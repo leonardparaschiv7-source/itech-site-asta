@@ -1,0 +1,92 @@
+/* iTECH — Process: "The anatomy of digital" — scroll-controlled film on a pinned canvas.
+   Palette: deep charcoal, platinum, soft rose-gold, champagne. Uses the site's theme variables. */
+.ana{--ana-rose:#E0988F;--ana-champ:#F4B8B2;--ana-plat:#F8F5F2;--ana-char:#1A1A1A;position:relative;padding-bottom:clamp(24px,4vw,56px)}
+.ana .sec-head{margin-bottom:clamp(20px,3vw,40px)}
+
+/* the scroll track: its height is the scroll distance of the film; the stage stays pinned inside it */
+.ana-track{position:relative;height:calc(var(--ana-len,400) * 1vh)}
+.ana-pin{position:sticky;top:var(--nav-h);height:calc(100vh - var(--nav-h));height:calc(100svh - var(--nav-h));overflow:hidden;contain:paint}
+.ana-stage{position:absolute;inset:0;isolation:isolate;
+  background:radial-gradient(70% 62% at 50% 50%,#0B0C0F 0,#050608 62%,var(--bg) 100%)}
+.ana-cv,.ana-poster{position:absolute;inset:0;width:100%;height:100%;display:block;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%,#000 94%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(180deg,transparent,#000 6%,#000 94%,transparent);mask-composite:intersect}
+.ana-poster{object-fit:contain;z-index:0}
+.ana-cv{z-index:1}
+.ana:not(.is-live) .ana-cv{visibility:hidden}
+
+/* soft dark field behind the words only (bottom-left), the product stays clear */
+.ana-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(55% 46% at 0% 100%,rgba(8,9,12,.78),transparent 72%),linear-gradient(0deg,rgba(8,9,12,.6),transparent 30%)}
+
+/* typography */
+.ana-copy{position:absolute;z-index:3;left:clamp(20px,4vw,72px);bottom:clamp(28px,8vh,92px);width:min(460px,28vw);height:0;pointer-events:none}
+.ana-txt{position:absolute;left:0;bottom:0;width:100%;opacity:0;visibility:hidden;will-change:opacity}
+.ana-txt.is-intro{opacity:1;visibility:visible}
+.ana-lbl{display:flex;align-items:center;gap:12px;margin:0 0 16px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#BFC3CB;will-change:transform}
+.ana-lbl b{font-weight:500;color:var(--ana-rose)}
+.ana-lbl b::after{content:"";display:inline-block;width:26px;height:1px;margin-left:12px;vertical-align:middle;background:linear-gradient(90deg,var(--ana-rose),transparent)}
+.ana-h{margin:0;font-family:var(--f-head);font-size:clamp(28px,3.3vw,56px);font-weight:600;line-height:.98;letter-spacing:-.04em;text-transform:uppercase}
+.ana-h .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.ana-h .ln>span{display:inline-block;will-change:transform;
+  background:linear-gradient(180deg,#FFFFFF 0%,var(--ana-plat) 55%,var(--ana-champ) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ana-txt .ana-h .ln:last-child>span{background:linear-gradient(100deg,var(--ana-plat) 0%,var(--ana-champ) 45%,var(--ana-rose) 100%);-webkit-background-clip:text;background-clip:text}
+.ana-sub{margin:18px 0 0;max-width:36ch;font-size:clamp(14px,1.15vw,17px);line-height:1.55;color:#A5A9B2}
+
+/* progress: three stages + percentage */
+.ana-hud{position:absolute;z-index:3;right:clamp(20px,5vw,80px);bottom:clamp(30px,8vh,94px);display:flex;align-items:center;gap:14px;pointer-events:none}
+.ana-segs{display:flex;gap:6px}
+.ana-segs i{width:clamp(28px,3.4vw,52px);height:2px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.ana-segs b{display:block;height:100%;background:linear-gradient(90deg,var(--ana-rose),var(--ana-champ));transform-origin:left;transform:scaleX(0)}
+.ana-pct{min-width:2ch;font-size:11px;letter-spacing:.16em;color:#BFC3CB;font-variant-numeric:tabular-nums}
+.ana-pct::after{content:"%";margin-left:2px;color:#6F737C}
+
+/* scroll cue (fades out as soon as the film moves) */
+.ana-hint{position:absolute;z-index:3;left:50%;top:clamp(14px,3vh,28px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;margin:0;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#9A9EA7;pointer-events:none}
+.ana-hint i{width:1px;height:26px;background:linear-gradient(180deg,var(--ana-rose),transparent);transform-origin:top;animation:anaCue 2.2s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes anaCue{0%{transform:scaleY(0);opacity:1}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+.perf-lite .ana-hint i{animation:none}
+
+/* the process steps (existing content), after the film */
+.ana-steps{list-style:none;margin:clamp(40px,6vw,88px) 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-radius:18px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(244,184,178,.16),rgba(248,245,242,.06) 40%,rgba(244,184,178,.1));border:1px solid rgba(248,245,242,.06)}
+.ana-step{position:relative;display:grid;align-content:start;gap:8px;padding:clamp(20px,2.2vw,30px);background:linear-gradient(180deg,#121214,#0D0D0F);transition:background .4s var(--ease)}
+.ana-step::before{content:"";position:absolute;left:0;top:0;height:1px;width:0;background:linear-gradient(90deg,var(--ana-rose),transparent);transition:width .6s var(--ease)}
+.ana-step:hover{background:linear-gradient(180deg,#17161A,#0F0F11)}
+.ana-step:last-child:nth-child(odd){grid-column:1/-1}
+@media (min-width:1180px){.ana-steps{grid-template-columns:repeat(var(--ana-n,7),minmax(0,1fr))}.ana-step:last-child:nth-child(odd){grid-column:auto}}
+@media (max-width:560px){.ana-steps{grid-template-columns:1fr}}
+.ana-step:hover::before{width:100%}
+.ana-step-n{font-size:11px;letter-spacing:.18em;color:var(--ana-rose)}
+.ana-step-t{margin:0;font-size:clamp(1.15rem,1.4vw,1.4rem);font-weight:600;letter-spacing:-.03em;color:var(--ana-plat)}
+.ana-step-g{margin:0;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9C9590}
+.ana-step-d{margin:0;font-size:14px;line-height:1.55;color:#A5A9B2}
+
+/* still version (reduced motion) */
+.ana-still{display:none}
+
+@media (max-width:760px){
+  .ana-track{height:calc(var(--ana-len-m,300) * 1vh)}
+  .ana-copy{left:20px;right:20px;width:auto;bottom:118px}   /* clears the fixed mobile CTA bar */
+  .ana-h{font-size:clamp(32px,9.4vw,46px)}
+  .ana-lbl{font-size:12px;letter-spacing:.2em;margin-bottom:12px}
+  .ana-sub{font-size:15px;margin-top:12px}
+  .ana-pct,.ana-hint{font-size:11px}
+  .ana-hud{left:20px;right:auto;bottom:92px}
+  .ana-segs i{width:36px}
+  .ana-scrim{background:linear-gradient(0deg,rgba(8,9,12,.92),rgba(8,9,12,.6) 40%,transparent 58%)}
+}
+/* large phones in landscape / small tablets: words bigger and wider than the desktop scale */
+@media (min-width:761px) and (max-width:1100px){
+  .ana-copy{width:min(560px,46vw)}
+  .ana-h{font-size:clamp(34px,5vw,52px)}
+  .ana-lbl{font-size:12px}
+  .ana-sub{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ana-track{display:none}
+  .ana-still{display:grid;gap:clamp(28px,4vw,56px);margin-top:clamp(16px,3vw,32px)}
+  .ana-fig{margin:0;display:grid;gap:18px}
+  .ana-fig img{width:100%;height:auto;display:block;border-radius:16px;background:#0B0C10}
+  .ana-fig .ana-h{font-size:clamp(26px,3.4vw,48px)}
+}

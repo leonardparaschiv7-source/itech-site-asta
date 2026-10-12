@@ -1,0 +1,13 @@
+# source material and backups (not part of the published site)
+_intro-video/
+_backup-*/
+.claude/
+CLAUDE.md
+test.html
+# owner-managed data, added only on request
+content.json
+reviews.json
+# unused original videos (the *-lite versions are used)
+img/addons-video.mp4
+img/experience-video.mp4
+img/hero-video.mp4

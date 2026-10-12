@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="base" cx="50%" cy="52%" r="75%">
+      <stop offset="0" stop-color="#101C30"/>
+      <stop offset=".45" stop-color="#0A1018"/>
+      <stop offset="1" stop-color="#06080C"/>
+    </radialGradient>
+    <radialGradient id="horizon" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#8CC4FF" stop-opacity=".55"/>
+      <stop offset=".35" stop-color="#4C8FE0" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#4C8FE0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="warm" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#E8C896" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#E8C896" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+      <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".75"/>
+    </radialGradient>
+    <linearGradient id="col" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#76B6FF" stop-opacity="0"/>
+      <stop offset=".35" stop-color="#9FD0FF" stop-opacity=".55"/>
+      <stop offset=".7" stop-color="#76B6FF" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#76B6FF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="colWarm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E8C896" stop-opacity="0"/>
+      <stop offset=".4" stop-color="#F0D6AA" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#E8C896" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="floorFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".25" stop-color="#fff" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".25"/>
+    </linearGradient>
+    <mask id="floorMask"><rect x="0" y="600" width="1600" height="400" fill="url(#floorFade)"/></mask>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="softer" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#base)"/>
+
+  <!-- architectural back wall: panels and light columns -->
+  <g opacity=".5" stroke="#7FA8D8" stroke-opacity=".07" fill="none">
+    <path d="M0 140H1600M0 600H1600"/>
+    <path d="M160 0V600M330 0V600M480 0V600M1120 0V600M1270 0V600M1440 0V600"/>
+  </g>
+  <g filter="url(#glow)">
+    <rect x="236" y="40" width="5" height="560" fill="url(#col)"/>
+    <rect x="404" y="90" width="3" height="510" fill="url(#col)" opacity=".7"/>
+    <rect x="1192" y="90" width="3" height="510" fill="url(#col)" opacity=".7"/>
+    <rect x="1358" y="40" width="5" height="560" fill="url(#col)"/>
+    <rect x="96" y="160" width="3" height="440" fill="url(#colWarm)" opacity=".8"/>
+    <rect x="1500" y="160" width="3" height="440" fill="url(#colWarm)" opacity=".8"/>
+  </g>
+  <g filter="url(#softer)" opacity=".9">
+    <rect x="200" y="80" width="80" height="520" fill="#4C8FE0" opacity=".12"/>
+    <rect x="1320" y="80" width="80" height="520" fill="#4C8FE0" opacity=".12"/>
+  </g>
+
+  <!-- ceiling arcs echoing the orbit -->
+  <g fill="none" stroke="#9FD0FF">
+    <ellipse cx="800" cy="520" rx="720" ry="170" stroke-opacity=".05"/>
+    <ellipse cx="800" cy="520" rx="560" ry="128" stroke-opacity=".06" stroke-dasharray="3 9"/>
+    <ellipse cx="800" cy="520" rx="400" ry="92" stroke-opacity=".05"/>
+  </g>
+
+  <!-- horizon glow behind the core -->
+  <ellipse cx="800" cy="600" rx="620" ry="120" fill="url(#horizon)" filter="url(#soft)"/>
+  <rect x="120" y="599" width="1360" height="1.4" fill="#BFE0FF" opacity=".35" filter="url(#glow)"/>
+
+  <!-- perspective floor grid -->
+  <g mask="url(#floorMask)" stroke="#8CC4FF" stroke-opacity=".16" fill="none">
+    <path d="M800 600L-1200 1000M800 600L-700 1000M800 600L-300 1000M800 600L40 1000M800 600L340 1000M800 600L590 1000M800 600L800 1000M800 600L1010 1000M800 600L1260 1000M800 600L1560 1000M800 600L1900 1000M800 600L2300 1000M800 600L2800 1000"/>
+    <path d="M0 612H1600M0 628H1600M0 650H1600M0 680H1600M0 720H1600M0 772H1600M0 840H1600M0 930H1600"/>
+  </g>
+  <!-- reflections on the floor -->
+  <g filter="url(#soft)" opacity=".55">
+    <rect x="226" y="620" width="24" height="260" fill="url(#col)" opacity=".35"/>
+    <rect x="1348" y="620" width="24" height="260" fill="url(#col)" opacity=".35"/>
+    <ellipse cx="800" cy="700" rx="260" ry="40" fill="#4C8FE0" opacity=".12"/>
+  </g>
+
+  <!-- distant bokeh, warm and cool -->
+  <g filter="url(#soft)">
+    <circle cx="150" cy="260" r="26" fill="url(#warm)"/>
+    <circle cx="1460" cy="300" r="30" fill="url(#warm)"/>
+    <circle cx="560" cy="210" r="14" fill="#9FD0FF" opacity=".12"/>
+    <circle cx="1040" cy="190" r="12" fill="#9FD0FF" opacity=".12"/>
+    <circle cx="1240" cy="450" r="10" fill="#C9B8FF" opacity=".12"/>
+    <circle cx="360" cy="470" r="10" fill="#9FD0FF" opacity=".1"/>
+  </g>
+  <g fill="#DCEEFF">
+    <circle cx="520" cy="300" r="1.2" opacity=".5"/><circle cx="1090" cy="260" r="1" opacity=".45"/>
+    <circle cx="690" cy="170" r="1" opacity=".4"/><circle cx="930" cy="350" r="1.2" opacity=".35"/>
+    <circle cx="300" cy="380" r="1" opacity=".4"/><circle cx="1310" cy="380" r="1" opacity=".4"/>
+  </g>
+
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+</svg>
