@@ -146,7 +146,8 @@ function mount(root, C) {
     if (b.dataset.bld === 'packages') { const p = document.getElementById('packages'); p && p.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); return; }
     const t = T[shown], radio = document.querySelector(`#briefForm input[name="projectType"][value="${t.briefType}"]`);
     if (radio) { radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
-    const target = document.getElementById('brief') || document.getElementById('contact');
+    // brief / contact may be switched off: fall back to the closing "Start" section, then the packages
+    const target = ['brief', 'contact', 'start', 'packages'].map(id => document.getElementById(id)).find(Boolean);
     if (target) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
   });
 
