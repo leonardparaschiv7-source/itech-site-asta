@@ -90,3 +90,8 @@
   .ana-fig img{width:100%;height:auto;display:block;border-radius:16px;background:#0B0C10}
   .ana-fig .ana-h{font-size:clamp(26px,3.4vw,48px)}
 }
+
+/* the whole Process section is for phones only: hidden (with its menu / footer links) on larger screens */
+@media (min-width:761px){
+  #process,a[data-target="process"],.nav-links li:has(>a[data-target="process"]){display:none!important}
+}

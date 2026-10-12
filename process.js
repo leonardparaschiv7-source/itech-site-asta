@@ -68,6 +68,7 @@ function mount(root, C) {
   const K = C.processConfig.cinematic || {}, F = K.frames || {}, stages = K.stages || [];
   const N = Math.max(2, +F.count || 2);
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (matchMedia(`(min-width: ${(+F.mobileBreakpoint || 760) + 1}px)`).matches) return;   // phones only (the film is hidden on larger screens)
   const track = root.querySelector('.ana-track'), pin = root.querySelector('.ana-pin'), stage = root.querySelector('.ana-stage');
   const cv = root.querySelector('.ana-cv'), poster = root.querySelector('.ana-poster');
   if (!track || !cv || !cv.getContext) return;
