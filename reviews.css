@@ -253,3 +253,8 @@ html.rv-lock{overflow:hidden}
   .rv-st-stars button svg{width:30px;height:30px}
   .rv-st-l{display:none}
 }
+
+/* the "rate your project" card has no reviews to browse: keep it flat (no 3D tilt / drag) so its stars always take clicks */
+.rv-stage:has(.rv-start){perspective:none;cursor:default;touch-action:auto}
+.rv-deck>.rv-start[data-off="0"]{transform:none}
+.rv-st-stars button{cursor:pointer;touch-action:manipulation}

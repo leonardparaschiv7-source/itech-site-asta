@@ -368,7 +368,7 @@ function mount(root, C) {
   on(stage, 'pointerdown', ev => { if (ev.button || ev.target.closest('a,button') || list.length < 2) return; px = ev.clientX; py = ev.clientY; dx = 0; stage.classList.add('drag'); });
   on(window, 'pointermove', ev => {
     if (px !== null) { dx = ev.clientX - px; if (Math.abs(dx) > Math.abs(ev.clientY - py)) stage.style.setProperty('--dx', Math.max(-90, Math.min(90, dx * .5)) + 'px'); return; }
-    if (parallax && !reduced() && !liteOn() && stage.matches(':hover')) { const r = stage.getBoundingClientRect(); stage.style.setProperty('--ry', (((ev.clientX - r.left) / r.width - .5) * 3).toFixed(2) + 'deg'); stage.style.setProperty('--rx', (-((ev.clientY - r.top) / r.height - .5) * 2.4).toFixed(2) + 'deg'); }
+    if (parallax && list.length && !reduced() && !liteOn() && stage.matches(':hover')) { const r = stage.getBoundingClientRect(); stage.style.setProperty('--ry', (((ev.clientX - r.left) / r.width - .5) * 3).toFixed(2) + 'deg'); stage.style.setProperty('--rx', (-((ev.clientY - r.top) / r.height - .5) * 2.4).toFixed(2) + 'deg'); }
   }, { passive: true });
   const endDrag = () => { if (px === null) return; px = null; stage.classList.remove('drag'); stage.style.setProperty('--dx', '0px'); if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1, true); };
   on(window, 'pointerup', endDrag); on(window, 'pointercancel', endDrag);
