@@ -11,7 +11,7 @@ window.ITECH_CONFIG = {
     metaDescription: "iTECH designs and develops premium websites for businesses, brands and entrepreneurs. Strategy, design, development and launch.",
     ogTitle: "iTECH — Websites that sell",
     ogDescription: "Custom-designed, fast, responsive websites for businesses that want to look as good online as they are.",
-    ogImage: "",            // PLACEHOLDER: absolute URL of a 1200×630 image
+    ogImage: "https://itechdigitalstudio.com/img/og-image.jpg",   // absolute URL, 1200×630
     favicon: "",            // PLACEHOLDER: URL of your favicon
     themeColor: "#08090C"
   },
