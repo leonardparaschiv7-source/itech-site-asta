@@ -79,7 +79,18 @@ const ReviewService = (() => {
         rating: Math.max(1, Math.min(5, Math.round(+data.rating))), review: clean(data.review, 600), projectUrl: data.projectUrl && isUrl(data.projectUrl) ? clean(data.projectUrl, 200) : '',
         status: 'pending', verified: false, createdAt: new Date().toISOString() };
       if (mode === 'demo') { await new Promise(r => setTimeout(r, 700)); if (demo.fail) throw { code: 'unavailable' }; demo.subs['s' + Date.now()] = doc; emit(); return { stored: true }; }
-      if (mode !== 'db' || !uid) return { stored: false, doc };
+      if (mode !== 'db' || !uid) {
+        // published site without the artifact database: the review arrives by email (Web3Forms) and is approved by the owner
+        const key = window.ITECH_CONFIG && window.ITECH_CONFIG.contactConfig && window.ITECH_CONFIG.contactConfig.web3formsKey;
+        if (!key) return { stored: false, doc };
+        try {
+          const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ access_key: key, subject: 'iTECH — new client review (please approve)', from_name: 'iTECH website', name: doc.name, email: doc.email,
+              message: `Name: ${doc.name}\nEmail: ${doc.email}${doc.company ? '\nCompany: ' + doc.company : ''}\nProject: ${doc.projectType}\nRating: ${doc.rating}/5${doc.projectUrl ? '\nURL: ' + doc.projectUrl : ''}\nDate: ${doc.createdAt}\n\n"${doc.review}"` }) });
+          const j = await res.json().catch(() => ({}));
+          return res.ok && j.success !== false ? { stored: true } : { stored: false, doc };
+        } catch (e) { return { stored: false, doc }; }
+      }
       try { await db.doc('submissions/' + uid).set(doc); return { stored: true }; }
       catch (e) {
         if (e && /invalid_argument|not_granted|capability_disabled|capability_removed|revoked/.test(e.code)) return { stored: false, doc };

@@ -1008,6 +1008,7 @@ window.ITECH_CONFIG = {
     whatsapp: "",           // PLACEHOLDER: international format without "+" or spaces, e.g. "40712345678"
     phone: "",              // PLACEHOLDER
     endpoints: { projectBrief: "", quickContact: "" },
+    web3formsKey: "6787f312-80d9-4e2a-aa4f-cdc170e78dca",   // Web3Forms public access key: forms and reviews arrive by email (used when no endpoint is set)
     submitLabel: "Let's talk",
     successText: "Message received. We'll reply soon.",
     notConnectedText: "Online sending isn't connected yet. Please use the email or WhatsApp buttons, or copy your message."

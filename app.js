@@ -1032,7 +1032,17 @@ function briefText(r) { return REVIEW_ROWS.map(([l, k]) => { const v = Array.isA
 async function submitRequest(kind, payload) {
   const url = (C.contactConfig.endpoints || {})[kind];
   window.ITECH_LAST_REQUEST = payload;          // handy for integration testing
-  if (!url) return { status: 'not_configured' };
+  if (!url) {
+    const key = C.contactConfig.web3formsKey;
+    if (!key) return { status: 'not_configured' };
+    const lines = Object.entries(payload || {}).filter(([, v]) => v != null && v !== '' && !(Array.isArray(v) && !v.length)).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? JSON.stringify(v) : v}`);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ access_key: key, subject: kind === 'projectBrief' ? 'iTECH — new project brief' : 'iTECH — new message', from_name: 'iTECH website', name: payload.customer || payload.name || '', email: payload.email || '', message: lines.join('\n') }) });
+      const j = await res.json().catch(() => ({}));
+      return { status: res.ok && j.success !== false ? 'sent' : 'error' };
+    } catch (err) { return { status: 'error' }; }
+  }
   try { const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) }); return { status: res.ok ? 'sent' : 'error' }; }
   catch (err) { return { status: 'error' }; }
 }
