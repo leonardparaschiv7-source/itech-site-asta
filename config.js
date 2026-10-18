@@ -1065,7 +1065,7 @@ window.ITECH_CONFIG = {
       { label: "FAQ", target: "faq" }
     ],
     studio: ["Romania · Available worldwide", "Custom websites, built to order"],
-    legal: [ { label: "Privacy", url: "" }, { label: "Terms", url: "" } ],   // PLACEHOLDER: add page URLs
+    legal: [ { label: "Privacy", url: "/confidentialitate" }, { label: "Terms", url: "/termeni" } ],
     copyrightName: "iTECH"
   }
 };
