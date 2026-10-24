@@ -82,10 +82,10 @@ window.ITECH_CONFIG = {
     why: { enabled: false, hideNumber: true },   // removed at the owner's request (content kept in whyConfig / whyITechFeatures); nav "Services" + footer link hide automatically
     websiteTypes: { enabled: false },   // removed; content kept in websiteTypesConfig
     packages: { enabled: true, hideNumber: true },
-    addons: { enabled: true, altSpan: 2, hideNumber: true },   // altSpan 2: keeps the background rhythm below unchanged after removing the estimator
+    addons: { enabled: false, altSpan: 2, hideNumber: true },   // removed at the owner's request (content kept in addonsConfig; nav "Add-ons" link hides automatically); altSpan 2 keeps the background rhythm if re-enabled
     estimator: { enabled: false },   // removed; settings kept in estimatorConfig
     process: { enabled: true, hideNumber: true },
-    comparison: { enabled: true, altSpan: 2, hideNumber: true },   // altSpan 2: keeps the background rhythm below unchanged after removing About
+    comparison: { enabled: false, altSpan: 2, hideNumber: true },   // removed at the owner's request (content kept in comparisonConfig; nav "Compare" link hides automatically)
     about: { enabled: false },   // removed; content kept in aboutConfig (nav/footer links hide automatically)
     testimonials: { enabled: true, hideNumber: true },   // real approved reviews only; empty state + review form until then
     faq: { enabled: true, altSpan: 2, hideNumber: true },   // altSpan 2: keeps the background rhythm below unchanged after removing the brief
