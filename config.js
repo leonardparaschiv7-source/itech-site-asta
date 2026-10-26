@@ -122,7 +122,9 @@ window.ITECH_CONFIG = {
   hero: {
     // background video of the first screen: loops muted; poster = still frame shown while it loads,
     // on reduced motion and when the visitor saves data. hideScene: hides the 3D mock-ups on the right
-    video: { enabled: true, src: "img/experience-video-lite.mp4", poster: "img/experience-poster.jpg", hideScene: true },   // previous: img/hero-video.mp4 + img/hero-poster.jpg
+    // look: "aura" = centered cinematic hero (shiny gradient accent word, pill CTA); "" = previous split layout
+    look: "aura",
+    video: { enabled: true, src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4", poster: "", hideScene: true },   // poster left empty: img/experience-poster.jpg is a still of the OLD video and flashed on every language switch; previous: img/experience-video-lite.mp4 (before that img/hero-video.mp4 + img/hero-poster.jpg)
     eyebrow: "Web design & development studio",
     headline: "We build\nwebsites\nthat sell.",
     accentWord: "sell.",

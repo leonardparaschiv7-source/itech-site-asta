@@ -1142,3 +1142,29 @@ select.input option{background:#15171D}
 .pkg.is-custom{background:radial-gradient(120% 60% at 100% 0%,rgba(151,135,255,.07),transparent 62%),var(--card);border-color:rgba(190,200,255,.14)}
 @media (min-width:1101px){.pkg-sub{min-height:calc(1.6em*4)}}
 @media (min-width:621px) and (max-width:1100px){.pkg-sub{min-height:calc(1.6em*3)}}
+
+/* ── hero "aura" look: centered, cinematic, shiny gradient accent word ── */
+.hero-aura{background:#0c0c0c;text-align:center}
+.hero-aura .hero-video{background:#0c0c0c}
+.hero-aura .hero-video video{object-position:50% 50%}
+.hero-aura .hero-grid{grid-template-columns:1fr;justify-items:center}
+.hero-aura .hero-copy{justify-items:center;text-align:center;gap:24px;max-width:860px}
+.hero-aura.has-video .hero-copy::before{display:none}
+.hero-aura .eyebrow{justify-self:center;background:rgba(255,255,255,.04);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.hero-aura .hero-title{line-height:.92;letter-spacing:-.05em}
+.hero-aura .hero-title .ln{overflow:visible}
+.hero-aura .hero-title .grad-text{font-family:inherit;font-size:1em;letter-spacing:inherit;padding:0 .04em;
+  background-image:linear-gradient(to right,#091020 0%,#0B2551 12.5%,#A4F4FD 32.5%,#00d2ff 50%,#0B2551 67.5%,#091020 87.5%,#091020 100%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:url(#c3-noise);animation:auraShiny 6s linear infinite}
+@keyframes auraShiny{0%{background-position:-200% center}100%{background-position:200% center}}
+.hero-aura .hero-sub{color:rgba(255,255,255,.6);max-width:30rem;line-height:1.5}
+.hero-aura .hero-ctas{justify-content:center}
+.hero-aura .btn-primary{border-radius:999px;background:#fff;color:#000;font-weight:500}
+.hero-aura .btn-primary:hover{background:rgba(255,255,255,.9)}
+.hero-aura .btn-primary:active{transform:scale(.98)}
+.hero-aura .btn-ghost{border-radius:999px}
+.hero-aura .cred{justify-content:center}
+.hero-aura::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:-1;background:linear-gradient(180deg,transparent,rgba(8,9,12,.9));pointer-events:none}
+@media (max-width:1024px){.hero-aura .hero-title .grad-text{filter:none;-webkit-text-fill-color:transparent}}
+@media (prefers-reduced-motion:reduce){.hero-aura .hero-title .grad-text{animation:none;background-position:50% center}}

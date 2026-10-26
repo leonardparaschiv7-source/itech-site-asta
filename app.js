@@ -142,7 +142,8 @@ R.hero = () => {
   const h = C.hero, lines = h.headline.split('\n');
   const heroMock = h.mock || { layout: 'split', bg: '#0E1015', fg: '#F4F6FA', accent: '#76B6FF', muted: '#8B90A0', font: 'sans', brand: 'NORTHLINE', kicker: 'Architecture studio', headline: 'Designed\nto be seen.', cta: 'Start a project', nav: ['Work', 'Studio', 'Journal', 'Contact'] };
   const V = h.video && h.video.enabled !== false && h.video.src ? h.video : null;
-  return `<section class="hero${V ? ' has-video' : ''}${V && V.hideScene ? ' no-scene' : ''}" id="home" aria-labelledby="hero-title">
+  return `<section class="hero${V ? ' has-video' : ''}${V && V.hideScene ? ' no-scene' : ''}${h.look === 'aura' ? ' hero-aura' : ''}" id="home" aria-labelledby="hero-title">
+  ${h.look === 'aura' ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
   ${V ? `<div class="hero-video" aria-hidden="true"><video muted loop playsinline preload="metadata"${V.poster ? ` poster="${esc(V.poster)}"` : ''}><source src="${esc(V.src)}" type="video/mp4"></video><span class="hero-video-shade"></span></div>` : ''}
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-grid">
