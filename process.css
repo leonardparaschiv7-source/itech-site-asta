@@ -1,6 +1,6 @@
 /* iTECH — Process: "The anatomy of digital" — scroll-controlled film on a pinned canvas.
    Palette: deep charcoal, platinum, soft rose-gold, champagne. Uses the site's theme variables. */
-.ana{--ana-rose:#E0988F;--ana-champ:#F4B8B2;--ana-plat:#F8F5F2;--ana-char:#1A1A1A;position:relative;padding-bottom:clamp(24px,4vw,56px)}
+.ana{--ana-rose:#76B6FF;--ana-champ:#A9CDFF;--ana-plat:#F4F6FA;--ana-char:#1A1A1A;position:relative;padding-bottom:clamp(24px,4vw,56px)}
 .ana .sec-head{margin-bottom:clamp(20px,3vw,40px)}
 
 /* the scroll track: its height is the scroll distance of the film; the stage stays pinned inside it */
@@ -49,7 +49,7 @@
 
 /* the process steps (existing content), after the film */
 .ana-steps{list-style:none;margin:clamp(40px,6vw,88px) 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-radius:18px;overflow:hidden;
-  background:linear-gradient(135deg,rgba(244,184,178,.16),rgba(248,245,242,.06) 40%,rgba(244,184,178,.1));border:1px solid rgba(248,245,242,.06)}
+  background:linear-gradient(135deg,rgba(118,182,255,.16),rgba(244,246,250,.06) 40%,rgba(118,182,255,.1));border:1px solid rgba(248,245,242,.06)}
 .ana-step{position:relative;display:grid;align-content:start;gap:8px;padding:clamp(20px,2.2vw,30px);background:linear-gradient(180deg,#121214,#0D0D0F);transition:background .4s var(--ease)}
 .ana-step::before{content:"";position:absolute;left:0;top:0;height:1px;width:0;background:linear-gradient(90deg,var(--ana-rose),transparent);transition:width .6s var(--ease)}
 .ana-step:hover{background:linear-gradient(180deg,#17161A,#0F0F11)}
@@ -66,6 +66,7 @@
 .ana-still{display:none}
 
 @media (max-width:760px){
+  .ana-steps{display:none}   /* the 7-step list is removed on phones: it made the scroll too long */
   .ana-track{height:calc(var(--ana-len-m,300) * 1vh)}
   .ana-copy{left:20px;right:20px;width:auto;bottom:118px}   /* clears the fixed mobile CTA bar */
   .ana-h{font-size:clamp(32px,9.4vw,46px)}

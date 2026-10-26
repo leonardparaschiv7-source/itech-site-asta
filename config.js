@@ -848,7 +848,7 @@ window.ITECH_CONFIG = {
       title: "The anatomy\nof digital.",
       subtitle: "Every detail. Engineered to perfection.",
       hint: "Scroll",
-      frames: { count: 346, width: 1920, height: 1080, desktop: "img/process-seq/d/f{i}.webp", mobile: "img/process-seq/m/a{i}.webp", mobileGrid: [2, 2], mobileBreakpoint: 760 },
+      frames: { count: 346, width: 1920, height: 1080, desktop: "img/process-seq/d/f{i}.webp", mobile: "img/process-seq/m/a{i}.webp?v=2", mobileGrid: [2, 2], mobileBreakpoint: 760 },
       stillFrames: [110, 215, 345],   // reduced motion: the three still pictures
       stages: [
         { label: "The machine", title: "Engineered\nto perfection.", from: 0, to: .34 },
