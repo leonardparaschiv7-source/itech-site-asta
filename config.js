@@ -322,10 +322,11 @@ window.ITECH_CONFIG = {
       site: { brand: "CLEANRIDE", eyebrow: "Premium car wash & detailing", headline: "More than\na car wash.", cta: "Book an appointment", meta: ["Premium products", "Professional team", "Longer protection"] }
     },
     {
-      /* live: a self-contained page in projects/ shown running inside the card (instead of a picture) */
+      /* live: a self-contained page in projects/ shown running inside the card (instead of a picture).
+         livePoster: a 1440x900 still of that page, shown on the cards that are not playing (only the active card runs the page) */
       id: "petalyx", name: "Petalyx", slug: "petalyx", category: "SaaS", industry: "SaaS · AI analytics", type: "SaaS product page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
-      live: "projects/petalyx.html",
+      live: "projects/petalyx.html", livePoster: "img/live/petalyx.webp",
       description: "A product page for an AI analytics tool: a cinematic hero, results that count up as you scroll and a clear three-step explanation that ends in sign-up.",
       direction: "A soft cherry-blossom sky with olive and lime accents. Smooth scroll motion keeps a technical product friendly.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
@@ -336,7 +337,7 @@ window.ITECH_CONFIG = {
     {
       id: "prmpt", name: "prmpt", slug: "prmpt", category: "Fashion", industry: "Fashion · Archive store", type: "Fashion store landing page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
-      live: "projects/prmpt.html",
+      live: "projects/prmpt.html", livePoster: "img/live/prmpt.webp",
       description: "A fashion archive store: a film you turn with the cursor, then a black gallery where each piece scales in as you scroll, ending on one clear buy button.",
       direction: "Pure black and white with oversized type and a custom cursor. The product leads and the interface stays out of the way.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
@@ -347,7 +348,7 @@ window.ITECH_CONFIG = {
     {
       id: "securify", name: "securify", slug: "securify", category: "SaaS", industry: "SaaS · Data security", type: "Cybersecurity landing page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
-      live: "projects/securify.html",
+      live: "projects/securify.html", livePoster: "img/live/securify.webp",
       description: "A confident landing page for a security product: a full-screen film, three giant words and three proof numbers, with one clear sign-up path.",
       direction: "Pure black and white, a floating pill navigation and huge lowercase type that cuts across the film.",
       services: ["Brand direction", "UI/UX design", "Web development"],
@@ -358,7 +359,7 @@ window.ITECH_CONFIG = {
     {
       id: "vaultshield", name: "VaultShield", slug: "vaultshield", category: "SaaS", industry: "SaaS · Password manager", type: "Password-manager landing page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
-      live: "projects/vaultshield.html",
+      live: "projects/vaultshield.html", livePoster: "img/live/vaultshield.webp",
       description: "A calm, trustworthy page for a password manager: one clear promise, small icons that explain it at a glance and a single strong button.",
       direction: "Soft neutral film, deep navy type and one violet accent. Rounded pills, a slide-in mobile menu and gentle entrance motion.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
@@ -369,7 +370,7 @@ window.ITECH_CONFIG = {
     {
       id: "aurai", name: "Aurai", slug: "aurai", category: "Wellness", industry: "Wellness · AI companion", type: "Wellness app landing page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
-      live: "projects/aurai.html",
+      live: "projects/aurai.html", livePoster: "img/live/aurai.webp",
       description: "A quiet, full-screen page for a wellness app: a soft headline, a glass sign-up field and three benefits, built to collect early subscribers.",
       direction: "No heavy overlay: the film breathes and the interface sits on it as frosted glass with light serif type.",
       services: ["Brand direction", "UI/UX design", "Web development"],
@@ -380,7 +381,7 @@ window.ITECH_CONFIG = {
     {
       id: "looksmith", name: "Looksmith", slug: "looksmith", category: "Fashion", industry: "Fashion · Virtual try-on", type: "Interactive product demo page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
-      live: "projects/looksmith.html",
+      live: "projects/looksmith.html", livePoster: "img/live/looksmith.webp",
       description: "An interactive page where shoppers change the scene, the lighting, the outfit or the model with a click and watch the change play as a short film.",
       direction: "Pale architecture, one model and a single frosted control. No scroll tricks: every change is a short film you trigger with a click.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],

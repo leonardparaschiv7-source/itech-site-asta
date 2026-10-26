@@ -226,7 +226,7 @@ function aureaArt() {
     <circle cx="332" cy="130" r="18" fill="#6F7462" opacity=".55"/><circle cx="350" cy="138" r="12" fill="#6F7462" opacity=".5"/><circle cx="52" cy="136" r="12" fill="#6F7462" opacity=".45"/></svg>`;
 }
 function desktopSite(p) {
-  if (p.live) return `<div class="w3-live" data-name="${esc(p.name)}" data-live="${esc(p.live)}"><iframe title="${esc(p.name)}" tabindex="-1" allow="autoplay" sandbox="allow-scripts allow-same-origin"></iframe></div>`;
+  if (p.live) return `<div class="w3-live${p.livePoster ? ' has-poster' : ''}" data-name="${esc(p.name)}" data-live="${esc(p.live)}">${p.livePoster ? `<img class="w3-poster" src="${esc(p.livePoster)}" alt="" loading="lazy" decoding="async">` : ''}<iframe title="${esc(p.name)}" tabindex="-1" allow="autoplay" sandbox="allow-scripts allow-same-origin"></iframe></div>`;
   if (p.desktopPreview) {
     const c = p.previewCrop;
     if (!c) return `<img class="w3-img" src="${esc(p.desktopPreview)}" alt="" loading="eager" decoding="async" fetchpriority="low">`;
@@ -1167,7 +1167,8 @@ function liveTick(now) {
 const liveBoxes = [];
 const livePausedCss = '.itech-paused *{animation-play-state:paused!important}html{scrollbar-width:none}::-webkit-scrollbar{display:none}';
 /* one card plays at a time: the others sit on their first frame (media and CSS animations paused), so nothing competes for the CPU.
-   Desktops load every card (staggered, the active one first); phones in lite mode / data saver load only the active card. */
+   Cards with a still (project.livePoster) run only the active page and show the still otherwise; cards without one load
+   staggered on desktops; phones in lite mode / data saver load only the active card. */
 function liveSetActive(b, on) {
   const f = b.f, w = f.contentWindow; let d; try { d = w && w.document; } catch (e) { return; }
   if (!d || !d.body || !b.loaded) return;
@@ -1182,9 +1183,11 @@ function liveSetActive(b, on) {
   if (w.__itechActive) { try { w.__itechActive(on); } catch (e) { } }
 }
 function liveLoad(b, delay) {
+  clearTimeout(b.unT);
   if (b.loading || b.loaded) return;
   b.loading = true;
   setTimeout(() => {
+    if (!b.loading) return;   // unloaded while waiting
     b.f.addEventListener('load', () => { if (b.f.getAttribute('src') === 'about:blank') return; b.loaded = true; b.loading = false; b.box.classList.add('loaded'); b.on = undefined; liveSync(); }, { once: true });
     b.f.src = b.box.dataset.live + (b.modal ? '' : '?card=1');
     if (!b.modal && !b.auto) { b.auto = true; liveAuto(b.box, b.f); }
@@ -1192,7 +1195,9 @@ function liveLoad(b, delay) {
 }
 function liveUnload(b) {
   if (!b.loaded && !b.loading) return;
-  b.f.src = 'about:blank'; b.loaded = false; b.loading = false; b.on = undefined; b.box.classList.remove('loaded');
+  b.loaded = false; b.loading = false; b.on = undefined; b.box.classList.remove('loaded');
+  /* the page fades out over its still first, then is emptied */
+  clearTimeout(b.unT); b.unT = setTimeout(() => { if (!b.loaded && !b.loading) b.f.src = 'about:blank'; }, 650);
 }
 /* the cards share the page's main thread (same origin): nothing loads until the Work section is near the screen,
    so the hero intro runs alone, and every card is paused while the section is off screen */
@@ -1205,7 +1210,7 @@ function liveSync() {
     if (stillOnly) { b.box.classList.add('is-still'); return; }
     b.box.classList.remove('is-still');
     const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
-    if (phoneLite && !active) { liveUnload(b); return; }
+    if ((phoneLite || b.box.classList.contains('has-poster')) && !active) { liveUnload(b); return; }   // cards with a still run no page until they are the active one
     if (liveNear) liveLoad(b, active ? 0 : 900 + n * 700);
     liveSetActive(b, active && liveNear);
   });
@@ -1222,7 +1227,8 @@ function setupLive(root = document) {
     }
     liveBoxes.push(b);
   });
-  const sec = liveBoxes.length && liveBoxes[0].box.closest('section');
+  for (let i = liveBoxes.length - 1; i >= 0; i--) if (!liveBoxes[i].box.isConnected) liveBoxes.splice(i, 1);   // drop cards of an earlier render
+  const first = liveBoxes.find(b => !b.modal), sec = first && first.box.closest('section');
   if (liveNearIO) { liveNearIO.disconnect(); liveNearIO = null; }
   if (sec && 'IntersectionObserver' in window) {
     liveNearIO = new IntersectionObserver(es => { const on = es[es.length - 1].isIntersecting; if (on !== liveNear) { liveNear = on; liveSync(); } }, { rootMargin: '60% 0px' });
