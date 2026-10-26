@@ -52,7 +52,7 @@ function render(C, H) {
     <header class="sec-head">
       <p class="sec-meta mono" data-reveal><span>${e(K.eyebrow)}</span></p>
       <h2 class="sec-title" id="bld-title" data-reveal>${H.accentize(K.headline, K.accent)}</h2>
-      <p class="sec-intro" data-reveal>${e(K.intro)}</p>
+      ${K.intro ? `<p class="sec-intro" data-reveal>${e(K.intro)}</p>` : ''}
     </header>
     <div class="bld-grid">
       <div class="bld-side">
@@ -79,8 +79,8 @@ function render(C, H) {
 /* image preview: a cropped region of a supplied image, edges blended into the page */
 function photo(t, e) {
   const im = t.image, c = im.crop;
-  if (!c) return `<div class="bld-photo"><div class="bld-photo-in"><img src="${e(im.src)}" alt="${e(t.title)} example" loading="lazy" decoding="async"></div></div>`;
-  return `<div class="bld-photo"><div class="bld-photo-in" style="aspect-ratio:${c.w}/${c.h}"><img class="bld-crop" src="${e(im.src)}" alt="${e(t.title)} example: website shown on a laptop and a phone" loading="lazy" decoding="async"
+  if (!c) return `<div class="bld-photo"><div class="bld-photo-in"><img src="${e(im.src)}" alt="${e(t.title)} example" loading="eager" decoding="async"></div></div>`;
+  return `<div class="bld-photo"><div class="bld-photo-in" style="aspect-ratio:${c.w}/${c.h}"><img class="bld-crop" src="${e(im.src)}" alt="${e(t.title)} example: website shown on a laptop and a phone" loading="eager" decoding="async"
     style="width:${(im.sourceWidth / c.w * 100).toFixed(3)}%;left:${(-c.x / c.w * 100).toFixed(3)}%;top:${(-c.y / c.h * 100).toFixed(3)}%"></div></div>`;
 }
 function info(t, K, e, hasPackages, i, n) {

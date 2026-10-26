@@ -30,7 +30,7 @@ function renderFoot(C, h) {
   <div class="syx-fcol">
     <div>
       <p class="syx-fbrand">${e(C.brandConfig.name)}</p>
-      <p class="syx-ftext">${e(T(S.foot.text))}</p>
+      ${S.foot.text ? `<p class="syx-ftext">${e(T(S.foot.text))}</p>` : ''}
     </div>
     <p class="syx-fcopy">${e(T(S.foot.copy))}</p>
   </div>

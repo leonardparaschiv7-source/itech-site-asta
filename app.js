@@ -158,12 +158,12 @@ R.hero = () => {
     <div class="hero-copy">
       <p class="eyebrow mono"><span class="dot" aria-hidden="true"></span><span${ed('hero.eyebrow')}>${esc(h.eyebrow)}</span></p>
       <h1 class="hero-title" id="hero-title"${ed('hero.headline')}>${lines.map(l => `<span class="ln"><span>${accentize(l, h.accentWord)}</span></span>`).join('')}</h1>
-      <p class="hero-sub"${ed('hero.subheadline')}>${nl(h.subheadline)}</p>
+      ${h.subheadline ? `<p class="hero-sub"${ed('hero.subheadline')}>${nl(h.subheadline)}</p>` : ''}
       <div class="hero-ctas">
         <button class="btn btn-primary" data-act="go" data-target="${esc(h.primaryCta.target)}">${esc(h.primaryCta.label)} ${I.arrow}</button>
         <button class="btn btn-ghost" data-act="go" data-target="${esc(h.secondaryCta.target)}">${esc(h.secondaryCta.label)}</button>
       </div>
-      <p class="cred mono">${h.credibility.map(c => `<span>${esc(c)}</span>`).join('')}</p>
+      ${(h.credibility || []).length ? `<p class="cred mono">${h.credibility.map(c => `<span>${esc(c)}</span>`).join('')}</p>` : ''}
     </div>
     ${S ? `<div class="hero-art" aria-hidden="true"><div class="art-mask"><video muted loop playsinline preload="metadata" poster="${esc(h.art.poster || '')}"><source src="${esc(h.art.src)}" type="video/mp4"></video></div>${(h.cards || []).slice(0, 2).map((k, i) => `<div class="hero-card hc${i + 1} glass"><i class="hc-ic">${HC_ICON[k.icon] || HC_ICON.graph}</i><div><p class="hc-k mono">${esc(T(k.kicker))}</p><p class="hc-t">${nl(T(k.title))}</p></div></div>`).join('')}</div>` : ''}
     <div class="hero-scene" id="scene" aria-hidden="true">
@@ -459,16 +459,16 @@ R.packages = () => {
       const name = P ? P.title : pk.name, cta = P ? P.cta : pk.ctaLabel, badge = P ? P.badge : pk.badge, msg = P && P.whatsappMessage || pk.whatsappMessage;
       return `<article class="pkg lit${pk.featured ? ' featured' : ''}${pk.price && pk.price.type === 'quote' ? ' is-custom' : ''}" data-reveal>
       ${badge ? `<span class="badge">${esc(badge)}</span>` : ''}
-      <div><h3 class="pkg-name"${P ? '' : ed(`packagesConfig.items.${idx}.name`)}>${esc(name)}</h3><p class="pkg-sub"${P ? '' : ed(`packagesConfig.items.${idx}.subtitle`)}>${esc(P ? P.subtitle : pk.subtitle)}</p></div>
+      <div><h3 class="pkg-name"${P ? '' : ed(`packagesConfig.items.${idx}.name`)}>${esc(name)}</h3>${K.showSubtitles === false ? '' : `<p class="pkg-sub"${P ? '' : ed(`packagesConfig.items.${idx}.subtitle`)}>${esc(P ? P.subtitle : pk.subtitle)}</p>`}</div>
       ${P ? localPrice(L, P) : priceBlock(pk, K.currency)}
       <ul class="checks">${(P ? P.features : pk.features).map(pkgFeature).join('')}${P ? '' : (pk.excludedFeatures || []).map(f => `<li class="x">${I.minus}<span>${esc(f)}</span></li>`).join('')}</ul>
-      ${P ? pkgExcluded(P.excludedLabel || L.notIncluded, P.excluded) : ''}
+      ${P && K.showExcluded !== false ? pkgExcluded(P.excludedLabel || L.notIncluded, P.excluded) : ''}
       ${K.whatsappNumber ? `<a class="btn pkg-cta ${pk.featured ? 'btn-primary' : 'btn-ghost'}" href="${esc(waLink(msg))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(cta)}: ${esc(name)} (WhatsApp)">${WA_ICON}<span>${esc(cta)}</span>${I.arrow}</a>`
         : `<button class="btn ${pk.featured ? 'btn-primary' : 'btn-ghost'}" data-act="package" data-id="${esc(pk.id)}" data-target="${esc(pk.ctaTarget || 'brief')}">${esc(cta)} ${I.arrow}</button>`}
     </article>`; }).join('')}</div>
-    ${K.whatsappNumber && K.contactStrip ? `<div class="pkg-wa-strip"><div><p class="mono">${esc(K.contactStrip.title)}</p><p>${esc(K.contactStrip.text)}</p></div>
+    ${K.whatsappNumber && K.contactStrip && K.contactStrip.enabled !== false ? `<div class="pkg-wa-strip"><div><p class="mono">${esc(K.contactStrip.title)}</p><p>${esc(K.contactStrip.text)}</p></div>
       <a class="pkg-wa-num" href="${esc(waLink(''))}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${esc(K.whatsappDisplay)} (opens in a new tab)">${WA_ICON}<span>${esc(K.whatsappDisplay || K.whatsappNumber)}</span>${I.arrow}</a></div>` : ''}
-    <p class="pkg-note"${L && L.note ? '' : ed('packagesConfig.note')}>${esc(L && L.note || K.note)}</p>
+    ${K.showNote === false ? '' : `<p class="pkg-note"${L && L.note ? '' : ed('packagesConfig.note')}>${esc(L && L.note || K.note)}</p>`}
   </div></section>`;
 };
 

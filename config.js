@@ -129,7 +129,7 @@ window.ITECH_CONFIG = {
       foot: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4"
     },
     metrics: { subtitle: "At a glance", items: [["6", "Website types"], ["7", "Steps from idea to launch"], ["3", "Languages: RO · EN · DE"]] },
-    foot: { text: "Websites built to sell: custom-made, fast and ready for every screen.", copy: "© 2026 iTECH Digital Studio. All rights reserved." }
+    foot: { text: "" /* hidden by the owner; was: "Websites built to sell: custom-made, fast and ready for every screen." */, copy: "© 2026 iTECH Digital Studio. All rights reserved." }
   },
 
   /* ── HERO ──────────────────────────────────────────────────────────────── */
@@ -154,10 +154,11 @@ window.ITECH_CONFIG = {
     eyebrow: "Web design & development studio",
     headline: "We build\nwebsites\nthat sell.",
     accentWord: "sell.",
-    subheadline: "iTECH designs and develops premium websites for businesses, brands and entrepreneurs. Custom-made, fast, and built to turn visitors into clients.",
+    // hidden by the owner (2026-10-26); was: "iTECH designs and develops premium websites for businesses, brands and entrepreneurs. Custom-made, fast, and built to turn visitors into clients."
+    subheadline: "",
     primaryCta: { label: "Start a project", target: "brief" },
     secondaryCta: { label: "View our work", target: "work" },
-    credibility: ["Strategy", "Design", "Development", "Launch"],
+    credibility: [],   // hidden by the owner; was: ["Strategy", "Design", "Development", "Launch"]
     mockupUrl: "yourbrand.com",
     // website shown in the hero browser; art: "laptop" draws a code-editor laptop on the right
     mock: { layout: "split", art: "laptop", bg: "#150E11", fg: "#FAF4F7", accent: "#FF6FB1", muted: "#8B90A0", font: "sans", brand: "NORTHLINE", kicker: "Architecture studio", headline: "Designed\nto be seen.", cta: "Start a project", nav: ["Work", "Studio", "Journal", "Contact"] },
@@ -242,7 +243,7 @@ window.ITECH_CONFIG = {
      Without an image, template "dharma" | "forge" | "aurea" draws a built-in
      mini website; any other value falls back to a simple branded preview.   */
   portfolioShowcase: {
-    header: { label: "Selected projects", title: "Different brands.\nDifferent worlds.", accent: "Different worlds.", intro: "Built around your business.\nDesigned to feel unmistakably yours." },
+    header: { label: "Selected projects", title: "Different brands.\nDifferent worlds.", accent: "Different worlds.", intro: "" },   // intro hidden by the owner; was: "Built around your business.\nDesigned to feel unmistakably yours."
     viewLabel: "View project",
     closeLabel: "Close project"
   },
@@ -401,7 +402,7 @@ window.ITECH_CONFIG = {
     eyebrow: "Start your project",
     headline: "What do you\nwant to build?",
     accent: "want to build?",
-    intro: "Choose the type of digital experience you need. We'll shape the strategy, design and development around your business.",
+    intro: "",   // hidden by the owner; was: "Choose the type of digital experience you need. We'll shape the strategy, design and development around your business."
     defaultProject: "business",
     hoverPreview: false,        // false: the preview changes on click only (hover just highlights the row)
     mouseParallax: true,
@@ -616,8 +617,11 @@ window.ITECH_CONFIG = {
     whatsappNumber: "40724972017",            // international format, digits only
     whatsappDisplay: "+40 724 972 017",
     brandLine: "Websites built around your business",
-    contactStrip: { title: "Not sure which package fits?", text: "Let's talk about your project." },
-    header: { label: "Packages", title: "Clear starting\npoints.", accent: "points.", intro: "Every project is quoted from its brief. These packages show where most projects begin." },
+    contactStrip: { enabled: false, title: "Not sure which package fits?", text: "Let's talk about your project." },
+    header: { label: "Packages", title: "Clear starting\npoints.", accent: "points.", intro: "" },   // intro hidden by the owner; was: "Every project is quoted from its brief. These packages show where most projects begin."
+    /* hidden by the owner (2026-10-26): the line under each package name, the "Not included" lists and the price note under the cards.
+       The texts stay in pricing.en / ro / de; set these back to true to show them again. */
+    showSubtitles: false, showExcluded: false, showNote: false,
     currency: "€",
     note: "Prices are starting points in EUR and exclude VAT where applicable. Your final quote follows the project brief.",
     /* PRICING PER LANGUAGE — the packages section reads pricing[active language] (en / ro / de).
@@ -1030,7 +1034,7 @@ window.ITECH_CONFIG = {
        projectUrl, showUrl }. Never put a client's email here.             */
   testimonialConfig: {
     showTestimonials: true,
-    header: { label: "Testimonials", title: "In their\nwords.", accent: "words.", intro: "Real feedback from businesses we've built for." },
+    header: { label: "Testimonials", title: "In their\nwords.", accent: "words.", intro: "" },   // intro hidden by the owner; was: "Real feedback from businesses we've built for."
     carouselEnabled: true,
     autoplay: false,
     autoplayMs: 9000,             // min 8000; pauses on hover / focus, stops after manual use
@@ -1063,7 +1067,7 @@ window.ITECH_CONFIG = {
 
   /* ── FAQ ───────────────────────────────────────────────────────────────── */
   faqConfig: {
-    header: { label: "FAQ", title: "Good\nto know.", accent: "know.", intro: "Anything else? Ask us in the project brief or send a quick message." },
+    header: { label: "FAQ", title: "Good\nto know.", accent: "know.", intro: "" },   // intro hidden by the owner; was: "Anything else? Ask us in the project brief or send a quick message."
     items: [
       { q: "How much does a website cost?", a: "It depends on the number of pages, the features and the level of design. Our packages show typical starting points, and the estimator gives you an approximate range in about a minute. You receive a fixed quote after we review your brief." },
       { q: "How long does a website take?", a: "A landing page usually takes a few weeks; a full business website or online store takes longer. You get a clear timeline before the project starts, and it depends partly on how quickly content is ready." },
