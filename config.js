@@ -138,7 +138,9 @@ window.ITECH_CONFIG = {
     // on reduced motion and when the visitor saves data. hideScene: hides the 3D mock-ups on the right
     // look: "aura" = centered cinematic hero over a background video; "strata" = split hero with artwork; "" = previous split layout with 3D scene
     look: "synapse",                  // "synapse" = full-screen film you scrub with the mouse + scrambling headline + watermark (current); "strata" / "aura" / "" = the other layouts
-    sy: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4", watermark: "iTECH" },
+    // films re-encoded with a keyframe on every frame (mouse scrubbing seeks without decoding the whole clip); srcMobile is used on screens <= 760px.
+    // original: https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4
+    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m.mp4", watermark: "iTECH" },
     //   previous look was: "strata"
     bg: "img/hero-bg-4k.webp?v=3",
     bgMobile: "img/hero-bg-mobile.webp?v=3",   // portrait picture used on phones (<= 760px)           // still background image of the first screen (hero.bg); remove it for the plain dark grid

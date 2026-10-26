@@ -151,7 +151,7 @@ R.hero = () => {
   return `<section class="hero${V ? ' has-video' : ''}${(V && V.hideScene) || S || SY ? ' no-scene' : ''}${SY ? ' hero-synapse' : ''}${h.look === 'aura' && !S ? ' hero-aura' : ''}${S ? ' hero-strata' : ''}" id="home" aria-labelledby="hero-title">
   ${h.look === 'aura' && !S ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
   ${V ? `<div class="hero-video" aria-hidden="true"><video muted loop playsinline preload="metadata"${V.poster ? ` poster="${esc(V.poster)}"` : ''}><source src="${esc(V.src)}" type="video/mp4"></video><span class="hero-video-shade"></span></div>` : ''}
-  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="auto"><source src="${esc(h.sy.src)}" type="video/mp4"></video></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div>` : ''}
+  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="auto"><source src="${esc(small() && h.sy.srcMobile || h.sy.src)}" type="video/mp4"></video></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div>` : ''}
   ${h.bg && !SY ? `<div class="hero-photo" aria-hidden="true"><picture>${h.bgMobile ? `<source media="(max-width:760px)" srcset="${esc(h.bgMobile)}">` : ''}<img src="${esc(h.bg)}" alt="" decoding="async" fetchpriority="high"></picture></div>` : ''}
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-grid">
@@ -1194,6 +1194,9 @@ function liveUnload(b) {
   if (!b.loaded && !b.loading) return;
   b.f.src = 'about:blank'; b.loaded = false; b.loading = false; b.on = undefined; b.box.classList.remove('loaded');
 }
+/* the cards share the page's main thread (same origin): nothing loads until the Work section is near the screen,
+   so the hero intro runs alone, and every card is paused while the section is off screen */
+let liveNear = false, liveNearIO = null;
 function liveSync() {
   const nc = navigator.connection || {};
   const stillOnly = reduced || nc.saveData;
@@ -1203,8 +1206,8 @@ function liveSync() {
     b.box.classList.remove('is-still');
     const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
     if (phoneLite && !active) { liveUnload(b); return; }
-    liveLoad(b, active ? 0 : 500 + n * 350);
-    liveSetActive(b, active);
+    if (liveNear) liveLoad(b, active ? 0 : 900 + n * 700);
+    liveSetActive(b, active && liveNear);
   });
 }
 function setupLive(root = document) {
@@ -1219,6 +1222,12 @@ function setupLive(root = document) {
     }
     liveBoxes.push(b);
   });
+  const sec = liveBoxes.length && liveBoxes[0].box.closest('section');
+  if (liveNearIO) { liveNearIO.disconnect(); liveNearIO = null; }
+  if (sec && 'IntersectionObserver' in window) {
+    liveNearIO = new IntersectionObserver(es => { const on = es[es.length - 1].isIntersecting; if (on !== liveNear) { liveNear = on; liveSync(); } }, { rootMargin: '60% 0px' });
+    liveNearIO.observe(sec);
+  } else liveNear = true;
   liveSync();
 }
 /* hero "synapse": the film is not played, it is scrubbed by horizontal mouse movement (delta based, 0.8 of the film per screen width);
@@ -1252,7 +1261,7 @@ function setupHeroSynapse() {
   v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
   let target = 0, shown = 0, lastX = null, lastMove = -1e9, dir = 1, vis = true, last = 0, raf = 0;
   const coarse = matchMedia('(pointer: coarse)').matches;
-  const apply = () => { if (!v.duration || v.seeking) return; if (Math.abs(v.currentTime - shown) > 1 / 90) v.currentTime = shown; };
+  const apply = () => { if (!v.duration || v.seeking) return; if (Math.abs(v.currentTime - shown) > 1 / 30) v.currentTime = shown; };   // the film is 24 fps: smaller seeks only re-decode the same frame
   v.addEventListener('seeked', apply);
   const onMove = e => { if (!vis || reduced || !v.duration) return; const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now(); target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8)); };
   addEventListener('mousemove', onMove);
