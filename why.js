@@ -131,7 +131,7 @@ function mount(root, C) {
     const w = world.clientWidth, h = world.clientHeight;
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     const defs = mk('defs', {});
-    defs.innerHTML = '<radialGradient id="wxNode"><stop offset="0" stop-color="#EAF4FF"/><stop offset=".4" stop-color="#76B6FF" stop-opacity=".7"/><stop offset="1" stop-color="#76B6FF" stop-opacity="0"/></radialGradient>';
+    defs.innerHTML = '<radialGradient id="wxNode"><stop offset="0" stop-color="#FFEAF4"/><stop offset=".4" stop-color="#FF6FB1" stop-opacity=".7"/><stop offset="1" stop-color="#FF6FB1" stop-opacity="0"/></radialGradient>';
     svg.appendChild(defs);
     panels.forEach((p, i) => {
       if (!shown(p)) return;

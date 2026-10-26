@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>securify</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Readex Pro',system-ui,-apple-system,sans-serif;background:#000;color:#fff;-webkit-font-smoothing:antialiased;text-transform:lowercase}
+a{color:inherit;text-decoration:none}
+.hero-title{letter-spacing:-0.04em;line-height:.95}
+
+.hero{position:relative;height:100vh;width:100%;overflow:hidden;background:#000}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.nav{position:absolute;z-index:20;top:0;left:0;right:0;padding:24px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.pill{background:rgba(23,23,23,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:999px}
+.brand{display:flex;align-items:center;gap:8px;padding:12px 24px 12px 16px;font-size:14px;font-weight:400;letter-spacing:-.025em;color:#fff}
+.brand svg{height:20px;width:20px;display:block}
+.links{display:none;align-items:center;gap:4px;padding:8px 12px}
+.links a{color:#d4d4d4;font-size:14px;padding:8px 20px;border-radius:999px;transition:color .15s}
+.links a:hover{color:#fff}
+.cta{background:#fff;color:#000;font-size:14px;font-weight:400;border-radius:999px;padding:12px 24px;transition:background-color .15s}
+.cta:hover{background:#e5e5e5}
+
+.content{position:relative;height:100%;width:100%}
+.hero-title.w{position:absolute;color:#fff;font-weight:500;font-size:14vw}
+.w1{left:16px;top:18%}
+.w2{right:16px;top:38%}
+.w3{left:18%;top:58%}
+.desc{position:absolute;left:24px;top:46%;max-width:240px;font-size:15px;line-height:1.375;color:rgba(255,255,255,.9)}
+
+.stat{position:absolute}
+.stat .row{display:flex;align-items:center;gap:12px}
+.stat .num{font-size:36px;line-height:1;font-weight:500;letter-spacing:-.025em}
+.stat .lbl{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
+.dv{display:none;height:1px;width:96px;background:rgba(255,255,255,.4)}
+.s1{right:24px;top:14%}
+.s1 .row{justify-content:flex-end}
+.s1 .lbl{text-align:right}
+.s1 .dv{transform:rotate(20deg)}
+.s2{left:24px;bottom:80px}
+.s2 .dv{transform:rotate(-20deg)}
+.s3{right:24px;bottom:64px}
+.s3 .dv{transform:rotate(-20deg)}
+.s3 .row{justify-content:flex-end}
+.s3 .lbl{text-align:right}
+.fade{pointer-events:none;position:absolute;bottom:0;left:0;right:0;height:192px;background:linear-gradient(to bottom,transparent,#000)}
+
+@media (min-width:768px){
+  .nav{padding:24px 40px 0}
+  .links{display:flex}
+  .hero-title.w{font-size:13vw}
+  .w1{left:40px}.w2{right:40px}.w3{left:28%}
+  .desc{left:40px}
+  .stat .num{font-size:48px}
+  .stat .lbl{font-size:14px}
+  .dv{display:block}
+  .s1{right:96px}
+  .s2{left:80px;bottom:96px}
+  .s3{right:80px;bottom:80px}
+}
+</style>
+</head>
+<body>
+<section class="hero">
+  <video class="bg" autoplay loop muted playsinline src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_063509_7d167302-4fd4-480b-8260-18ab572333d4.mp4"></video>
+
+  <nav class="nav">
+    <a class="pill brand" href="#"><svg viewBox="0 0 256 256" aria-hidden="true"><path fill="#ffffff" d="M 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 128 L 64 128 Z M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z M 128 64 L 128 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 Z M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 128 0 L 192 0 Z"/></svg><span>securify</span></a>
+    <div class="pill links"><a href="#">platform</a><a href="#">solutions</a><a href="#">company</a><a href="#">support</a></div>
+    <a class="cta" href="#">get started</a>
+  </nav>
+
+  <div class="content">
+    <h1 class="hero-title w w1">protect</h1>
+    <h1 class="hero-title w w2">your</h1>
+    <h1 class="hero-title w w3">data</h1>
+    <p class="desc">we guard your data with utmost care, so you can work with privacy everywhere</p>
+
+    <div class="stat s1"><div class="row"><span class="dv"></span><span class="num">+65k</span></div><p class="lbl">startups use</p></div>
+
+    <div class="fade"></div>
+
+    <div class="stat s2"><div class="row"><span class="num">+1.5b</span><span class="dv"></span></div><p class="lbl">gb data was protected</p></div>
+    <div class="stat s3"><div class="row"><span class="dv"></span><span class="num">+300k</span></div><p class="lbl">downloads</p></div>
+  </div>
+</section>
+</body>
+</html>

@@ -138,13 +138,21 @@ const projById = id => C.portfolioConfig.projects.find(p => p.id === id);
 /* ───────────────────────── sections ───────────────────────── */
 const R = {};
 
+const HC_ICON = {
+  graph: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="12" cy="17" r="2.6"/><path d="M8 8l3 6M16.2 7.6l-3 6.6M8.2 7l7.6-.6"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 5 13.5h6L10 21l9-11h-6z"/></svg>'
+};
 R.hero = () => {
   const h = C.hero, lines = h.headline.split('\n');
-  const heroMock = h.mock || { layout: 'split', bg: '#0E1015', fg: '#F4F6FA', accent: '#76B6FF', muted: '#8B90A0', font: 'sans', brand: 'NORTHLINE', kicker: 'Architecture studio', headline: 'Designed\nto be seen.', cta: 'Start a project', nav: ['Work', 'Studio', 'Journal', 'Contact'] };
-  const V = h.video && h.video.enabled !== false && h.video.src ? h.video : null;
-  return `<section class="hero${V ? ' has-video' : ''}${V && V.hideScene ? ' no-scene' : ''}${h.look === 'aura' ? ' hero-aura' : ''}" id="home" aria-labelledby="hero-title">
-  ${h.look === 'aura' ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
+  const heroMock = h.mock || { layout: 'split', bg: '#150E11', fg: '#FAF4F7', accent: '#FF6FB1', muted: '#8B90A0', font: 'sans', brand: 'NORTHLINE', kicker: 'Architecture studio', headline: 'Designed\nto be seen.', cta: 'Start a project', nav: ['Work', 'Studio', 'Journal', 'Contact'] };
+  const S = h.look === 'strata' && h.art && h.art.src;
+  const SY = h.look === 'synapse' && h.sy && h.sy.src;
+  const V = !S && !SY && h.video && h.video.enabled !== false && h.video.src ? h.video : null;
+  return `<section class="hero${V ? ' has-video' : ''}${(V && V.hideScene) || S || SY ? ' no-scene' : ''}${SY ? ' hero-synapse' : ''}${h.look === 'aura' && !S ? ' hero-aura' : ''}${S ? ' hero-strata' : ''}" id="home" aria-labelledby="hero-title">
+  ${h.look === 'aura' && !S ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
   ${V ? `<div class="hero-video" aria-hidden="true"><video muted loop playsinline preload="metadata"${V.poster ? ` poster="${esc(V.poster)}"` : ''}><source src="${esc(V.src)}" type="video/mp4"></video><span class="hero-video-shade"></span></div>` : ''}
+  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="auto"><source src="${esc(h.sy.src)}" type="video/mp4"></video></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div>` : ''}
+  ${h.bg && !SY ? `<div class="hero-photo" aria-hidden="true"><picture>${h.bgMobile ? `<source media="(max-width:760px)" srcset="${esc(h.bgMobile)}">` : ''}<img src="${esc(h.bg)}" alt="" decoding="async" fetchpriority="high"></picture></div>` : ''}
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-grid">
     <div class="hero-copy">
@@ -157,6 +165,7 @@ R.hero = () => {
       </div>
       <p class="cred mono">${h.credibility.map(c => `<span>${esc(c)}</span>`).join('')}</p>
     </div>
+    ${S ? `<div class="hero-art" aria-hidden="true"><div class="art-mask"><video muted loop playsinline preload="metadata" poster="${esc(h.art.poster || '')}"><source src="${esc(h.art.src)}" type="video/mp4"></video></div>${(h.cards || []).slice(0, 2).map((k, i) => `<div class="hero-card hc${i + 1} glass"><i class="hc-ic">${HC_ICON[k.icon] || HC_ICON.graph}</i><div><p class="hc-k mono">${esc(T(k.kicker))}</p><p class="hc-t">${nl(T(k.title))}</p></div></div>`).join('')}</div>` : ''}
     <div class="hero-scene" id="scene" aria-hidden="true">
       <div class="rig" id="rig">
         <div class="floor"></div>
@@ -167,7 +176,7 @@ R.hero = () => {
           <span class="app-load"><i></i></span>
         </div></div></div></div></div>
         <div class="layer ly-main" data-z="0"><div class="float" style="--fd:10s;--fdl:-2s"><div class="browser"><div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">${esc(h.mockupUrl)}</span></div><div class="browser-body"><div class="mock-box">${mockHTML(heroMock)}</div></div></div></div></div>
-        <div class="layer ly-tokens" data-z="170"><div class="float" style="--fd:8s;--fdl:-1s"><div class="ui-card"><span class="mono">Color tokens</span><div class="sw"><i style="background:#08090C"></i><i style="background:#F7F8FA"></i><i style="background:#76B6FF"></i><i style="background:#9787FF"></i><i style="background:#7AE7E7"></i></div><div class="type-spec"><b>Aa</b><span class="mono" style="margin:0">Geist · 64 / 72</span></div></div></div></div>
+        <div class="layer ly-tokens" data-z="170"><div class="float" style="--fd:8s;--fdl:-1s"><div class="ui-card"><span class="mono">Color tokens</span><div class="sw"><i style="background:#09080B"></i><i style="background:#FAF7F8"></i><i style="background:#FF6FB1"></i><i style="background:#C58BFF"></i><i style="background:#FFB3D6"></i></div><div class="type-spec"><b>Aa</b><span class="mono" style="margin:0">Geist · 64 / 72</span></div></div></div></div>
         <div class="layer ly-comp" data-z="120"><div class="float" style="--fd:9s;--fdl:-4s"><div class="ui-card"><span class="mono">Breakpoints</span><div class="bp"><span class="bp-i"><i class="d-m"></i>390</span><span class="bp-i"><i class="d-t"></i>834</span><span class="bp-i on"><i class="d-d"></i>1440</span></div><p class="bp-ok">✓ Designed for every screen</p></div></div></div>
         <div class="layer ly-code" data-z="210"><div class="float" style="--fd:12s;--fdl:-6s"><div class="ui-card"><span class="mono">hero.tsx</span><div class="code"><span class="k">export function</span> <span class="t">Hero</span>() {
   <span class="k">return</span> &lt;<span class="t">Section</span>
@@ -213,10 +222,11 @@ function aureaArt() {
     <rect x="40" y="150" width="320" height="6" fill="#EEE8DD"/>
     <rect x="70" y="92" width="250" height="14" fill="#F8F4EE"/><rect x="92" y="106" width="206" height="44" fill="#EFE9DF"/>
     <rect x="104" y="112" width="130" height="32" fill="#2F3436" opacity=".88"/><rect x="246" y="106" width="8" height="44" fill="#E4DCCF"/>
-    <rect x="84" y="160" width="190" height="9" fill="#8DB0B4"/>
+    <rect x="84" y="160" width="190" height="9" fill="#B48D9F"/>
     <circle cx="332" cy="130" r="18" fill="#6F7462" opacity=".55"/><circle cx="350" cy="138" r="12" fill="#6F7462" opacity=".5"/><circle cx="52" cy="136" r="12" fill="#6F7462" opacity=".45"/></svg>`;
 }
 function desktopSite(p) {
+  if (p.live) return `<div class="w3-live" data-name="${esc(p.name)}" data-live="${esc(p.live)}"><iframe title="${esc(p.name)}" tabindex="-1" allow="autoplay" sandbox="allow-scripts allow-same-origin"></iframe></div>`;
   if (p.desktopPreview) {
     const c = p.previewCrop;
     if (!c) return `<img class="w3-img" src="${esc(p.desktopPreview)}" alt="" loading="eager" decoding="async" fetchpriority="low">`;
@@ -290,6 +300,7 @@ function w3Layout() {
   stage.classList.toggle('flat', flat);
   const cnt = $('#w3Count'); if (cnt) cnt.textContent = `${pad2(a + 1)} / ${pad2(N)}`;
   cards.forEach(c => { const i = +c.dataset.i; c.classList.toggle('is-active', i === a); const v = $('.w3-view', c); if (v) v.tabIndex = (!flat && i === a) ? 0 : -1; });
+  liveSync();
   if (flat) { cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; c.style.zIndex = ''; c.classList.remove('is-side', 'is-hover'); }); return; }
   const W = cards[0].offsetWidth, sep = S.w3.sep, half = Math.floor(N / 2);
   cards.forEach(c => {
@@ -340,6 +351,7 @@ function openShowcase(i) {
       <div class="cs"><h4>${esc(T('Services'))}</h4><ul class="tags">${(p.services || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <p class="muted" style="font-size:13.5px">${esc(T('This is a concept project created by iTECH to show a design direction. It is not client work.'))}</p>
       <button class="btn btn-primary" data-act="go" data-target="brief">${esc(T('Start a similar project'))} ${I.arrow}</button></div></div></div>`);
+  setupLive(document.querySelector('.w3m') || document);
 }
 
 R.services = () => {
@@ -822,7 +834,7 @@ function setupFcta() {
   row.onpointerleave = () => { mag.style.transform = ''; };
 }
 function afterRender() {
-  observeReveals(); setupScene(); setupW3(); setupFcta(); setupOffscreenPause(); setupHeroVideo();
+  observeReveals(); setupScene(); setupW3(); setupFcta(); setupOffscreenPause(); setupHeroVideo(); setupHeroSynapse(); setupLive();
   Object.keys(EXT).forEach(k => { const el = document.querySelector(`[data-ext="${k}"]`); if (el && EXT[k].mount) EXT[k].mount(el, C); });
   briefGo(S.brief.step, false); markEditable(); updateNavInd(); onScroll();
 }
@@ -1104,7 +1116,7 @@ let layers = [], rig = null, scene = null, fstack = null, fghosts = [];
 let heroVidIO = null;
 function setupHeroVideo() {
   if (heroVidIO) { heroVidIO.disconnect(); heroVidIO = null; }
-  const v = $('.hero-video video'); if (!v) return;
+  const v = $('.hero-video video') || $('.hero-art video'); if (!v) return;
   const nc = navigator.connection || {}, still = reduced || nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '');
   if (still) { v.preload = 'none'; return; }
   v.preload = 'auto';
@@ -1112,6 +1124,149 @@ function setupHeroVideo() {
   if (!('IntersectionObserver' in window)) return play();
   heroVidIO = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) play(); else v.pause(); }), { threshold: .05 });
   heroVidIO.observe(v);
+}
+/* live project pages (project.live): a page from projects/ runs inside the card, scaled to the card's width.
+   It loads once the card is near the screen; phones in lite mode / data saver / reduced motion keep a still dark card. */
+const LIVE_W = 1440;
+/* the active live card scrolls its own page: down slowly, a pause, back up. Pauses when the card is not the active one,
+   when it is off screen or the tab is hidden; not used with reduced motion or inside the detail window (the visitor scrolls there). */
+const liveRuns = new Set();
+let liveRaf = 0;
+function liveAuto(box, f) {
+  if (reduced) return;
+  const st = { box, f, ph: 'wait', t0: 0, from: 0, y: 0, last: 0, wait: performance.now() + 3200, vis: true };
+  new IntersectionObserver(es => { st.vis = es[es.length - 1].isIntersecting; }).observe(box);
+  /* no scrollbar inside the card: the page should read as a film, not as a scrolled page */
+  f.addEventListener('load', () => { try { const d = f.contentDocument, s = d.createElement('style'); s.textContent = 'html{scrollbar-width:none}::-webkit-scrollbar{display:none}'; d.head.appendChild(s); } catch (e) { } });
+  liveRuns.add(st);
+  if (!liveRaf) liveRaf = requestAnimationFrame(liveTick);
+}
+const liveEase = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;   // easeInOutCubic
+function liveTick(now) {
+  liveRaf = liveRuns.size ? requestAnimationFrame(liveTick) : 0;
+  if (document.hidden) return;
+  liveRuns.forEach(s => {
+    if (!s.box.isConnected) { liveRuns.delete(s); return; }
+    const card = s.box.closest('.w3-card'), w = s.f.contentWindow;
+    if (!w || !w.document || !w.document.body) return;
+    const on = s.vis && card && card.classList.contains('is-active');
+    if (!on) { s.last = 0; return; }
+    if (now < s.wait) return;
+    const max = Math.max(0, w.document.documentElement.scrollHeight - w.innerHeight);
+    /* one smooth travel (about 430 px/s on average, eased at both ends), a short hold, a quicker glide back */
+    const dur = s.ph === 'down' ? Math.max(6000, max / .43) : s.ph === 'up' ? 2600 : 0;
+    if (s.ph === 'wait') { s.ph = 'down'; s.t0 = now; s.from = 0; }
+    if (s.ph === 'down' || s.ph === 'up') {
+      const p = Math.min(1, (now - s.t0) / dur), e = liveEase(p);
+      s.y = s.ph === 'down' ? max * e : max * (1 - e);
+      if (p >= 1) { if (s.ph === 'down') { s.ph = 'hold'; s.wait = now + 1400; } else { s.ph = 'wait'; s.wait = now + 1200; } }
+      w.scrollTo(0, s.y);
+    } else if (s.ph === 'hold') { s.ph = 'up'; s.t0 = now; }
+  });
+}
+const liveBoxes = [];
+const livePausedCss = '.itech-paused *{animation-play-state:paused!important}html{scrollbar-width:none}::-webkit-scrollbar{display:none}';
+/* one card plays at a time: the others sit on their first frame (media and CSS animations paused), so nothing competes for the CPU.
+   Desktops load every card (staggered, the active one first); phones in lite mode / data saver load only the active card. */
+function liveSetActive(b, on) {
+  const f = b.f, w = f.contentWindow; let d; try { d = w && w.document; } catch (e) { return; }
+  if (!d || !d.body || !b.loaded) return;
+  if (!d.getElementById('itech-live-css')) { const s = d.createElement('style'); s.id = 'itech-live-css'; s.textContent = livePausedCss; d.head.appendChild(s); }
+  d.documentElement.classList.toggle('itech-paused', !on);
+  const was = b.on; b.on = on;
+  if (on && !was) {   /* a clean start every time a card becomes the active one */
+    try { w.scrollTo(0, 0); } catch (e) { }
+    $$('video[autoplay]', d).forEach(v => { try { v.currentTime = 0; } catch (e) { } });
+  }
+  $$('video[autoplay]', d).forEach(v => { if (on) { const p = v.play(); if (p && p.catch) p.catch(() => { }); } else v.pause(); });
+  if (w.__itechActive) { try { w.__itechActive(on); } catch (e) { } }
+}
+function liveLoad(b, delay) {
+  if (b.loading || b.loaded) return;
+  b.loading = true;
+  setTimeout(() => {
+    b.f.addEventListener('load', () => { if (b.f.getAttribute('src') === 'about:blank') return; b.loaded = true; b.loading = false; b.box.classList.add('loaded'); b.on = undefined; liveSync(); }, { once: true });
+    b.f.src = b.box.dataset.live + (b.modal ? '' : '?card=1');
+    if (!b.modal && !b.auto) { b.auto = true; liveAuto(b.box, b.f); }
+  }, delay);
+}
+function liveUnload(b) {
+  if (!b.loaded && !b.loading) return;
+  b.f.src = 'about:blank'; b.loaded = false; b.loading = false; b.on = undefined; b.box.classList.remove('loaded');
+}
+function liveSync() {
+  const nc = navigator.connection || {};
+  const stillOnly = reduced || nc.saveData;
+  const phoneLite = innerWidth <= 760 || (nc.effectiveType && /(^|-)(2|3)g$/.test(nc.effectiveType));   // phones / slow links: only the active card is loaded
+  liveBoxes.filter(b => b.box.isConnected && !b.modal).forEach((b, n) => {
+    if (stillOnly) { b.box.classList.add('is-still'); return; }
+    b.box.classList.remove('is-still');
+    const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
+    if (phoneLite && !active) { liveUnload(b); return; }
+    liveLoad(b, active ? 0 : 500 + n * 350);
+    liveSetActive(b, active);
+  });
+}
+function setupLive(root = document) {
+  $$('.w3-live', root).forEach(box => {
+    const f = $('iframe', box); if (!f || box.dataset.ready) return; box.dataset.ready = '1';
+    const fit = () => { const w = box.clientWidth; if (!w) return; const s = w / LIVE_W; f.style.width = LIVE_W + 'px'; f.style.height = (box.clientHeight / s) + 'px'; f.style.transform = `scale(${s})`; };
+    fit(); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(box);
+    const b = { box, f, modal: !!box.closest('.w3m') };
+    if (b.modal) {   /* detail window: a normal, interactive page */
+      f.addEventListener('load', () => box.classList.add('loaded'), { once: true });
+      f.src = box.dataset.live; return;
+    }
+    liveBoxes.push(b);
+  });
+  liveSync();
+}
+/* hero "synapse": the film is not played, it is scrubbed by horizontal mouse movement (delta based, 0.8 of the film per screen width);
+   without a mouse (touch) or after 3 s of stillness it drifts back and forth by itself. The headline lines scramble in once. */
+let syCleanup = null;
+const SY_CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~|}{[]:;?><';
+function scrambleIn(el, delay) {
+  const nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())) nodes.push({ n, t: n.nodeValue });
+  const total = nodes.reduce((s, o) => s + o.t.length, 0); let rev = 0;
+  nodes.forEach(o => { o.n.nodeValue = ''; });
+  const timers = [];
+  timers.push(setTimeout(() => {
+    const iv = setInterval(() => {
+      rev += .5; let pos = 0;
+      nodes.forEach(o => { let out = ''; for (let i = 0; i < o.t.length; i++, pos++) { const c = o.t[i]; out += (c === ' ' || pos < rev) ? c : pos < rev + 3 ? SY_CH[Math.floor(Math.random() * SY_CH.length)] : ''; } o.n.nodeValue = out; });
+      if (rev >= total + 1) { clearInterval(iv); nodes.forEach(o => { o.n.nodeValue = o.t; }); }
+    }, 25); timers.push(iv);
+  }, delay));
+  return () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); nodes.forEach(o => { o.n.nodeValue = o.t; }); };
+}
+function setupHeroSynapse() {
+  if (syCleanup) { syCleanup(); syCleanup = null; }
+  const box = $('.sy-video'), v = box && $('video', box); if (!v) return;
+  const cleans = [];
+  if (!reduced) $$('.hero-synapse .hero-title .ln>span').forEach((el, i) => cleans.push(scrambleIn(el, 200 + i * 300)));
+  /* keep the clip in memory: seeking from the network is what makes scrubbing lag */
+  const nc = navigator.connection || {};
+  if (nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // 5 MB film: skipped on data saver / 2G (the headline still animates)
+  fetch($('source', v).src).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => { v.src = URL.createObjectURL(b); v.load(); }).catch(() => { });
+  v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
+  let target = 0, shown = 0, lastX = null, lastMove = -1e9, dir = 1, vis = true, last = 0, raf = 0;
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  const apply = () => { if (!v.duration || v.seeking) return; if (Math.abs(v.currentTime - shown) > 1 / 90) v.currentTime = shown; };
+  v.addEventListener('seeked', apply);
+  const onMove = e => { if (!vis || reduced || !v.duration) return; const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now(); target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8)); };
+  addEventListener('mousemove', onMove);
+  const tick = now => {
+    raf = requestAnimationFrame(tick);
+    if (!vis || document.hidden || !v.duration) { last = now; return; }
+    const dt = Math.min(64, now - (last || now)); last = now;
+    if (!reduced && (coarse || now - lastMove > 3000)) { target += dir * dt / 1000 * v.duration * .1; if (target >= v.duration) { target = v.duration; dir = -1; } else if (target <= 0) { target = 0; dir = 1; } }
+    shown += (target - shown) * .25; apply();
+  };
+  raf = requestAnimationFrame(tick);
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; }, { threshold: .05 }) : null;
+  if (io) io.observe(box);
+  syCleanup = () => { removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); if (io) io.disconnect(); cleans.forEach(f => f()); };
 }
 function setupScene() {
   rig = $('#rig'); scene = $('#scene'); layers = $$('#rig .layer').map(el => ({ el, z: +el.dataset.z || 0 }));

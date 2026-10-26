@@ -13,7 +13,7 @@ window.ITECH_CONFIG = {
     ogDescription: "Custom-designed, fast, responsive websites for businesses that want to look as good online as they are.",
     ogImage: "https://itechdigitalstudio.com/img/og-image.jpg",   // absolute URL, 1200×630
     favicon: "",            // PLACEHOLDER: URL of your favicon
-    themeColor: "#08090C"
+    themeColor: "#09080B"
   },
 
   /* ── BRAND ─────────────────────────────────────────────────────────────── */
@@ -35,16 +35,16 @@ window.ITECH_CONFIG = {
 
   /* ── THEME TOKENS (applied as CSS variables) ───────────────────────────── */
   themeConfig: {
-    backgroundPrimary: "#08090C",
-    backgroundSecondary: "#111318",
-    cardBackground: "#15171D",
-    textPrimary: "#F7F8FA",
+    backgroundPrimary: "#09080B",
+    backgroundSecondary: "#111015",
+    cardBackground: "#161319",
+    textPrimary: "#FAF7F8",
     textSecondary: "#A5A9B2",
-    accentPrimary: "#76B6FF",
-    accentSecondary: "#9787FF",
-    accentHighlight: "#7AE7E7",
-    borderColor: "rgba(247,248,250,0.09)",
-    gradientPrimary: "linear-gradient(100deg, #76B6FF 0%, #9787FF 100%)",
+    accentPrimary: "#FF6FB1",
+    accentSecondary: "#C58BFF",
+    accentHighlight: "#FFB3D6",
+    borderColor: "rgba(250,247,248,0.09)",
+    gradientPrimary: "linear-gradient(100deg, #FF6FB1 0%, #C58BFF 100%)",
     fontHeading: "'Geist', 'Helvetica Neue', Helvetica, Arial, sans-serif",
     fontBody: "'Geist', 'Helvetica Neue', Helvetica, Arial, sans-serif",
     fontAccent: "'Instrument Serif', Georgia, 'Times New Roman', serif",
@@ -70,10 +70,12 @@ window.ITECH_CONFIG = {
 
   /* ── SECTIONS: order + on/off ──────────────────────────────────────────── */
   sections: {
-    order: ["hero", "experience", "trust", "work", "builder", "services", "why", "websiteTypes", "packages", "addons",
-            "estimator", "process", "comparison", "about", "testimonials", "faq",
+    order: ["hero", "work", "synapse", "builder", "experience", "trust", "services", "why", "websiteTypes", "packages", "addons",
+            "estimator", "process", "comparison", "about", "testimonials", "synapseFoot", "faq",
             "projectBrief", "contact", "finalCTA"],
     hero: { enabled: true },
+    synapse: { enabled: true },       // the story after the hero (synapse.js): cinematic text, numbers, method, three steps; copy in synapseConfig
+    synapseFoot: { enabled: true },   // film footer at the end (synapse.js)
     experience: { enabled: false },   // removed: its video now plays in the hero   // Digital Experience scene (experience.js); settings in digitalExperienceConfig
     trust: { enabled: false },
     work: { enabled: true, hideNumber: true },   // hideNumber: hides the "01" label but keeps the line and the numbering of other sections
@@ -118,13 +120,35 @@ window.ITECH_CONFIG = {
     cta: { label: "Start a project", target: "brief" }
   },
 
+  /* ── SYNAPSE SECTIONS (synapse.js) ─────────────────────────────────────────
+     Films load when their section is near the screen and play only while visible.
+     The numbers are facts about the site: 6 website types (builder), 7 process steps, 3 languages. */
+  synapseConfig: {
+    videos: {
+      metrics: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589.mp4",
+      foot: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4"
+    },
+    metrics: { subtitle: "At a glance", items: [["6", "Website types"], ["7", "Steps from idea to launch"], ["3", "Languages: RO · EN · DE"]] },
+    foot: { text: "Websites built to sell: custom-made, fast and ready for every screen.", copy: "© 2026 iTECH Digital Studio. All rights reserved." }
+  },
+
   /* ── HERO ──────────────────────────────────────────────────────────────── */
   hero: {
     // background video of the first screen: loops muted; poster = still frame shown while it loads,
     // on reduced motion and when the visitor saves data. hideScene: hides the 3D mock-ups on the right
-    // look: "aura" = centered cinematic hero (shiny gradient accent word, pill CTA); "" = previous split layout
-    look: "aura",
-    video: { enabled: true, src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4", poster: "", hideScene: true },   // poster left empty: img/experience-poster.jpg is a still of the OLD video and flashed on every language switch; previous: img/experience-video-lite.mp4 (before that img/hero-video.mp4 + img/hero-poster.jpg)
+    // look: "aura" = centered cinematic hero over a background video; "strata" = split hero with artwork; "" = previous split layout with 3D scene
+    look: "synapse",                  // "synapse" = full-screen film you scrub with the mouse + scrambling headline + watermark (current); "strata" / "aura" / "" = the other layouts
+    sy: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4", watermark: "iTECH" },
+    //   previous look was: "strata"
+    bg: "img/hero-bg-4k.webp?v=3",
+    bgMobile: "img/hero-bg-mobile.webp?v=3",   // portrait picture used on phones (<= 760px)           // still background image of the first screen (hero.bg); remove it for the plain dark grid
+    // look: "strata" = left copy + glowing artwork on the right with two glass cards (hero.art / hero.cards); the background video below is not used by it
+    art: { src: "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/435a4fe7-e43b-4e7c-af78-0be083e73569.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/782a4a52-4c1e-4471-bb0c-aa232927f4a6.webp" },
+    cards: [
+      { icon: "graph", kicker: "Design", title: "Custom-made,\nnever a template." },
+      { icon: "bolt", kicker: "Launch", title: "Fast, responsive,\nbuilt to convert." }
+    ],
+    video: { enabled: false, src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4", poster: "", hideScene: true },   // poster left empty: img/experience-poster.jpg is a still of the OLD video and flashed on every language switch; previous: img/experience-video-lite.mp4 (before that img/hero-video.mp4 + img/hero-poster.jpg)
     eyebrow: "Web design & development studio",
     headline: "We build\nwebsites\nthat sell.",
     accentWord: "sell.",
@@ -134,7 +158,7 @@ window.ITECH_CONFIG = {
     credibility: ["Strategy", "Design", "Development", "Launch"],
     mockupUrl: "yourbrand.com",
     // website shown in the hero browser; art: "laptop" draws a code-editor laptop on the right
-    mock: { layout: "split", art: "laptop", bg: "#0E1015", fg: "#F4F6FA", accent: "#76B6FF", muted: "#8B90A0", font: "sans", brand: "NORTHLINE", kicker: "Architecture studio", headline: "Designed\nto be seen.", cta: "Start a project", nav: ["Work", "Studio", "Journal", "Contact"] },
+    mock: { layout: "split", art: "laptop", bg: "#150E11", fg: "#FAF4F7", accent: "#FF6FB1", muted: "#8B90A0", font: "sans", brand: "NORTHLINE", kicker: "Architecture studio", headline: "Designed\nto be seen.", cta: "Start a project", nav: ["Work", "Studio", "Journal", "Contact"] },
     // iTECH client interface shown on the hero phone
     phone: { kicker: "Your vision. Our creation.", headline: "We build\nwebsites\nthat sell.", projectLabel: "Your project", projectName: "Brand website", progress: 68,
              stages: [ { label: "Strategy", state: "done" }, { label: "Design", state: "done" }, { label: "Development", state: "now" }, { label: "Launch", state: "next" } ],
@@ -157,7 +181,7 @@ window.ITECH_CONFIG = {
     trailSpeed: 1,              // speed of light along the trails
     lightIntensity: 1,          // brightness of trails and glow
     scrollLength: 2.2,          // section height in screens (desktop) — lower = faster scroll story
-    colors: { primary: "#76B6FF", secondary: "#8A9CFF", accent: "#9787FF", white: "#E8F0FF" },
+    colors: { primary: "#FF6FB1", secondary: "#FF8AC1", accent: "#C58BFF", white: "#FFE8F3" },
     text: {
       eyebrow: "The iTECH experience",
       headline: "One idea.\nEvery screen.",
@@ -198,7 +222,7 @@ window.ITECH_CONFIG = {
     designSystem: {
       enabled: true, focusLabel: "Design system", title: "Design system",
       steps: ["Strategy", "Design", "Development", "Launch"], activeStep: 1,
-      swatches: ["#08090C", "#76B6FF", "#9787FF", "#F7F8FA"],
+      swatches: ["#09080B", "#FF6FB1", "#C58BFF", "#FAF7F8"],
       fonts: ["Geist", "Instrument Serif"], components: ["Book now", "Learn more"]
     },
     mobileWebsite: { enabled: true, focusLabel: "Mobile experience" },
@@ -235,13 +259,14 @@ window.ITECH_CONFIG = {
     mobileEnabled: false      // false = swipe gallery on phones (recommended)
   },
   portfolioProjects: [
+    /* the 5 static picture projects (Savore, IronFit, Lumident, Noble, CleanRide) are hidden with enabled: false - set it back to true to bring them back */
     /* desktopPreview: the project image (file in img/). scene: true shows it
        as a full photo card (no browser bar); previewCrop: the part shown.
        mobilePhotoCrop: the part used as the photo of the phone version.
        mobileStyle: "serif" | "bold" for the phone preview. */
     {
       id: "restaurant", name: "Savore Restaurant", slug: "savore", category: "Restaurant", industry: "Restaurant · Fine dining", type: "Restaurant & reservations website", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "serif",
       description: "A candlelit website for a fine-dining restaurant: signature dishes, the wine list and a table booked in a few taps.",
       direction: "Deep black, warm gold and glowing food photography. An elegant serif, generous spacing and one clear reservation path.",
       services: ["Brand direction", "UI/UX design", "Web development", "Reservations"],
@@ -252,7 +277,7 @@ window.ITECH_CONFIG = {
     },
     {
       id: "gym", name: "IronFit Gym", slug: "ironfit", category: "Fitness", industry: "Fitness · Personal training", type: "Gym & coaching website", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "bold",
       description: "A high-energy training brand: programs, personal coaching and a direct path to a first session.",
       direction: "Black, steel grey and a warm amber accent. Heavy uppercase type and dramatic, low-key gym photography.",
       services: ["Brand direction", "UI/UX design", "Web development", "Booking"],
@@ -263,18 +288,18 @@ window.ITECH_CONFIG = {
     },
     {
       id: "dental", name: "Lumident Dental Clinic", slug: "lumident", category: "Healthcare", industry: "Healthcare · Dental clinic", type: "Clinic & online booking website", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "serif",
       description: "A bright, reassuring site for a modern dental clinic. Treatments are explained clearly and an appointment is one tap away.",
       direction: "Soft white, marble grey and deep navy. Light-filled photography and a refined serif that feels trustworthy, not clinical.",
       services: ["Brand direction", "UI/UX design", "Web development", "Online booking"],
       thumbnail: "", desktopPreview: "img/work-lumident.webp", mobilePreview: "",
       previewCrop: { x: 0, y: 0, w: 1672, h: 941, sourceWidth: 1672 }, mobilePhotoCrop: { x: 780, y: 250, w: 520, h: 390, sourceWidth: 1672 },
-      accentColor: "#14202B", backgroundColor: "#F4F2EE", textColor: "#14202B",
+      accentColor: "#2B141F", backgroundColor: "#F4F2EE", textColor: "#2B141F",
       site: { brand: "LUMIDENT", eyebrow: "Dental clinic", headline: "A healthier,\nbrighter smile.", cta: "Book an appointment", meta: ["Modern technology", "Aesthetic treatments", "Experienced team"] }
     },
     {
       id: "barber", name: "Noble Barbershop", slug: "noblebarber", category: "Grooming", industry: "Grooming · Barbershop", type: "Barbershop & booking website", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "serif",
       description: "A premium grooming brand site: haircuts, beard work and products, with booking always one tap away.",
       direction: "Warm black, brass gold and moody tungsten light. Classic serif capitals with a confident, timeless tone.",
       services: ["Brand direction", "UI/UX design", "Web development", "Booking"],
@@ -285,7 +310,7 @@ window.ITECH_CONFIG = {
     },
     {
       id: "carwash", name: "CleanRide Detailing", slug: "cleanride", category: "Automotive", industry: "Automotive · Car care", type: "Car wash & detailing website", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "bold",
       description: "A sleek website for a premium car wash and detailing studio: packages, results and online booking.",
       direction: "Gloss black, cool reflections and a soft champagne accent. Clean sans-serif type and high-contrast, wet-look photography.",
       services: ["Brand direction", "UI/UX design", "Web development", "Online booking"],
@@ -293,6 +318,73 @@ window.ITECH_CONFIG = {
       previewCrop: { x: 0, y: 0, w: 1670, h: 942, sourceWidth: 1670 }, mobilePhotoCrop: { x: 850, y: 270, w: 480, h: 380, sourceWidth: 1670 },
       accentColor: "#D9B98A", backgroundColor: "#0A0B0D", textColor: "#F2F2EE",
       site: { brand: "CLEANRIDE", eyebrow: "Premium car wash & detailing", headline: "More than\na car wash.", cta: "Book an appointment", meta: ["Premium products", "Professional team", "Longer protection"] }
+    },
+    {
+      /* live: a self-contained page in projects/ shown running inside the card (instead of a picture) */
+      id: "petalyx", name: "Petalyx", slug: "petalyx", category: "SaaS", industry: "SaaS · AI analytics", type: "SaaS product page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      live: "projects/petalyx.html",
+      description: "A product page for an AI analytics tool: a cinematic hero, results that count up as you scroll and a clear three-step explanation that ends in sign-up.",
+      direction: "A soft cherry-blossom sky with olive and lime accents. Smooth scroll motion keeps a technical product friendly.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#B4CD52", backgroundColor: "#FFFFFF", textColor: "#121410",
+      site: { brand: "PETALYX", eyebrow: "AI benchmarking", headline: "Benchmark the impact of\nall your AI staff.", cta: "Start for $0", meta: ["Time freed", "Success rates", "Reliability"] }
+    },
+    {
+      id: "prmpt", name: "prmpt", slug: "prmpt", category: "Fashion", industry: "Fashion · Archive store", type: "Fashion store landing page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      live: "projects/prmpt.html",
+      description: "A fashion archive store: a film you turn with the cursor, then a black gallery where each piece scales in as you scroll, ending on one clear buy button.",
+      direction: "Pure black and white with oversized type and a custom cursor. The product leads and the interface stays out of the way.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#FFFFFF", backgroundColor: "#000000", textColor: "#FFFFFF",
+      site: { brand: "PRMPT", eyebrow: "Archive collection", headline: "Archive collection\n\"PROMPT\"", cta: "view", meta: ["Scroll gallery", "Video scrub", "Custom cursor"] }
+    },
+    {
+      id: "securify", name: "securify", slug: "securify", category: "SaaS", industry: "SaaS · Data security", type: "Cybersecurity landing page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      live: "projects/securify.html",
+      description: "A confident landing page for a security product: a full-screen film, three giant words and three proof numbers, with one clear sign-up path.",
+      direction: "Pure black and white, a floating pill navigation and huge lowercase type that cuts across the film.",
+      services: ["Brand direction", "UI/UX design", "Web development"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#FFFFFF", backgroundColor: "#000000", textColor: "#FFFFFF",
+      site: { brand: "SECURIFY", eyebrow: "Data security", headline: "protect\nyour data", cta: "get started", meta: ["+65k startups", "+1.5b gb protected", "+300k downloads"] }
+    },
+    {
+      id: "vaultshield", name: "VaultShield", slug: "vaultshield", category: "SaaS", industry: "SaaS · Password manager", type: "Password-manager landing page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      live: "projects/vaultshield.html",
+      description: "A calm, trustworthy page for a password manager: one clear promise, small icons that explain it at a glance and a single strong button.",
+      direction: "Soft neutral film, deep navy type and one violet accent. Rounded pills, a slide-in mobile menu and gentle entrance motion.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#7342E2", backgroundColor: "#F2F2EE", textColor: "#371927",
+      site: { brand: "VAULTSHIELD", eyebrow: "Password manager", headline: "Lock down your\npasswords", cta: "Get it free", meta: ["Unbreakable storage", "One-tap access", "Pro-grade tools"] }
+    },
+    {
+      id: "aurai", name: "Aurai", slug: "aurai", category: "Wellness", industry: "Wellness · AI companion", type: "Wellness app landing page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      live: "projects/aurai.html",
+      description: "A quiet, full-screen page for a wellness app: a soft headline, a glass sign-up field and three benefits, built to collect early subscribers.",
+      direction: "No heavy overlay: the film breathes and the interface sits on it as frosted glass with light serif type.",
+      services: ["Brand direction", "UI/UX design", "Web development"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#FFFFFF", backgroundColor: "#000000", textColor: "#FFFFFF",
+      site: { brand: "AURAI", eyebrow: "Wellness companion", headline: "Your calm is\nalways within.", cta: "Join the list", meta: ["Smart Therapy", "Real-time Healing", "Insights into outcomes"] }
+    },
+    {
+      id: "looksmith", name: "Looksmith", slug: "looksmith", category: "Fashion", industry: "Fashion · Virtual try-on", type: "Interactive product demo page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      live: "projects/looksmith.html",
+      description: "An interactive page where shoppers change the scene, the lighting, the outfit or the model with a click and watch the change play as a short film.",
+      direction: "Pale architecture, one model and a single frosted control. No scroll tricks: every change is a short film you trigger with a click.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#FFFFFF", backgroundColor: "#000000", textColor: "#FFFFFF",
+      site: { brand: "LOOKSMITH", eyebrow: "Virtual try-on", headline: "Try every\nlook.", cta: "Try now", meta: ["Scene", "Lighting", "Clothing", "Cast"] }
     }
   ],
 
@@ -843,7 +935,7 @@ window.ITECH_CONFIG = {
       smoothMs: 150,              // how softly the film follows the scroll
       maxZoom: 1.1,               // desktop: zoom allowed past "contain" (never crops the laptop more than this)
       maxZoomMobile: 1.45,        // phones: larger picture, sides may crop slightly
-      background: "#040508",      // matches the black of the frames
+      background: "#080406",      // matches the black of the frames
       kicker: "Process · from idea to launch",
       title: "The anatomy\nof digital.",
       subtitle: "Every detail. Engineered to perfection.",

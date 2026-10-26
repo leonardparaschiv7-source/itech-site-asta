@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Looksmith — Try every look</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--retake-ease:cubic-bezier(0.22,1,0.36,1);--retake-slow-ease:cubic-bezier(0.65,0,0.35,1)}
+*{box-sizing:border-box;margin:0}
+html,body{background:#000;color:#fff;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font-family:'Manrope',system-ui,sans-serif;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(255,255,255,.2)}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+.stage{position:relative;isolation:isolate;width:100%;height:100vh;height:100dvh;overflow:hidden;background:#000}
+.media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;visibility:hidden}
+.media.on{visibility:visible}
+
+/* hero copy */
+.hero{position:absolute;inset:0;z-index:10;pointer-events:none}
+.hero h1{position:absolute;top:35.9%;left:50%;transform:translateX(-50%);width:min(901px,calc(100vw - 48px));font-size:clamp(62px,6.8vw,100px);font-weight:500;line-height:.8;letter-spacing:-.04em;white-space:nowrap;text-shadow:0 2px 12px rgb(0 0 0/.14);text-align:center}
+.hero h1 span{display:inline-block;transition:opacity 900ms var(--retake-ease),filter 900ms var(--retake-ease),transform 900ms var(--retake-ease)}
+.hero h1 span:nth-child(2){transition-delay:90ms}.hero h1 span:nth-child(3){transition-delay:180ms}
+.stage.title-hidden .hero h1 span{opacity:0;filter:blur(12px);transform:translateY(-10px)}
+.hero p{position:absolute;top:calc(46.78% + 94px);left:50%;transform:translateX(-50%);width:min(734px,calc(100vw - 48px));font-size:clamp(14px,1.25vw,18px);font-weight:400;line-height:1.2;letter-spacing:-.04em;text-shadow:0 1px 8px rgb(0 0 0/.16);text-align:center}
+
+/* header */
+header{position:absolute;z-index:30;top:0;left:0;right:0;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:calc(58px + env(safe-area-inset-top)) 40px 40px;text-shadow:0 1px 6px rgb(0 0 0/.18)}
+header .logo{display:block;height:24px}
+header .logo svg{height:24px;width:auto;display:block}
+.meta{display:flex;align-items:center;margin-left:clamp(48px,5vw,70px);gap:clamp(28px,3vw,44px);font-size:18px;line-height:1.2;letter-spacing:-.04em}
+.try{justify-self:end;position:relative;display:flex;align-items:center;justify-content:center;width:152px;height:38px;border-radius:999px;border:1px solid rgb(255 255 255/.75);background:transparent;font-size:18px;letter-spacing:-.04em;transition:color 300ms,background 300ms,border-color 300ms}
+.try:hover,.try:focus-visible{background:#fff;color:#0b1a26;border-color:#fff}
+
+/* controller */
+.controller{position:absolute;top:46.78%;left:50%;transform:translateX(-50%);width:min(880px,calc(100vw - 48px));height:72px;z-index:20}
+.glass{position:absolute;border-radius:999px;pointer-events:none}
+.glass::before,.glass::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.glass::before{background:radial-gradient(120% 150% at var(--glass-x,24%) var(--glass-y,8%),rgb(255 255 255/.25),rgb(255 255 255/0) 53%),linear-gradient(115deg,rgb(255 255 255/.10),rgb(255 255 255/0) 42%)}
+.glass::after{padding:1px;background:conic-gradient(from 225deg,#7fe3ff,rgb(255 255 255/.35),#ffffff,#ffd7e6,rgb(255 255 255/.35),#7fe3ff);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.track{top:4px;left:0;width:100%;height:64px;background:rgb(24 55 82/.31);border:1px solid rgb(255 255 255/.2);-webkit-backdrop-filter:blur(9px) saturate(126%) contrast(108%) brightness(103%);backdrop-filter:blur(9px) saturate(126%) contrast(108%) brightness(103%);box-shadow:0 14px 38px rgb(4 24 43/.16),0 2px 7px rgb(4 24 43/.1),inset 1px 1px 0 rgb(255 255 255/.48),inset -1px -1px 0 rgb(21 49 73/.14),inset 0 0 0 .5px rgb(255 255 255/.16);transition:left 980ms var(--retake-slow-ease),width 980ms var(--retake-slow-ease),opacity 600ms linear}
+.track::after{opacity:.27}
+.capsule{top:-1px;height:72px;left:var(--cap-left,-5px);width:var(--cap-width,calc(20% + 5px));background:rgb(246 251 255/.24);border:1px solid rgb(255 255 255/.28);-webkit-backdrop-filter:blur(13px) saturate(128%) contrast(107%) brightness(105%);backdrop-filter:blur(13px) saturate(128%) contrast(107%) brightness(105%);box-shadow:0 11px 28px rgb(4 24 43/.17),0 2px 6px rgb(4 24 43/.1),inset 1px 1px 0 rgb(255 255 255/.62),inset -1px -1px 0 rgb(20 49 73/.18),inset 0 0 12px rgb(255 255 255/.055);transition:left 620ms var(--retake-ease),width 620ms var(--retake-ease),background 980ms var(--retake-slow-ease)}
+.capsule::after{opacity:.30}
+.controller[data-pos="0"] .capsule{--cap-left:-5px;--cap-width:calc(20% + 5px)}
+.controller[data-pos="1"] .capsule{--cap-left:20%;--cap-width:20%}
+.controller[data-pos="2"] .capsule{--cap-left:40%;--cap-width:20%}
+.controller[data-pos="3"] .capsule{--cap-left:60%;--cap-width:20%}
+.controller[data-pos="4"] .capsule{--cap-left:80%;--cap-width:calc(20% + 5px)}
+.controller.collapsed .capsule,.controller.collapsed[data-pos] .capsule{--cap-left:calc(50% - 100px);--cap-width:200px;background:rgb(246 251 255/.14);transition:left 980ms var(--retake-slow-ease),width 980ms var(--retake-slow-ease),background 980ms var(--retake-slow-ease)}
+.controller.collapsed .track{left:calc(50% - 96px);width:192px}
+.controller.rear-off .track{opacity:0;transition:left 980ms var(--retake-slow-ease),width 980ms var(--retake-slow-ease),opacity 400ms linear 650ms}
+
+.cells{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);align-items:center}
+.cell{display:flex;align-items:center;justify-content:center;height:100%;padding:0 14px;font-size:23px;font-weight:400;line-height:1.2;letter-spacing:-.04em;white-space:nowrap;background:transparent;border:0;border-radius:999px;cursor:pointer;text-shadow:0 1px 6px rgb(0 0 0/.14);transition:opacity 420ms var(--retake-ease),filter 420ms var(--retake-ease),transform 980ms var(--retake-slow-ease)}
+div.cell{cursor:default}
+.cell:disabled{cursor:default}
+.lead{transition:opacity 300ms var(--retake-ease),filter 420ms var(--retake-ease),transform 980ms var(--retake-slow-ease)}
+.controller.hl .lead{opacity:.5}
+.controller.collapsed .lead{opacity:0;filter:blur(10px);transform:scale(.94)}
+.cell.gone{opacity:0;filter:blur(10px);transform:scale(.94)!important;pointer-events:none}
+.controller:not(.collapsed) .cell:not(.lead){transition:opacity 760ms var(--retake-ease) 60ms,filter 760ms var(--retake-ease) 60ms,transform 980ms var(--retake-slow-ease)}
+.cell.is-reset{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;animation:reveal 520ms var(--retake-ease) both}
+.cell.fading{opacity:0;filter:blur(10px)}
+@keyframes reveal{from{opacity:0;filter:blur(10px)}to{opacity:1;filter:blur(0)}}
+
+/* status + notice */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.notice{position:absolute;z-index:40;left:50%;bottom:24px;transform:translateX(-50%);display:none;align-items:center;gap:14px;padding:10px 12px 10px 18px;border-radius:999px;background:rgb(24 55 82/.5);border:1px solid rgb(255 255 255/.25);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);font-size:14px}
+.notice.show{display:flex}
+.notice button{background:#fff;color:#0b1a26;border:0;border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+
+@media (max-width:900px){
+  header{padding:calc(24px + env(safe-area-inset-top)) 24px 24px}
+  .meta{font-size:14px;gap:22px;margin-left:34px}
+  .try{width:116px;height:36px;font-size:14px}
+  .cell{font-size:clamp(17px,2.5vw,24px)}
+}
+@media (max-width:700px){
+  header{padding-left:18px;padding-right:18px}
+  header .logo,header .logo svg{height:21px}
+  .meta{font-size:12px}
+  .meta span:nth-child(2){display:none}
+  .try{width:92px;height:34px;font-size:13px}
+  .try::after{content:'';position:absolute;inset:-6px -10px}
+  .hero h1{top:34%;width:calc(100vw - 40px);font-size:clamp(48px,14vw,64px);line-height:.88;white-space:normal}
+  .hero p{top:77%;width:calc(100vw - 44px);font-size:14px}
+  .controller{top:53%;width:calc(100vw - 40px);height:156px}
+  .track{top:0;height:156px;border-radius:28px}
+  .cells{grid-template-columns:1fr 1fr;grid-template-rows:48px 54px 54px;align-items:stretch}
+  .cell{font-size:17px;border-radius:0;padding:0 8px}
+  .lead{grid-column:1/-1}
+  .cell:nth-child(n+3){border-top:1px solid rgb(255 255 255/.12)}
+  .cell:nth-child(2),.cell:nth-child(4){border-top:1px solid rgb(255 255 255/.12)}
+  .cell:nth-child(2),.cell:nth-child(4){border-right:1px solid rgb(255 255 255/.12)}
+  .capsule{opacity:0;pointer-events:none}
+  .cell:active,.cell:focus-visible{outline-offset:-3px;background:rgb(255 255 255/.08)}
+  .controller.collapsed .capsule,.controller.collapsed[data-pos] .capsule{opacity:1;left:50%;top:4vh;top:4dvh;transform:translate(-50%,-50%);width:196px;height:64px;border-radius:999px;background:rgb(246 251 255/.18)}
+  .controller.collapsed .track{left:50%;top:4dvh;width:196px;height:64px;transform:translate(-50%,-50%);border-radius:999px}
+}
+@media (max-width:700px) and (max-height:700px){
+  .controller{top:50%}
+  .hero p{top:calc(50% + 168px);width:calc(100vw - 32px);font-size:13px}
+}
+@media (max-height:520px) and (orientation:landscape){
+  .hero h1{top:20%;font-size:clamp(34px,8vh,56px)}
+  .controller{top:50%}
+  .hero p{top:auto;bottom:8px;font-size:13px}
+}
+@media (max-width:700px) and (max-height:520px) and (orientation:landscape){
+  .hero h1{top:12%;font-size:clamp(28px,7vh,44px)}
+  .controller{top:46%;height:118px}
+  .track{height:118px}
+  .cells{grid-template-rows:36px 41px 41px}
+  .cell{font-size:15px}
+  .hero p{bottom:6px;font-size:12px}
+}
+@media (prefers-reduced-motion:reduce){
+  .capsule,.track,.cell,.lead,.hero h1 span,.try{transition-duration:1ms!important;transition-delay:0s!important}
+  .hero h1 span,.cell.gone,.cell.fading,.controller.collapsed .lead{filter:none!important}
+}
+</style>
+</head>
+<body>
+<main class="stage title-hidden" id="stage">
+  <video class="media" id="v1" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1.mp4"></video>
+  <video class="media" id="v1r" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-1-reverse.mp4"></video>
+  <video class="media" id="v2" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2.mp4"></video>
+  <video class="media" id="v2r" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-2-reverse.mp4"></video>
+  <video class="media" id="v3" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3.mp4"></video>
+  <video class="media" id="v3r" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-3-reverse.mp4"></video>
+  <video class="media" id="v4" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4.mp4"></video>
+  <video class="media" id="v4r" muted playsinline preload="auto" aria-hidden="true" src="https://pub-86dc5b5484314368ac5436a674b0d919.r2.dev/designs/video-4-reverse.mp4"></video>
+
+  <div class="hero">
+    <h1><span>Try</span> <span>every</span> <span>look</span></h1>
+    <p>Looksmith lets shoppers change the scene, the lighting, the outfit and the model on a single photo shoot, and watch every change play back as a short film.</p>
+  </div>
+
+  <div class="controller" id="ctl" data-pos="0" role="group" aria-label="Scene state controller">
+    <div class="glass track"></div>
+    <div class="glass capsule"></div>
+    <div class="cells">
+      <div class="cell lead">Select state →</div>
+      <button class="cell" type="button" data-key="scene" data-label="Scene" disabled>Scene</button>
+      <button class="cell" type="button" data-key="light" data-label="Lighting" disabled>Lighting</button>
+      <button class="cell" type="button" data-key="colorway" data-label="Clothing" disabled>Clothing</button>
+      <button class="cell" type="button" data-key="fullLook" data-label="Cast" disabled>Cast</button>
+    </div>
+  </div>
+
+  <header>
+    <a class="logo" href="#" aria-label="Looksmith home"><svg viewBox="0 0 150 32" fill="#fff" aria-hidden="true"><text x="0" y="25" font-family="Manrope,system-ui,sans-serif" font-weight="700" font-size="27" letter-spacing="-1">Looksmith</text></svg></a>
+    <div class="meta"><span>New season is here</span><span>Try every look</span></div>
+    <a class="try" href="#ctl">Try now</a>
+  </header>
+
+  <div class="sr" id="live" role="status" aria-live="polite"></div>
+  <div class="notice" id="notice" role="alert"><span id="noticeText">Something went wrong.</span><button type="button" id="retry">Retry</button></div>
+</main>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var stage = $('stage'), ctl = $('ctl'), live = $('live'), notice = $('notice');
+  var cap = ctl.querySelector('.capsule');
+  var lead = ctl.querySelector('.lead');
+  var cells = [].slice.call(ctl.querySelectorAll('.cell'));
+  var btns = cells.slice(1);
+  var V = {}; ['v1','v1r','v2','v2r','v3','v3r','v4','v4r'].forEach(function(k){ V[k] = $(k); });
+  var KEYS = {
+    scene:    { f: 'v2', r: 'v2r', rGuard: .18 },
+    light:    { f: 'v3', r: 'v3r' },
+    colorway: { f: 'v1', r: 'v1r' },
+    fullLook: { f: 'v4', r: 'v4r' }
+  };
+  var state = { scene: 'base', busy: false, token: 0, cur: V.v1, ready: {}, lastAction: null, pending: null };
+
+  function say(t){ live.textContent = t; }
+
+  /* ---------- readiness ---------- */
+  function markReady(id){
+    state.ready[id] = true;
+    if (id === 'v1' && !state.baseShown) { state.baseShown = true; try { V.v1.currentTime = 0; } catch (e) {} show(V.v1); state.cur = V.v1; stage.classList.remove('title-hidden'); }
+    syncButtons();
+  }
+  Object.keys(V).forEach(function(id){
+    var v = V[id];
+    if (v.readyState >= 2) markReady(id);
+    v.addEventListener('loadeddata', function(){ markReady(id); });
+    v.addEventListener('error', function(){ if (!state.baseShown && id === 'v1') say('Video failed to load'); });
+  });
+  function pairReady(key){ var k = KEYS[key]; return state.ready[k.f] && state.ready[k.r]; }
+  function syncButtons(){
+    btns.forEach(function(b){
+      var key = b.getAttribute('data-key');
+      var ok = state.scene === 'base' && !state.busy && pairReady(key);
+      if (state.scene === 'base' && !state.busy) b.disabled = !ok;
+    });
+  }
+  say('Loading scenes');
+
+  function show(v){ Object.keys(V).forEach(function(k){ V[k].classList.toggle('on', V[k] === v); }); }
+
+  /* ---------- glass pointer + hover capsule ---------- */
+  ctl.addEventListener('pointermove', function(e){
+    var r = ctl.getBoundingClientRect();
+    ctl.style.setProperty('--glass-x', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+    ctl.style.setProperty('--glass-y', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+  });
+  function setPos(i){ ctl.setAttribute('data-pos', i); ctl.classList.toggle('hl', i > 0); }
+  btns.forEach(function(b, i){
+    function on(){ if (state.scene === 'base' && !state.busy && !b.disabled) setPos(i + 1); }
+    b.addEventListener('mouseenter', on); b.addEventListener('focus', on);
+    b.addEventListener('blur', function(){ if (!ctl.contains(document.activeElement)) setPos(0); });
+  });
+  ctl.addEventListener('pointerleave', function(){ if (!ctl.contains(document.activeElement) || document.activeElement === document.body) setPos(0); });
+
+  /* ---------- player ---------- */
+  function seekZero(v){
+    return new Promise(function(res){
+      if (v.currentTime <= 0.001) return res();
+      var d = function(){ v.removeEventListener('seeked', d); res(); };
+      v.addEventListener('seeked', d); v.currentTime = 0;
+    });
+  }
+  function firstFrame(v, tok){
+    return new Promise(function(res, rej){
+      var done = false, waited = 0, last = performance.now();
+      var iv = setInterval(function(){
+        var n = performance.now(); if (!document.hidden) waited += n - last; last = n;
+        if (tok !== state.token) { fin(); return; }
+        if (waited > 12000) { fin(); rej(new Error('timeout')); }
+      }, 250);
+      function fin(){ done = true; clearInterval(iv); }
+      if (v.requestVideoFrameCallback) {
+        var cb = function(now, meta){
+          if (done) return;
+          if (tok !== state.token) { fin(); return; }
+          if (meta.mediaTime <= 0.5 && v.readyState >= 2) { fin(); res(); }
+          else v.requestVideoFrameCallback(cb);
+        };
+        v.requestVideoFrameCallback(cb);
+      } else {
+        var onp = function(){
+          v.removeEventListener('playing', onp);
+          requestAnimationFrame(function(){ requestAnimationFrame(function(){ if (!done && v.readyState >= 2) { fin(); res(); } }); });
+        };
+        v.addEventListener('playing', onp);
+      }
+    });
+  }
+  function runClip(v, guard, titleAt, tok){
+    state.pending = { v: v, revealed: false };
+    v.pause();
+    return seekZero(v).then(function(){
+      if (tok !== state.token) throw new Error('stale');
+      var frame = firstFrame(v, tok);
+      var p = v.play();
+      return Promise.all([p, frame]);
+    }).then(function(){
+      if (tok !== state.token) throw new Error('stale');
+      show(v); state.cur = v; state.pending.revealed = true;
+      return new Promise(function(res){
+        var finished = false;
+        function end(){ if (finished) return; finished = true; v.removeEventListener('ended', end); v.pause(); try { v.currentTime = v.currentTime; } catch (e) {} res(); }   /* re-seek to the same frame so the held frame stays painted */
+        v.addEventListener('ended', end);
+        (function tick(){
+          if (finished || tok !== state.token) return;
+          if (titleAt != null && v.currentTime >= titleAt && !stage.classList.contains('title-hidden') && titleAt >= 0) { stage.classList.add('title-hidden'); }
+          if (v.duration && v.currentTime >= v.duration - guard) return end();
+          requestAnimationFrame(tick);
+        })();
+      });
+    });
+  }
+  document.addEventListener('visibilitychange', function(){
+    var p = state.pending; if (!p || p.revealed) return;
+    if (document.hidden) { p.v.pause(); try { p.v.currentTime = 0; } catch (e) {} }
+    else { var r = p.v.play(); if (r && r.catch) r.catch(function(){}); }
+  });
+
+  /* ---------- controller UI ---------- */
+  function cellOf(key){ return btns.filter(function(b){ return b.getAttribute('data-key') === key; })[0]; }
+  function disableAll(){ btns.forEach(function(b){ b.disabled = true; }); }
+  function collapse(key){
+    var chosen = cellOf(key);
+    var cr = ctl.getBoundingClientRect(), br = chosen.getBoundingClientRect();
+    var small = innerWidth <= 700;
+    var tx = cr.left + cr.width / 2, ty = small ? innerHeight * .04 : cr.top + 35;
+    var dx = tx - (br.left + br.width / 2), dy = ty - (br.top + br.height / 2);
+    ctl.classList.add('collapsed', 'rear-off');
+    cells.forEach(function(c){ if (c !== chosen && c !== lead) c.classList.add('gone'); });
+    chosen.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+    setPos(0);
+  }
+  function setSelectedUI(key, hadFocus){
+    var chosen = cellOf(key);
+    chosen.textContent = 'Reset'; chosen.classList.add('is-reset'); chosen.disabled = false;
+    btns.forEach(function(b){ if (b !== chosen) { b.disabled = true; b.setAttribute('aria-hidden', 'true'); b.tabIndex = -1; } });
+    if (hadFocus) chosen.focus({ preventScroll: true });
+  }
+  function expand(key){
+    var chosen = cellOf(key);
+    ctl.classList.remove('collapsed', 'rear-off');
+    chosen.classList.remove('is-reset'); chosen.classList.add('fading');
+    cells.forEach(function(c){ if (c !== chosen) c.classList.remove('gone'); });
+    setTimeout(function(){
+      chosen.textContent = chosen.getAttribute('data-label');
+      chosen.style.transform = '';
+      chosen.classList.remove('fading');
+    }, 220);
+  }
+  function restoreOptions(hadFocus, key){
+    btns.forEach(function(b){ b.removeAttribute('aria-hidden'); b.tabIndex = 0; });
+    syncButtons();
+    if (hadFocus) { var c = cellOf(key); if (c && !c.disabled) c.focus({ preventScroll: true }); }
+  }
+  function fail(msg){
+    $('noticeText').textContent = msg; notice.classList.add('show'); say(msg);
+  }
+  function hideNotice(){ notice.classList.remove('show'); }
+
+  /* ---------- actions ---------- */
+  function forward(key){
+    if (state.busy || state.scene !== 'base' || !pairReady(key)) return;
+    state.busy = true; var tok = ++state.token;
+    var btn = cellOf(key), hadFocus = document.activeElement === btn;
+    state.lastAction = { type: 'f', key: key };
+    hideNotice(); disableAll(); collapse(key);
+    var v = V[KEYS[key].f], guard = KEYS[key].fGuard || .08;
+    var titleAt = Math.min((v.duration || 2) * .12, .9);
+    say('Applying ' + btn.getAttribute('data-label'));
+    runClip(v, guard, titleAt, tok).then(function(){
+      if (tok !== state.token) return;
+      stage.classList.add('title-hidden');
+      state.scene = key; state.busy = false;
+      setSelectedUI(key, hadFocus); say(btn.getAttribute('data-label') + ' applied. Reset available.');
+    }).catch(function(err){
+      if (tok !== state.token) return;
+      state.busy = false; state.scene = 'base';
+      expand(key); stage.classList.remove('title-hidden'); restoreOptions(hadFocus, key);
+      if (state.cur) show(state.cur);
+      fail('Could not play this transition.');
+    });
+  }
+  function reverse(){
+    var key = state.scene; if (key === 'base' || state.busy) return;
+    state.busy = true; var tok = ++state.token;
+    var btn = cellOf(key), hadFocus = document.activeElement === btn;
+    state.lastAction = { type: 'r', key: key };
+    hideNotice(); disableAll(); expand(key);
+    var v = V[KEYS[key].r], guard = KEYS[key].rGuard || .08;
+    say('Resetting');
+    runClip(v, guard, null, tok).then(function(){
+      if (tok !== state.token) return;
+      state.scene = 'base'; state.busy = false;
+      stage.classList.remove('title-hidden');
+      restoreOptions(hadFocus, key); say('Back to the base scene');
+    }).catch(function(err){
+      if (tok !== state.token) return;
+      state.busy = false; state.scene = key;
+      collapse(key); setSelectedUI(key, hadFocus);
+      if (state.cur) show(state.cur);
+      fail('Could not reset. Try again.');
+    });
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var key = b.getAttribute('data-key');
+      if (state.scene === 'base') forward(key); else if (state.scene === key) reverse();
+    });
+  });
+  /* inside a preview card (?card=1) the scene plays itself: a change, a short hold, Reset, the next one */
+  var demo = /[?&]card=1/.test(location.search), dOn = false, dTimer = 0, dI = 0, idleSince = 0;
+  function poll(){
+    if (!dOn) return;
+    if (state.busy || !state.baseShown) { idleSince = 0; return; }
+    var now = performance.now();
+    if (!idleSince) { idleSince = now; return; }
+    if (now - idleSince < 1500) return;
+    idleSince = 0;
+    if (state.scene === 'base') forward(['scene', 'light', 'colorway', 'fullLook'][dI++ % 4]); else reverse();
+  }
+  window.__itechActive = function(on){
+    dOn = demo && on;
+    if (dOn && !dTimer) dTimer = setInterval(poll, 400);
+    if (!dOn && dTimer) { clearInterval(dTimer); dTimer = 0; }
+  };
+  $('retry').addEventListener('click', function(){
+    hideNotice(); var a = state.lastAction; if (!a) return;
+    if (a.type === 'f') forward(a.key); else reverse();
+  });
+})();
+</script>
+</body>
+</html>

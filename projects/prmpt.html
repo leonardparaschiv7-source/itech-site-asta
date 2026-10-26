@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>prmpt — Archive Collection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff;font-family:"Inter Tight",system-ui,sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+#scroll-spacer{position:relative;height:500vh;background:#fff;user-select:none;-webkit-user-select:none}
+#scroll-spacer.has-cursor,#scroll-spacer.has-cursor *{cursor:none}
+.ex{mix-blend-mode:exclusion;color:#fff}
+.fixed{position:fixed;pointer-events:none}
+
+@keyframes inUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes inFade{from{opacity:0}to{opacity:1}}
+.a0{animation:inUp .6s cubic-bezier(.25,.1,.25,1) 0s both}
+.a1{animation:inUp .6s cubic-bezier(.25,.1,.25,1) .15s both}
+.a2{animation:inUp .6s cubic-bezier(.25,.1,.25,1) .3s both}
+.a3{animation:inFade .6s ease .45s both}
+
+/* cursor */
+#cursor{position:fixed;z-index:50;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%);mix-blend-mode:exclusion;display:none}
+#cursor svg{display:block;width:48px;height:48px}
+
+/* video */
+#main-canvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .3s ease;background:#000}
+#main-canvas.ready{opacity:1}
+#main-canvas video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#vL{display:none}
+
+/* ui */
+#logo{z-index:20;top:32px;left:32px;width:355px}
+#logo svg{display:block;width:100%;height:auto}
+#caption{z-index:20;left:32px;top:244px;width:692px;font-size:12px;line-height:1.4;letter-spacing:-.04em}
+#header{z-index:20;top:32px;right:32px;width:330px;height:30px;display:flex;justify-content:space-between;align-items:center;font-size:15px;text-transform:uppercase}
+#header .r{display:flex;align-items:center;gap:50px}
+#header svg{width:30px;height:30px;display:block}
+#header .cart{text-transform:none}
+#outro-info{z-index:20;right:32px;bottom:80px;width:330px;display:flex;flex-direction:column;align-items:center}
+.i-top{width:100%;display:flex;flex-direction:column;align-items:flex-start;margin-bottom:32px}
+.circ{position:relative;width:30px;height:30px;margin-bottom:8px}
+.circ svg{width:100%;height:100%;display:block}
+#circle-symbol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;letter-spacing:-.04em;text-transform:uppercase}
+.coll{width:100%;font-size:30px;line-height:1;text-align:center;letter-spacing:-.04em;text-transform:uppercase}
+.price{font-size:80px;line-height:1;text-align:center;letter-spacing:-.04em}
+#outro-buy{z-index:20;right:32px;bottom:32px;width:330px;height:174px;transform-origin:right bottom;transform:scale(0);background:#fff;border-radius:1335px;display:flex;align-items:center;justify-content:center}
+#outro-buy span{font-size:110px;letter-spacing:-.04em;color:#fff;mix-blend-mode:exclusion}
+#outro-overlay{position:fixed;inset:0;pointer-events:none;z-index:12;background:#fff;opacity:0}
+#outro-footer{z-index:20;left:16px;bottom:32px;display:flex;gap:80px;font-size:13px;letter-spacing:-.02em;text-transform:uppercase;opacity:0}
+
+/* black panel */
+#panel{position:fixed;inset:0;background:#000;z-index:10;transform:translateY(100vh);overflow:hidden;pointer-events:none;will-change:transform}
+#wrap{width:100%;padding-top:min(400px,40vh);will-change:transform}
+.row{display:grid;width:100%}
+.cell{aspect-ratio:2/3;padding:10px}
+.bp-card{width:100%;height:100%;transform:scale(0);will-change:transform;background:#111}
+.bp-card img{width:100%;height:100%;object-fit:cover;display:block}
+
+@media (max-width:1023px){
+  #logo{width:266px}
+  #caption{top:180px;width:calc(50vw - 48px)}
+}
+@media (max-width:639px){
+  #scroll-spacer{}
+  #main-canvas{top:220px;height:calc(100vh - 220px)}
+  #logo{width:124px;top:16px;left:16px}
+  #caption{left:16px;top:118px;width:calc(100vw - 32px)}
+  #header{top:16px;right:16px;width:auto}
+  #header .about{display:none}
+  #header .r{gap:20px}
+  #header svg{width:24px;height:24px}
+  #header .cart{font-size:13px}
+  #outro-info{left:0;right:0;bottom:48px;width:auto}
+  .i-top{width:252px;margin-bottom:12px}
+  .circ{width:20px;height:20px}
+  #circle-symbol{font-size:10px}
+  .coll{font-size:20px}
+  .price{font-size:60px}
+  #outro-buy{left:16px;right:16px;bottom:60px;width:auto;height:100px}
+  #outro-buy span{font-size:72px}
+  #outro-footer{left:16px;right:16px;bottom:24px;justify-content:space-between;gap:0;font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){.a0,.a1,.a2,.a3{animation:none}.bp-card{will-change:auto}}
+</style>
+</head>
+<body>
+<div id="scroll-spacer">
+  <div id="cursor" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22.75" stroke="#fff" stroke-width="2.5"/><path d="M15 17h18M24 13v22M17 24c2 5 5 8 7 11M31 24c-2 5-5 8-7 11" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+
+  <div id="main-canvas" aria-hidden="true">
+    <video id="vL" muted playsinline preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154433_532a85d3-dabf-4265-b8bd-19ac6af31842.mp4"></video>
+    <video id="vR" muted playsinline preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154401_a664f076-b971-4557-8728-40ef9ea4c49b.mp4"></video>
+  </div>
+
+  <div id="panel"><div id="wrap"></div></div>
+  <div id="outro-overlay"></div>
+
+  <div id="logo" class="fixed ex a0" aria-label="prmpt">
+    <svg viewBox="0 0 355 110" fill="#fff"><text x="0" y="82" font-family="Inter Tight,system-ui,sans-serif" font-weight="500" font-size="100" letter-spacing="-5">prmpt</text><circle cx="333" cy="22" r="15" fill="none" stroke="#fff" stroke-width="3"/><text x="333" y="29" text-anchor="middle" font-family="Inter Tight,system-ui,sans-serif" font-weight="500" font-size="20">R</text></svg>
+  </div>
+  <p id="caption" class="fixed ex a2">Archive pieces from the 2026 collection. Move your cursor across the screen to turn the model, then scroll to browse every piece.</p>
+  <div id="header" class="fixed ex a1">
+    <span class="about">About</span>
+    <div class="r"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.5"><path d="M0 14H40"/><path d="M0 26H40"/></svg><span class="cart">[ CART ]</span></div>
+  </div>
+  <div id="outro-info" class="fixed ex a3" data-outro-offset="166">
+    <div class="i-top">
+      <div class="circ"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="18.75" stroke="#fff" stroke-width="2.5"/></svg><span id="circle-symbol">8</span></div>
+      <div class="coll">Archive Collection<br>"PROMPT"</div>
+    </div>
+    <div class="price">$97,33</div>
+  </div>
+  <div id="outro-buy" class="fixed ex"><span>view</span></div>
+  <div id="outro-footer" class="fixed ex"><span>PRMPT (R) 2026</span><span>PRIVACY POLICY</span></div>
+</div>
+
+<script>
+(function(){
+  var IMGS = [
+    'hf_20260629_104530_521b2f85-c0f3-4d0e-9704-b578315b4cb9','hf_20260629_103711_76ccdb8b-5043-4f47-9c54-4379713393ea','hf_20260629_103728_394f6a1b-85e2-4386-a4f6-408472a0a5b7',
+    'hf_20260629_103739_86743e0e-16a7-4bee-bf38-dd67985344dc','hf_20260629_103748_b2215dc8-a3a7-470d-b19a-5b87fa7d0c37','hf_20260629_103758_e919ce72-5c9d-4b87-9be6-d7647b34825c',
+    'hf_20260629_103808_013583d0-3386-4547-9832-37c7d8edb3ac','hf_20260629_103937_a0c49d0a-33eb-4ead-aea6-c1baf241acbc','hf_20260629_103956_d18ed8fd-7b6f-4b86-91f9-20010fe38670',
+    'hf_20260629_104034_ba5a9963-87ff-4008-a545-6bd686c088b5'
+  ].map(function(id){
+    return 'https://images.higgs.ai/?default=1&output=webp&url=' + encodeURIComponent('https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/' + id + '.png') + '&w=1920&q=85';
+  });
+
+  var $ = function(s){ return document.querySelector(s); };
+  var spacer = $('#scroll-spacer'), panel = $('#panel'), wrap = $('#wrap'), canvas = $('#main-canvas');
+  var vL = $('#vL'), vR = $('#vR'), overlay = $('#outro-overlay'), info = $('#outro-info'), buy = $('#outro-buy'), foot = $('#outro-footer'), sym = $('#circle-symbol'), cursor = $('#cursor');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var touch = ('ontouchstart' in window) || matchMedia('(pointer: coarse)').matches || innerWidth < 1024;
+  var clamp = function(v, a, b){ return Math.min(b, Math.max(a, v)); };
+
+  /* ---------- grid ---------- */
+  function colsFor(w){ return w < 640 ? 2 : w < 1024 ? 3 : 4; }
+  function buildLayout(count, cols){
+    var rows = [], next = 0, r = 0;
+    while (next < count) {
+      var row = []; for (var c = 0; c < cols; c++) row.push(-1);
+      var a = (r * 2 + (r % 2)) % cols; row[a] = next++;
+      if (r % 3 === 0 && next < count) { var b = (a + 2) % cols; if (b === a) b = (a + 1) % cols; row[b] = next++; }
+      rows.push(row); r++;
+    }
+    return rows;
+  }
+  var cards = [], curCols = 0, maxScroll = 0;
+  function render(){
+    var cols = colsFor(innerWidth); if (cols === curCols) return; curCols = cols;
+    wrap.innerHTML = ''; cards = [];
+    buildLayout(IMGS.length, cols).forEach(function(row){
+      var el = document.createElement('div'); el.className = 'row'; el.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+      row.forEach(function(idx, c){
+        var cell = document.createElement('div'); cell.className = 'cell';
+        if (idx >= 0) {
+          var card = document.createElement('div'); card.className = 'bp-card';
+          card.style.transformOrigin = c < cols / 2 ? 'right bottom' : 'left bottom';
+          var im = document.createElement('img'); im.src = IMGS[idx]; im.alt = ''; im.decoding = 'async'; card.appendChild(im);
+          cell.appendChild(card); cards.push(card);
+        }
+        el.appendChild(cell);
+      });
+      wrap.appendChild(el);
+    });
+    measure();
+  }
+  function measure(){
+    var vh = innerHeight; maxScroll = Math.max(0, wrap.scrollHeight - vh);
+    spacer.style.height = (vh + maxScroll + 2 * vh) + 'px';
+  }
+  render();
+  addEventListener('resize', function(){ render(); measure(); cardsOk = false; });
+  addEventListener('load', measure);
+
+  /* ---------- videos ---------- */
+  /* seeking from the network is slow: keep both clips in memory (falls back to the plain URL if the fetch is blocked) */
+  [vL, vR].forEach(function(v){
+    var url = v.getAttribute('src');
+    fetch(url).then(function(r){ if (!r.ok) throw 0; return r.blob(); }).then(function(b){
+      var t = v.currentTime; v.removeAttribute('src'); v.src = URL.createObjectURL(b); v.load();
+      v.addEventListener('loadeddata', function(){ try { v.currentTime = t; } catch (e) {} }, { once: true });
+    }).catch(function(){});
+  });
+  var ready = 0;
+  function onReady(){ if (++ready >= 2) canvas.classList.add('ready'); }
+  [vL, vR].forEach(function(v){ v.addEventListener('loadeddata', onReady, { once: true }); });
+  setTimeout(function(){ canvas.classList.add('ready'); }, 2500);
+
+  var side = 'R';           /* last active video: R shown first */
+  var mx = innerWidth / 2, lastMove = -1e9;
+  if (touch) {
+    if (!reduce) {
+      vL.style.display = 'block'; vR.style.display = 'none';
+      var play = function(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); };
+      vL.addEventListener('ended', function(){ vL.style.display = 'none'; vR.style.display = 'block'; vR.currentTime = 0; play(vR); });
+      vR.addEventListener('ended', function(){ vR.style.display = 'none'; vL.style.display = 'block'; vL.currentTime = 0; play(vL); });
+      play(vL);
+    }
+  } else {
+    spacer.classList.add('has-cursor'); cursor.style.display = 'block';
+    addEventListener('mousemove', function(e){ mx = e.clientX; lastMove = performance.now(); cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+  }
+
+  var target = { R: 0, L: 0 }, shown = { R: 0, L: 0 };
+  function seekTo(v, key){
+    if (!v.duration || v.seeking) return;
+    var want = shown[key] * v.duration;
+    if (Math.abs(v.currentTime - want) > 1 / 90) v.currentTime = want;
+  }
+  vL.addEventListener('seeked', function(){ if (side === 'L') seekTo(vL, 'L'); });
+  vR.addEventListener('seeked', function(){ if (side === 'R') seekTo(vR, 'R'); });
+  function scrub(now){
+    var w = innerWidth, center = w / 2, dz = Math.max(30, w * .05);
+    var x = mx;
+    if (now - lastMove > 2500) {   /* no pointer (or inside a preview card): the cursor drifts by itself */
+      x = center + Math.sin(now / 2600) * center * .92;
+      cursor.style.left = x + 'px'; cursor.style.top = innerHeight * .5 + 'px';
+    }
+    var d = x - center;
+    if (Math.abs(d) <= dz) { target[side] = 0; }
+    else {
+      var left = d < 0; side = left ? 'R' : 'L';
+      var p = left ? (center - dz - x) / (center - dz) : (x - (center + dz)) / (w - (center + dz));
+      target[side] = clamp(p, 0, 1);
+    }
+    /* ease the playhead toward the pointer so the character glides instead of stepping */
+    shown[side] += (target[side] - shown[side]) * .38;
+    if (Math.abs(target[side] - shown[side]) < .001) shown[side] = target[side];
+    var show = side === 'R' ? vR : vL, hide = side === 'R' ? vL : vR;
+    show.style.display = 'block'; hide.style.display = 'none';
+    seekTo(show, side);
+  }
+
+  /* ---------- scroll loop ---------- */
+  var SYMS = ['8', '$', '^^', '%', '/'], lastSym = 0;
+  addEventListener('scroll', function(){
+    var t = performance.now(); if (t - lastSym < 80) return; lastSym = t;
+    sym.textContent = SYMS[Math.floor(Math.random() * SYMS.length)];
+  }, { passive: true });
+
+  var offset = +info.dataset.outroOffset || 166, lastY = -1, lastVh = 0, cardsOk = false;
+  var idle = false;
+  window.__itechActive = function(on){ idle = !on; };   /* a preview card that is not the active one skips all work */
+  function frame(now){
+    requestAnimationFrame(frame);
+    if (idle) return;
+    var vh = innerHeight, y = scrollY;
+    if (!touch) scrub(now);
+    canvas.style.visibility = y > vh ? 'hidden' : 'visible';
+
+    var panelY = y < vh ? vh - y : 0, wrapY = y > vh ? -(y - vh) : 0;
+    panel.style.transform = 'translateY(' + panelY + 'px)';
+    wrap.style.transform = 'translateY(' + wrapY + 'px)';
+
+    if (y === lastY && vh === lastVh && cardsOk) return;
+    lastY = y; lastVh = vh; cardsOk = true;
+    var rects = cards.map(function(c){ return c.parentNode.getBoundingClientRect(); });
+    cards.forEach(function(c, i){
+      var r = rects[i], top = r.top, bottom = r.bottom, s;
+      if (bottom <= 0 || top >= vh) s = 0;
+      else s = Math.min(Math.min(1, (vh - top) / (vh * .6)), Math.min(1, bottom / (vh * .4)));
+      c.style.transform = 'scale(' + s.toFixed(3) + ')';
+    });
+
+    var o = clamp((y - vh - maxScroll) / Math.max(1, vh - 100), 0, 1);
+    overlay.style.opacity = o;
+    info.style.transform = 'translateY(' + (-o * offset) + 'px)';
+    buy.style.transform = 'scale(' + o.toFixed(3) + ')';
+    foot.style.opacity = o;
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

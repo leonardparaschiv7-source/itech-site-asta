@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aurai - Always-On Wellness Companion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://db.onlinewebfonts.com/c/304a6edcec9f8858eeaafc2ac18243f4?family=Askan+Light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:#000}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;border:0;background:none;outline:none}
+button{cursor:pointer}
+.askan{font-family:"Askan Light",serif}
+
+.hero{position:relative;width:100%;height:100vh;overflow:hidden;background:#000}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:80% center}
+
+.layer{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;padding:16px}
+.glass{background:rgba(0,0,0,.2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1)}
+.glass3{background:rgba(0,0,0,.3);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1)}
+
+nav{display:flex;align-items:center;justify-content:space-between}
+.pill{display:flex;align-items:center;gap:8px;border-radius:16px;padding:10px 16px;color:#fff}
+.pill svg.logo{width:20px;height:20px;display:block}
+.brand{font-size:16px;letter-spacing:.025em;color:#fff}
+.burger{display:flex;align-items:center;justify-content:center;color:#fff;margin-left:16px}
+.burger svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.burger .x{display:none}
+.menu-open .burger .m{display:none}.menu-open .burger .x{display:block}
+.join-top{display:none;background:#fff;color:#111827;font-weight:500;font-size:14px;padding:12px 24px;border-radius:999px}
+
+.mmenu{display:none;position:absolute;top:4.5rem;left:16px;right:16px;z-index:20;background:rgba(0,0,0,.3);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,.1);flex-direction:column;gap:14px}
+.menu-open .mmenu{display:flex}
+.mmenu a{color:#fff;font-size:16px}
+.mmenu .join{background:#fff;color:#111827;font-weight:500;font-size:14px;padding:12px 24px;border-radius:999px;width:100%;text-align:center}
+
+.spacer{flex:1 1 0}
+.main{display:flex;flex-direction:column;padding-bottom:16px;margin-top:0}
+.left{display:flex;flex-direction:column;align-items:flex-start}
+h1{font-family:"Askan Light",serif;font-weight:400;color:#fff;font-size:2rem;line-height:1.05;letter-spacing:-.025em;max-width:700px}
+.sub{color:rgba(255,255,255,.7);font-size:12px;line-height:1.625;max-width:520px;margin-top:12px}
+form{position:relative;width:100%;max-width:448px;margin-top:20px;border-radius:999px}
+form input{width:100%;padding:12px 130px 12px 16px;font-size:14px;color:#fff;border-radius:999px}
+form input::placeholder{color:rgba(255,255,255,.6)}
+form button{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:#fff;color:#111827;font-size:12px;font-weight:500;padding:8px 12px;border-radius:999px;white-space:nowrap}
+.feat{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.feat span,.rcol span{background:rgba(0,0,0,.3);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.1)}
+.rcol{display:none}
+
+@media (min-width:640px){
+  .layer{padding:32px 40px}
+  .pill{padding:16px 24px}
+  .pill svg.logo{width:28px;height:28px}
+  .brand{font-size:20px}
+  .burger{margin-left:128px}
+  .join-top{display:block}
+  .mmenu{display:none!important}
+  .spacer{display:none}
+  .main{flex:1 1 0;flex-direction:row;align-items:flex-end;padding-bottom:48px;margin-top:auto;justify-content:space-between}
+  h1{font-size:3.5rem}
+  .sub{font-size:16px;margin-top:16px}
+  form{margin-top:24px}
+  form input{padding:16px 150px 16px 24px}
+  form button{font-size:14px;padding:12px 24px}
+  .feat{display:none}
+  .rcol{display:flex;flex-direction:column;align-items:flex-end;gap:8px;align-self:flex-end}
+  .rcol span{font-size:14px;padding:8px 16px}
+}
+@media (min-width:768px){
+  .bg{object-position:right center}
+  .burger{margin-left:256px}
+  h1{font-size:4.5rem}
+  .sub{font-size:18px}
+}
+@media (min-width:1024px){
+  .bg{object-position:center center}
+  .layer{padding-left:48px;padding-right:48px}
+  .burger{margin-left:384px}
+  .main{padding-bottom:64px}
+  h1{font-size:5.5rem}
+}
+</style>
+</head>
+<body>
+<section class="hero" id="hero">
+  <video class="bg" autoplay loop muted playsinline src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260618_174853_aac61aa2-0f3f-4cf1-bc78-7f657dd11164.mp4"></video>
+
+  <div class="layer">
+    <nav>
+      <div class="pill glass">
+        <svg class="logo" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M 228 0 C 172.772 0 128 44.772 128 100 L 128 0 L 0 0 L 0 28 C 0 83.228 44.772 128 100 128 L 0 128 L 0 256 L 28 256 C 83.228 256 128 211.228 128 156 L 128 256 L 256 256 L 256 228 C 256 172.772 211.228 128 156 128 L 256 128 L 256 0 Z"/></svg>
+        <span class="brand askan">Aurai</span>
+        <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+          <svg class="m" viewBox="0 0 24 24"><path d="M4 12h16M4 6h16M4 18h16"/></svg>
+          <svg class="x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <a class="join-top" href="#join">Join the list</a>
+    </nav>
+
+    <div class="mmenu" id="mmenu">
+      <a href="#">Story</a><a href="#">Benefits</a><a href="#">Connect</a>
+      <a class="join" href="#join">Join the list</a>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="main">
+      <div class="left">
+        <h1>Your calm is always within.</h1>
+        <p class="sub">Aurai is your always-on wellness companion. Built by leading therapists, it brings you the care and clarity right when you need it.</p>
+        <form class="glass3" id="join">
+          <input type="email" name="email" placeholder="Your email address" required aria-label="Your email address">
+          <button type="submit">Join the list</button>
+        </form>
+        <div class="feat"><span>Smart Therapy</span><span>Real-time Healing</span><span>Insights into outcomes</span></div>
+      </div>
+      <div class="rcol"><span>Smart Therapy</span><span>Real-time Healing</span><span>Insights into outcomes</span></div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var hero = document.getElementById('hero'), b = document.getElementById('burger');
+  b.addEventListener('click', function(){
+    var on = hero.classList.toggle('menu-open'); b.setAttribute('aria-expanded', on ? 'true' : 'false');
+  });
+  document.getElementById('join').addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = this.email.value;
+    try { alert('Thanks! ' + v + ' is on the list.'); } catch (x) {}
+    this.reset();
+  });
+})();
+</script>
+</body>
+</html>

@@ -17,20 +17,20 @@ let inst = null;
 /* ───────────── markup ───────────── */
 function villaSVG(id) {
   return `<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
-    <linearGradient id="dxSky${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070A14"/><stop offset=".7" stop-color="#16203A"/><stop offset="1" stop-color="#1F2B4A"/></linearGradient>
-    <linearGradient id="dxPool${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2D4F"/><stop offset="1" stop-color="#0A1222"/></linearGradient>
+    <linearGradient id="dxSky${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14070D"/><stop offset=".7" stop-color="#3A1627"/><stop offset="1" stop-color="#4A1F33"/></linearGradient>
+    <linearGradient id="dxPool${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4F1B33"/><stop offset="1" stop-color="#220A15"/></linearGradient>
     <radialGradient id="dxWin${id}" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#FFE2B0"/><stop offset="1" stop-color="#E9A960"/></radialGradient></defs>
     <rect width="400" height="260" fill="url(#dxSky${id})"/>
-    <path d="M0 150 L60 128 L120 140 L190 118 L260 136 L330 120 L400 134 V170 H0Z" fill="#0E1426"/>
-    <rect x="60" y="78" width="250" height="10" fill="#2A2F3A"/><rect x="74" y="88" width="222" height="44" fill="#14171E"/>
+    <path d="M0 150 L60 128 L120 140 L190 118 L260 136 L330 120 L400 134 V170 H0Z" fill="#260E19"/>
+    <rect x="60" y="78" width="250" height="10" fill="#2A2F3A"/><rect x="74" y="88" width="222" height="44" fill="#1E1419"/>
     <rect x="86" y="94" width="90" height="34" fill="url(#dxWin${id})" opacity=".85"/><rect x="186" y="94" width="96" height="34" fill="url(#dxWin${id})" opacity=".55"/>
-    <rect x="40" y="132" width="300" height="10" fill="#2A2F3A"/><rect x="52" y="142" width="270" height="34" fill="#101319"/>
+    <rect x="40" y="132" width="300" height="10" fill="#2A2F3A"/><rect x="52" y="142" width="270" height="34" fill="#191014"/>
     <rect x="64" y="146" width="120" height="26" fill="url(#dxWin${id})" opacity=".7"/><rect x="194" y="146" width="116" height="26" fill="url(#dxWin${id})" opacity=".45"/>
     <rect x="232" y="88" width="4" height="44" fill="#2A2F3A"/><rect x="120" y="142" width="4" height="34" fill="#2A2F3A"/>
     <rect y="176" width="400" height="84" fill="url(#dxPool${id})"/>
     <rect x="64" y="182" width="120" height="16" fill="#FFD9A0" opacity=".18"/><rect x="194" y="182" width="116" height="14" fill="#FFD9A0" opacity=".1"/>
-    <path d="M0 176 H400" stroke="#76B6FF" stroke-opacity=".25"/>
-    <circle cx="352" cy="138" r="22" fill="#0B0F18"/><circle cx="372" cy="150" r="16" fill="#0B0F18"/><circle cx="24" cy="146" r="18" fill="#0B0F18"/></svg>`;
+    <path d="M0 176 H400" stroke="#FF6FB1" stroke-opacity=".25"/>
+    <circle cx="352" cy="138" r="22" fill="#180B11"/><circle cx="372" cy="150" r="16" fill="#180B11"/><circle cx="24" cy="146" r="18" fill="#180B11"/></svg>`;
 }
 function centerSite(X, H) {
   const c = X.centerWebsite, esc = H.esc;
@@ -62,8 +62,8 @@ function svgTrails() {
   const P = ['M-40 40 C 260 160, 520 260, 600 340', 'M-60 140 C 240 220, 470 300, 600 345', 'M1240 30 C 940 150, 700 260, 600 340', 'M1260 120 C 980 210, 740 300, 600 345',
     'M-40 720 C 240 560, 480 420, 600 350', 'M-60 620 C 260 520, 500 400, 600 352', 'M1240 730 C 960 560, 720 420, 600 350', 'M1260 640 C 960 520, 720 400, 600 352'];
   return `<svg class="dx-svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
-    <linearGradient id="dxT1" x1="0" x2="1"><stop offset="0" stop-color="#9787FF" stop-opacity="0"/><stop offset="1" stop-color="#E8F0FF" stop-opacity=".7"/></linearGradient>
-    <linearGradient id="dxT2" x1="0" x2="1"><stop offset="0" stop-color="#76B6FF" stop-opacity="0"/><stop offset="1" stop-color="#76B6FF" stop-opacity=".8"/></linearGradient></defs>
+    <linearGradient id="dxT1" x1="0" x2="1"><stop offset="0" stop-color="#C58BFF" stop-opacity="0"/><stop offset="1" stop-color="#FFE8F3" stop-opacity=".7"/></linearGradient>
+    <linearGradient id="dxT2" x1="0" x2="1"><stop offset="0" stop-color="#FF6FB1" stop-opacity="0"/><stop offset="1" stop-color="#FF6FB1" stop-opacity=".8"/></linearGradient></defs>
     ${P.map((d, i) => `<path d="${d}" fill="none" stroke="url(#${i < 4 ? 'dxT1' : 'dxT2'})" stroke-width="${i % 2 ? 1 : 1.6}" class="dx-sp" style="animation-delay:${-i * 0.7}s"/>`).join('')}
     <circle cx="600" cy="346" r="90" fill="url(#dxT2)" opacity=".08"/></svg>`;
 }
@@ -112,7 +112,7 @@ function softTexture(T, kind) {
   const g = c.getContext('2d');
   if (kind === 'glow') {
     const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(200,220,255,.45)'); r.addColorStop(1, 'rgba(0,0,0,0)');
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,200,226,.45)'); r.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = r; g.fillRect(0, 0, 128, 128);
   } else {
     for (let i = 0; i < 26; i++) {

@@ -158,7 +158,7 @@ function mount(root, C) {
     const mz = innerWidth <= (+F.mobileBreakpoint || 760) ? (+K.maxZoomMobile || 1.45) : (+K.maxZoom || 1.1);
     const sc = Math.min(cw / fw, ch / fh), s = Math.min(Math.max(cw / fw, ch / fh), sc * mz);
     const dw = fw * s, dh = fh * s;
-    ctx.fillStyle = K.background || '#0B0C10'; ctx.fillRect(0, 0, cw, ch);
+    ctx.fillStyle = K.background || '#100B0D'; ctx.fillRect(0, 0, cw, ch);
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
     const ay = innerWidth <= (+F.mobileBreakpoint || 760) ? (+K.mobileAlignY || .36) : .5;   // phones: picture above the words
     const dx = (cw - dw) / 2, dy = (ch - dh) * ay;
@@ -170,7 +170,7 @@ function mount(root, C) {
     if (img2) put(img2, sub2, al);
     // letterboxed (phones): melt the picture's top and bottom edges into the background
     if (dy > 1) {
-      const bg = K.background || '#0B0C10', fd = dh * .14;
+      const bg = K.background || '#100B0D', fd = dh * .14;
       [[dy, dy + fd], [dy + dh, dy + dh - fd]].forEach(([a, b]) => {
         const g = ctx.createLinearGradient(0, a, 0, b); g.addColorStop(0, bg); g.addColorStop(1, bg + '00');
         ctx.fillStyle = g; ctx.fillRect(0, Math.min(a, b) - 1, cw, fd + 2);
