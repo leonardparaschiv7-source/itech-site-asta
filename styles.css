@@ -1395,3 +1395,9 @@ select.input option{background:#161319}
   .hero-synapse .hero-ctas{display:none}
   .sy-mark{top:auto;bottom:14px;transform:none!important;font-size:clamp(96px,33vw,170px);opacity:.9;background:none;-webkit-text-fill-color:#fff;color:#fff;-webkit-background-clip:border-box;background-clip:border-box;z-index:0}
 }
+
+/* phones: finger-sized tap targets (>= 40px) for the language switch, logo and footer links */
+@media (max-width:760px){
+  .lang-b{min-width:40px;min-height:40px}
+  .logo,.wi-open,.foot-start,.fcta a,footer a{display:inline-flex;align-items:center;min-height:40px}
+}

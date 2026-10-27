@@ -226,5 +226,6 @@
 @media (prefers-reduced-motion:reduce){.bld-pv,.bld-pv.is-out{transform:none;filter:none}.bld-info.swap>*{animation:none}}
 @media (max-width:760px){.bld-opt .t,.bld-opt.is-on .t{transform:none!important}.bld-opt::after{display:none}.bld-opt.is-on{background:rgba(255,111,177,.07)}}
 
-/* phones: the laptop/phone mock-up stage is removed completely (list + info + CTA remain) */
-@media (max-width:760px){.bld-stage{display:none!important}}
+
+/* phones: the project preview is a flat picture, no 3D */
+@media (max-width:760px){.bld-stage{perspective:none}.bld-rig,.bld-pv{transform-style:flat}}

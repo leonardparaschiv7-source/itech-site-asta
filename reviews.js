@@ -244,7 +244,7 @@ function mount(root, C) {
     filters.hidden = !show;
     if (!show) { filter = 'all'; return; }
     const groups = ['All', ...['Business', 'E-commerce', 'Booking', 'Custom'].filter(g => all.some(r => groupOf(r.projectType) === g))];
-    filters.innerHTML = groups.map(g => `<button type="button" class="rv-flt mono" data-flt="${g === 'All' ? 'all' : g}" aria-pressed="${(g === 'All' ? 'all' : g) === filter}">${g}</button>`).join('');
+    filters.innerHTML = groups.map(g => `<button type="button" class="rv-flt mono" data-flt="${g === 'All' ? 'all' : e(g)}" aria-pressed="${(g === 'All' ? 'all' : g) === filter}">${e(g)}</button>`).join('');
   }
 
   /* ── deck ── */

@@ -87,7 +87,7 @@ window.ITECH_CONFIG = {
     packages: { enabled: true, hideNumber: true },
     addons: { enabled: false, altSpan: 2, hideNumber: true },   // removed at the owner's request (content kept in addonsConfig; nav "Add-ons" link hides automatically); altSpan 2 keeps the background rhythm if re-enabled
     estimator: { enabled: false },   // removed; settings kept in estimatorConfig
-    process: { enabled: true, hideNumber: true },
+    process: { enabled: false, hideNumber: true },   // removed at the owner's request: the phone-only laptop scroll film "The anatomy of digital" (content kept in processConfig; nav/footer links hide automatically)
     comparison: { enabled: false, altSpan: 2, hideNumber: true },   // removed at the owner's request (content kept in comparisonConfig; nav "Compare" link hides automatically)
     about: { enabled: false },   // removed; content kept in aboutConfig (nav/footer links hide automatically)
     testimonials: { enabled: true, hideNumber: true },   // real approved reviews only; empty state + review form until then
@@ -149,7 +149,7 @@ window.ITECH_CONFIG = {
     look: "synapse",                  // "synapse" = full-screen film you scrub with the mouse + scrambling headline + watermark (current); "strata" / "aura" / "" = the other layouts
     // films re-encoded with a keyframe on every frame (mouse scrubbing seeks without decoding the whole clip); srcMobile is used on screens <= 760px.
     // original: https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4
-    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m.mp4", poster: "img/hero-synapse-poster.webp", posterMobile: "img/hero-synapse-poster-m.webp", watermark: "iTECH", layout: "split" },   // layout: "split" = the film is a stage on the right, copy on clean black (current); "full" = the film fills the whole screen behind the copy   // poster = the film's first frame: shown at once, so nothing blinks while the film loads
+    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m-loop.mp4", poster: "img/hero-synapse-poster.webp", posterMobile: "img/hero-synapse-poster-m.webp", watermark: "iTECH", layout: "split" },   // layout: "split" = the film is a stage on the right, copy on clean black (current); "full" = the film fills the whole screen behind the copy   // poster = the film's first frame: shown at once, so nothing blinks while the film loads
     //   previous look was: "strata"
     bg: "img/hero-bg-4k.webp?v=3",
     bgMobile: "img/hero-bg-mobile.webp?v=3",   // portrait picture used on phones (<= 760px)           // still background image of the first screen (hero.bg); remove it for the plain dark grid

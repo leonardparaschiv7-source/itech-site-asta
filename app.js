@@ -168,7 +168,7 @@ R.hero = () => {
       ${(h.credibility || []).length ? `<p class="cred mono">${h.credibility.map(c => `<span>${esc(c)}</span>`).join('')}</p>` : ''}
     </div>
     ${S ? `<div class="hero-art" aria-hidden="true"><div class="art-mask"><video muted loop playsinline preload="metadata" poster="${esc(h.art.poster || '')}"><source src="${esc(h.art.src)}" type="video/mp4"></video></div>${(h.cards || []).slice(0, 2).map((k, i) => `<div class="hero-card hc${i + 1} glass"><i class="hc-ic">${HC_ICON[k.icon] || HC_ICON.graph}</i><div><p class="hc-k mono">${esc(T(k.kicker))}</p><p class="hc-t">${nl(T(k.title))}</p></div></div>`).join('')}</div>` : ''}
-    <div class="hero-scene" id="scene" aria-hidden="true">
+    ${SY || S ? '' : `<div class="hero-scene" id="scene" aria-hidden="true">
       <div class="rig" id="rig">
         <div class="floor"></div>
         <div class="layer ly-back" data-z="-240"><div class="float" style="--fd:11s"><div class="tablet"><div class="tablet-screen"><div class="tab-app">
@@ -188,7 +188,7 @@ R.hero = () => {
         <div class="layer ly-phone" data-z="260"><div class="float" style="--fd:9.5s;--fdl:-3s"><div class="phone"><div class="phone-screen">${itechPhoneHTML()}</div></div></div></div>
       </div>
 
-    </div>
+    </div>`}
   </div>
 </section>`;
 };
@@ -1352,6 +1352,15 @@ function setupHeroSynapse() {
   const filmSrc = v.dataset.src;   // one download only, however often the hero is set up again (language change, resize...): the film comes into memory as a blob; until then the poster (its first frame) is on screen
   if (!syFilm || syFilm.src !== filmSrc) syFilm = { src: filmSrc, url: fetch(filmSrc).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => URL.createObjectURL(b)) };
   syFilm.url.then(u => { v.src = u; }).catch(() => { v.src = filmSrc; });
+  /* phones play the light forward-and-back clip natively (no seeking: it lags and some phones never show the first seek); a blocked autoplay starts on the first touch */
+  if (small()) {
+    v.loop = true; v.muted = true;
+    const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => addEventListener('touchstart', () => v.play().catch(() => { }), { once: true, passive: true })); };
+    v.addEventListener('loadeddata', () => { box.classList.add('ready'); go(); });
+    if (v.readyState >= 2) { box.classList.add('ready'); go(); }
+    syCleanup = () => cleans.forEach(f => f());
+    return;
+  }
   v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
 
   /* Motion model — everything that moves is a spring or an eased curve; only transform and opacity are written, three elements per frame:
