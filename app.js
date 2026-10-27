@@ -1359,6 +1359,7 @@ function setupHeroSynapse() {
                   eases to a stop at both ends and then turns, starting exactly where the mouse left it (no jump)
        stage      spring-smoothed pointer parallax: film, giant wordmark and headline sit at different depths
        exit       on scroll the stage drifts down slower than the page and the copy lifts away                                     */
+  const followFilm = (C.motionConfig || {}).heroFilmFollowsMouse !== false;
   const fine = matchMedia('(pointer: fine)').matches, FPS = 24, TAU = Math.PI * 2, DRIFT_S = 14;
   let pos = 0, vel = 0, target = 0, phase = 0, drifting = false, lastX = null, lastMove = -1e9, vis = true, last = 0, raf = 0, hh = hero.offsetHeight || 1;
   let nx = 0, ny = 0, px = 0, py = 0, pvx = 0, pvy = 0, gx = 0, gy = 0, gvx = 0, gvy = 0, mx = innerWidth / 2, my = innerHeight / 2, lastP = -1;
@@ -1366,7 +1367,7 @@ function setupHeroSynapse() {
   v.addEventListener('seeked', apply);
   const onMove = e => {
     mx = e.clientX; my = e.clientY;
-    if (!vis || reduced || !v.duration) return;
+    if (!vis || reduced || !v.duration || !followFilm) return;
     const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now();
     target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8));
   };
@@ -1378,7 +1379,7 @@ function setupHeroSynapse() {
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
     const dur = v.duration;
     if (dur) {
-      const idle = !reduced && (!fine || now - lastMove > 3000);
+      const idle = !reduced && (!fine || !followFilm || now - lastMove > 3000);
       if (idle) { if (!drifting) { drifting = true; phase = Math.acos(1 - 2 * Math.min(1, Math.max(0, pos / dur))); } phase += dt * TAU / DRIFT_S; target = dur * (.5 - .5 * Math.cos(phase)); }
       else drifting = false;
       vel += (170 * (target - pos) - 2 * Math.sqrt(170) * .92 * vel) * dt; pos += vel * dt;   // critically damped spring
