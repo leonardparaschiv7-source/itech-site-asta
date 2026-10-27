@@ -9,6 +9,8 @@
   --f-head:'Geist','Helvetica Neue',Helvetica,Arial,sans-serif;
   --f-body:'Geist','Helvetica Neue',Helvetica,Arial,sans-serif;
   --f-accent:'Instrument Serif',Georgia,'Times New Roman',serif;
+  /* the small "i" of the iTECH wordmark: Outfit 500 (fonts/outfit-latin.woff2). Another font: add its @font-face to fonts/fonts.css and change these three values (also in legal.css) */
+  --f-logo-i:'Outfit'; --logo-i-w:500; --logo-i-s:1.06em;
   --f-mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   --radius:14px; --r-sm:10px; --container:1320px;
   --section:clamp(96px,14vh,176px); --gap:clamp(16px,1.6vw,24px);
@@ -43,7 +45,8 @@ img{max-width:100%;display:block}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .mono{font-family:var(--f-mono);font-size:var(--t-lab);letter-spacing:.14em;text-transform:uppercase}
 .muted{color:var(--muted)}
-.grain::after{content:"";position:fixed;inset:-50%;z-index:200;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* the grain never moves: one screen-sized layer is enough (it used to be 4x the screen, composited on every scroll frame) */
+.grain::after{content:"";position:fixed;inset:0;z-index:200;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* ── Buttons ── */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.75em;height:52px;padding:0 22px;border-radius:var(--r-sm);font-size:15px;font-weight:500;letter-spacing:-.005em;white-space:nowrap;transition:transform .5s var(--ease),box-shadow .6s var(--ease),background .4s,border-color .4s,color .3s}
@@ -104,11 +107,14 @@ img{max-width:100%;display:block}
 /* ── Nav ── */
 .nav{position:fixed;z-index:50;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;pointer-events:none}
 .nav-in{pointer-events:auto;display:flex;align-items:center;gap:var(--gap);height:var(--nav-h);padding:0 10px 0 20px;border-radius:14px;border:1px solid transparent;transition:background .6s var(--ease),border-color .6s var(--ease),box-shadow .6s}
-.nav.scrolled .nav-in{background:rgba(12,13,17,.66);border-color:var(--line);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);box-shadow:0 20px 40px -24px rgba(0,0,0,.6)}
+.nav.scrolled .nav-in{background:rgba(12,13,17,.72);border-color:var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 40px -24px rgba(0,0,0,.6)}
 .has-announce .nav{top:calc(56px + env(safe-area-inset-top,0px))}
 .has-announce .nav.scrolled{top:calc(12px + env(safe-area-inset-top,0px))}
 .logo{display:inline-flex;align-items:baseline;font-weight:700;font-size:21px;letter-spacing:-.05em}
-.logo-mark{color:var(--a1);margin-right:2px;animation:blink 1.2s steps(1) infinite}
+.logo-mark{color:var(--a1);margin-right:2px;animation:blinkSoft 2.4s ease-in-out infinite}
+/* the small "i" of the wordmark: Outfit Medium (round dot, clean geometric shape) with the rose-violet gradient */
+.logo-i{display:inline-block;font-family:var(--f-logo-i),var(--f-head);font-style:normal;font-weight:var(--logo-i-w);font-size:var(--logo-i-s);line-height:1;letter-spacing:0;padding-right:.04em;margin-right:.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+@keyframes blinkSoft{0%,100%{opacity:1}50%{opacity:.2}}
 .logo img{height:26px;width:auto}
 @keyframes blink{50%{opacity:0}}
 .nav-links{display:flex;gap:2px;margin-left:auto;position:relative}
@@ -424,6 +430,9 @@ html:has(.hero.has-video) .nav:not(.scrolled) .nav-in{background:rgba(12,13,17,.
 .pkg-note{color:var(--muted);font-size:13px;margin-top:28px;max-width:70ch}
 @media (max-width:1100px){.pkg-grid{grid-template-columns:repeat(2,1fr);row-gap:28px}}
 @media (max-width:620px){.pkg-grid{grid-template-columns:1fr}}
+/* three plans (Start, Grow, Premium): one row down to tablet width */
+.pkg-grid.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:960px){.pkg-grid.n3{grid-template-columns:1fr;max-width:520px;margin-inline:auto}}
 
 /* ── Add-ons ── */
 .addon-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -1000,9 +1009,17 @@ select.input option{background:#161319}
 .w3m .modal-body{padding:0}
 .w3m-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
 .w3m-head h3{font-size:clamp(2rem,4vw,3.2rem);font-weight:600;letter-spacing:-.05em;line-height:1;margin:6px 0 4px}
-.w3m-media{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,17%);gap:clamp(16px,3vw,40px);align-items:center}
+.w3m-media{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,22%,290px);gap:clamp(20px,3.4vw,52px);align-items:center}
 .w3m-desk{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 80px -40px rgba(0,0,0,.9)}
-@media (max-width:640px){.w3m-media{grid-template-columns:1fr}.w3m-phone{width:52%;justify-self:center}.w3m-head{flex-direction:column}}
+/* the phone in the project window: a real device frame with the project's own page running at 390 px wide inside it */
+.w3m-phone{position:relative;border-radius:40px;padding:9px;background:linear-gradient(160deg,#241a20,#0d0809 60%);border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 50px 80px -34px rgba(0,0,0,.95),0 0 70px -24px rgba(255,111,177,.35),inset 0 1px 0 rgba(255,255,255,.12)}
+.w3m-phone::after{content:"";position:absolute;right:-3px;top:22%;width:3px;height:58px;border-radius:0 3px 3px 0;background:#2a2024;box-shadow:0 -80px 0 #2a2024}
+.w3m-phone .phone-screen{aspect-ratio:390/844;border-radius:31px;background:#0a0709}
+.w3m-phone .phone-screen::before{top:10px;width:29%;height:22px;z-index:5}
+.w3m-phone .phone-screen::after{content:"";position:absolute;z-index:5;left:50%;bottom:7px;width:34%;height:4px;transform:translateX(-50%);border-radius:4px;background:rgba(255,255,255,.55);mix-blend-mode:difference;pointer-events:none}
+.w3-live-phone{background:#0a0709}
+@media (max-width:640px){.w3m-media{grid-template-columns:1fr}.w3m-phone{width:min(70%,280px);justify-self:center}.w3m-head{flex-direction:column}}
 
 /* ── Selected Work: photo previews (cropped to the website area) ── */
 .w3-shot{position:absolute;inset:0;overflow:hidden}
@@ -1076,6 +1093,7 @@ select.input option{background:#161319}
 /* ── Adaptive quality: light mode (app.js setupPerf adds .perf-lite on devices that cannot keep up).
       Same design: glass becomes solid frosted panels, the cursor follower is off, idle loops rest. ── */
 .perf-lite *:not(.nav-in){-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.perf-lite.grain::after,.perf-lite .grain::after{display:none}
 .perf-lite .glass{background:linear-gradient(180deg,#16191F,#111015)}
 .perf-lite .btn-ghost{background:rgba(22,25,31,.92)}
 .perf-lite .nav.scrolled .nav-in{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);background:rgba(12,13,17,.9)}
@@ -1214,6 +1232,60 @@ select.input option{background:#161319}
 .w3-live.has-poster::after{display:none}
 .w3-live.has-poster.is-still{display:block}
 
+/* ── Work, "index" layout (portfolioShowcase.layout): a screening room. One large screen plays the active project;
+      a typographic index beside it names every project. A thin line fills under the active name, then the next one plays. ── */
+.wi-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.4fr);gap:clamp(28px,4vw,72px);align-items:start;margin-top:clamp(36px,5vw,64px)}
+.wi-stage{position:relative}
+.wi-screen{position:relative;border-radius:14px;overflow:hidden;background:#100B0D;border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 60px 120px -60px rgba(0,0,0,.95),0 40px 90px -60px rgba(255,111,177,.28);transition:border-color .5s var(--ease)}
+.wi-screen:hover{border-color:rgba(255,111,177,.32)}
+.wi-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:40px;padding:0 16px;background:#0D0A0C;border-bottom:1px solid rgba(255,255,255,.07);font-size:10.5px;letter-spacing:.12em;color:#8C8790}
+.wi-live{display:inline-flex;align-items:center;gap:8px;color:#E9D3DE}
+.wi-live i{width:6px;height:6px;border-radius:50%;background:var(--a1);animation:wiLive 2.4s var(--ease-io) infinite}
+@keyframes wiLive{50%{opacity:.25}}
+.wi-url{padding:4px 14px;border-radius:6px;background:rgba(255,255,255,.04);text-transform:none;letter-spacing:.04em;color:#A5A0A8}
+.wi-count{justify-self:end;color:#E9D3DE}
+.wi-view{position:relative;aspect-ratio:16/10;background:#100B0D}
+.wi-card{position:absolute;inset:0;left:0;top:0;width:100%;height:100%;transform:none;transform-style:flat;filter:none;opacity:0;visibility:hidden;transition:opacity .7s var(--ease),visibility 0s .7s}
+.wi-card.is-active{opacity:1;visibility:visible;transition:opacity .7s var(--ease),visibility 0s}
+.wi-card .w3-site{position:absolute;inset:0;aspect-ratio:auto;cursor:pointer}
+.wi-open{position:absolute;z-index:3;right:16px;bottom:16px;display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 16px;border-radius:999px;
+  background:rgba(12,8,10,.86);border:1px solid rgba(255,255,255,.16);color:#FAF7F8;font-size:11px;letter-spacing:.12em;
+  opacity:0;transform:translateY(6px);transition:opacity .45s var(--ease),transform .6s var(--ease),border-color .4s}
+.wi-open svg{width:14px;height:14px;transition:transform .5s var(--ease)}
+.wi-screen:hover .wi-open,.wi-open:focus-visible{opacity:1;transform:none}
+.wi-open:hover{border-color:rgba(255,111,177,.55)}
+.wi-open:hover svg{transform:translateX(3px)}
+.wi-cap{display:flex;justify-content:space-between;align-items:baseline;gap:8px 24px;flex-wrap:wrap;margin-top:18px}
+.wi-type{color:var(--text);font-size:15px}
+.wi-tags{color:var(--muted);font-size:10.5px;letter-spacing:.12em}
+.wi-cap>*{animation:paneIn .6s var(--ease)}
+.wi-list{list-style:none;border-top:1px solid var(--line);counter-reset:none}
+.wi-row{position:relative;display:block;width:100%;padding:24px 0 25px;border-bottom:1px solid var(--line);text-align:left;cursor:pointer}
+.wi-nm{display:block;font-size:clamp(1.7rem,2.8vw,2.6rem);font-weight:600;letter-spacing:-.045em;line-height:1;color:rgba(250,247,248,.36);transition:color .45s var(--ease),transform .7s var(--ease)}
+.wi-row:hover .wi-nm{color:rgba(250,247,248,.78)}
+.wi-row.is-active .wi-nm{color:var(--text);transform:translateX(8px)}
+.wi-prog{position:absolute;left:0;right:0;bottom:-1px;height:1px;overflow:hidden;pointer-events:none}
+.wi-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));transform:scaleX(0);transform-origin:left}
+.wi-row.is-active .wi-prog i{transform:scaleX(1)}
+.work-index.is-auto .wi-row.is-active .wi-prog i{transform:scaleX(0);animation:wiProg var(--wi-dur,9s) linear forwards}
+.work-index.is-auto:not(.is-vis) .wi-prog i,.work-index.is-auto.is-hold .wi-prog i,.work-index.is-auto:not(.is-ready) .wi-prog i{animation-play-state:paused!important}
+.work-index:not(.is-ready) .wi-live i{animation-duration:.8s}   /* the live dot beats faster while the page is still loading */
+@keyframes wiProg{to{transform:scaleX(1)}}
+@media (max-width:980px){
+  .wi-grid{grid-template-columns:1fr}
+  .wi-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gap)}
+}
+@media (max-width:760px){
+  .wi-bar{grid-template-columns:auto 1fr;height:34px;padding:0 12px}
+  .wi-url{display:none}
+  .wi-open{opacity:1;transform:none;right:12px;bottom:12px;height:36px}
+  .wi-list{grid-template-columns:1fr}
+  .wi-row{padding:18px 0 19px}
+  .wi-nm{font-size:1.6rem}
+}
+@media (prefers-reduced-motion:reduce){.wi-card,.wi-card.is-active{transition:none}.wi-live i{animation:none}}
+
 /* hero background picture (hero.bg): the glowing layers sit on the right, a soft shade keeps the copy readable */
 .hero-photo{position:absolute;inset:0;z-index:-2;background:#09080B;overflow:hidden}
 .hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%}
@@ -1230,11 +1302,10 @@ select.input option{background:#161319}
 /* ── hero "synapse": mouse-scrubbed film, dot grid, big watermark, copy pushed to the bottom (the site's own fonts are kept) ── */
 .hero-synapse{align-items:flex-end;background:#000;padding-bottom:clamp(28px,5vh,56px)}
 .hero-synapse .hero-bg,.hero-synapse .hero-photo{display:none}
-.sy-video{position:absolute;inset:0;z-index:-3;background:#000;opacity:0;transition:opacity .6s ease}
-.sy-video.ready{opacity:1}
-.sy-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.sy-dots{position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.05;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:24px 24px}
-.sy-mark{position:absolute;left:0;right:0;top:50%;transform:translateY(calc(-50% + 50px));z-index:-2;pointer-events:none;text-align:center;white-space:nowrap;user-select:none;font-family:var(--f-head);font-weight:700;text-transform:uppercase;letter-spacing:-.04em;line-height:1;font-size:clamp(120px,30vw,521px);opacity:.10;background:radial-gradient(circle,rgba(142,127,148,0) 0%,#8E7F94 70%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.sy-video{position:absolute;inset:0;z-index:-3;background:#000}   /* visible from the first paint: the poster is the film's first frame */
+.sy-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:translateZ(0)}
+.sy-dots{position:absolute;inset:0;z-index:-2;pointer-events:none;opacity:.05;will-change:transform;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:24px 24px}
+.sy-mark{position:absolute;left:0;right:0;top:50%;transform:translateY(calc(-50% + 50px)) translateZ(0);will-change:transform;z-index:-2;pointer-events:none;text-align:center;white-space:nowrap;user-select:none;font-family:var(--f-head);font-weight:700;text-transform:uppercase;letter-spacing:-.04em;line-height:1;font-size:clamp(120px,30vw,521px);opacity:.10;background:radial-gradient(circle,rgba(142,127,148,0) 0%,#8E7F94 70%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hero-synapse::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 22%,transparent 55%,rgba(0,0,0,.6))}
 .hero-synapse .hero-grid{grid-template-columns:minmax(0,1fr) auto;align-items:end;row-gap:0}
 .hero-synapse .hero-copy{display:contents}
@@ -1263,3 +1334,54 @@ select.input option{background:#161319}
   .hero-synapse .hero-title{font-size:clamp(38px,12vw,56px)}
   .sy-mark{top:34%;font-size:clamp(110px,42vw,200px)}
 }
+
+/* ── Packages, "plan card" composition: name · dotted rule · large price · wide pill button right under it · checklist.
+      Plain plans get a white pill, the recommended one a rose-to-violet pill. Only the order and the surfaces change; the markup is the same. ── */
+.pkg-grid{gap:clamp(16px,1.8vw,28px)}
+.pkg{gap:26px;padding:34px 30px 32px;border-radius:28px;background:linear-gradient(180deg,#19151C,#131016);border:1px solid rgba(250,247,248,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.pkg:hover{transform:translateY(-5px);border-color:rgba(250,247,248,.16)}
+.pkg-head{order:1;padding-bottom:24px;border-bottom:1px dotted rgba(250,247,248,.2)}
+.pkg-name{font-size:clamp(1.55rem,2vw,1.9rem);letter-spacing:-.04em}
+.pkg .price{order:2;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:14px;row-gap:8px;padding:0;border:0}
+.pkg .price-was{order:1;margin:0;font-size:clamp(1.15rem,1.5vw,1.4rem);font-weight:500;color:rgba(165,169,178,.55);text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:rgba(165,169,178,.7)}
+.pkg .price-was::after{display:none}
+.pkg .price b{order:2;font-size:clamp(2.7rem,3.8vw,3.6rem);font-weight:600;letter-spacing:-.055em;line-height:1}
+.pkg .price .price-tag{order:3;flex:0 0 100%;color:var(--muted);font-size:11px;letter-spacing:.14em}
+.pkg .price>.pkg-save{order:4;margin-top:2px}
+.pkg .pkg-cta,.pkg>button.btn{order:3;width:100%;height:58px;min-height:58px;border-radius:999px;font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.pkg .btn-ghost{background:#F7F2F5;color:#150C12;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 1px 0 rgba(255,255,255,.6) inset}
+.pkg .btn-ghost:hover{background:#fff;color:#150C12;transform:translateY(-2px);box-shadow:0 18px 36px -18px rgba(255,255,255,.35)}
+.pkg.featured .btn{background:linear-gradient(100deg,#FF8EC2 0%,#E49BFF 55%,#C58BFF 100%);color:#1A0912;border:0;box-shadow:0 20px 44px -18px rgba(255,111,177,.7)}
+.pkg.featured .btn:hover{filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 24px 50px -18px rgba(255,111,177,.85)}
+.pkg .btn svg{color:currentColor}
+.pkg .checks{order:4;gap:13px;font-size:15px;color:#E4DDE1}
+.pkg .checks svg{width:17px;height:17px;margin-top:3px}
+.pkg .badge{top:30px;left:auto;right:28px;padding:7px 14px;font-size:12px;box-shadow:none;background:linear-gradient(100deg,#FF8EC2,#C58BFF);color:#1A0912}
+.pkg.featured{background:linear-gradient(180deg,#201423,#151018);box-shadow:0 0 80px -38px rgba(255,111,177,.6)}
+.pkg-head{padding-right:0}
+.pkg.featured .pkg-head{padding-right:110px}
+@media (max-width:620px){.pkg{padding:30px 24px 28px}.pkg.featured .pkg-head{padding-right:0}.pkg .badge{position:relative;top:auto;right:auto;align-self:flex-start;order:0;margin-bottom:-8px}}
+
+/* ── Hero "stage" (hero.sy.layout "split"): the film is no longer a full-screen background. It is a stage on the right whose edges melt
+      into the black page; the copy sits on clean black. The film comes in with a slow cinematic zoom and fade; the stage, wordmark and
+      copy move at different depths (app.js setupHeroSynapse). "full" keeps the old full-screen look. ── */
+.sy-video::before{content:"";position:absolute;inset:0;z-index:2;background:#000;pointer-events:none;animation:syFade 1.8s var(--ease) .1s both}
+@keyframes syFade{from{opacity:.92}to{opacity:0}}
+.sy-video video{animation:syZoom 3s var(--ease) both}
+@keyframes syZoom{from{transform:scale(1.13)}to{transform:scale(1)}}
+.sy-glow{position:absolute;left:0;top:0;width:560px;height:560px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,rgba(255,111,177,.15),rgba(197,139,255,.05) 55%,transparent);will-change:transform;display:none}
+@media (min-width:1101px){
+  .hero-synapse.sy-split{align-items:center;padding-bottom:0}
+  .sy-split .sy-video{left:auto;width:64%}
+  .sy-split .sy-video::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:
+    linear-gradient(90deg,#000 0%,rgba(0,0,0,.7) 12%,rgba(0,0,0,0) 46%),linear-gradient(270deg,#000 0%,rgba(0,0,0,0) 12%),
+    linear-gradient(180deg,#000 0%,rgba(0,0,0,0) 20%),linear-gradient(0deg,#000 0%,rgba(0,0,0,0) 26%)}
+  .sy-split::after{inset:auto 0 0 0;height:26%;background:linear-gradient(0deg,#000 0%,rgba(0,0,0,.6) 40%,rgba(0,0,0,0) 100%)}   /* fixed fade at the foot of the hero: the stage drifts down on scroll and never shows a hard edge */
+  .sy-split .hero-grid{grid-template-columns:minmax(0,46%) minmax(0,1fr);align-items:center}
+  .sy-split .hero-title{font-size:clamp(44px,5.6vw,96px)}
+  .sy-split .sy-mark{opacity:.07}
+}
+@media (pointer:fine) and (min-width:1101px){.sy-glow{display:block}}
+@media (prefers-reduced-motion:reduce){.sy-video::before{animation:none;opacity:0}.sy-video video{animation:none}}
+/* the giant ghost wordmark in the footer: its "i" is an echo, as soft as the letters next to it */
+.foot-mark .logo-i{font-size:var(--logo-i-s);opacity:.34;margin-left:.05em}

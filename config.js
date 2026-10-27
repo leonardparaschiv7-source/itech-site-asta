@@ -31,7 +31,7 @@ window.ITECH_CONFIG = {
   /* Adaptive quality. "auto": each visitor's device is measured for a few seconds;
      if it cannot keep the animations smooth, the site switches itself to a lighter
      mode (same design, calmer motion). "full": always full effects. "lite": always light. */
-  performanceConfig: { mode: "auto", slowFrameMs: 24, slowWindows: 2 },
+  performanceConfig: { mode: "auto", slowFrameMs: 20, slowWindows: 2 },   // light mode when the median frame of two 40-frame samples is slower than 20 ms (a 60 Hz screen dropping every other frame)
 
   /* ── THEME TOKENS (applied as CSS variables) ───────────────────────────── */
   themeConfig: {
@@ -117,19 +117,21 @@ window.ITECH_CONFIG = {
       { label: "About", target: "about" },
       { label: "FAQ", target: "faq" }
     ],
-    cta: { label: "Start a project", target: "brief" }
+    cta: { label: "Start a project", target: "packages" }
   },
 
   /* ── SYNAPSE SECTIONS (synapse.js) ─────────────────────────────────────────
      Films load when their section is near the screen and play only while visible.
      The numbers are facts about the site: 6 website types (builder), 7 process steps, 3 languages. */
   synapseConfig: {
+    /* the big iTECH logo + contact icons (from finalContact) shown over the first film; set enabled:false to bring back the "At a glance" numbers below */
+    brandBlock: { enabled: true },
     videos: {
-      /* re-encoded 1080p copies with a keyframe every 2 s (the originals were 12-14 MB each and lagged in Chrome); originals:
+      /* re-encoded 1080p copies (crf 20, SSIM 0.993-0.996 against the originals) with a keyframe every 2 s (the originals were 12-14 MB each and lagged in Chrome); originals:
          metrics https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589.mp4
          foot    https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4 */
-      metrics: "media/synapse-metrics.mp4",
-      foot: "media/synapse-foot.mp4"
+      metrics: "media/synapse-metrics.mp4?v=2",
+      foot: "media/synapse-foot.mp4?v=2"
     },
     metrics: { subtitle: "At a glance", items: [["6", "Website types"], ["7", "Steps from idea to launch"], ["3", "Languages: RO · EN · DE"]] },
     foot: { text: "" /* hidden by the owner; was: "Websites built to sell: custom-made, fast and ready for every screen." */, copy: "© 2026 iTECH Digital Studio. All rights reserved." }
@@ -143,7 +145,7 @@ window.ITECH_CONFIG = {
     look: "synapse",                  // "synapse" = full-screen film you scrub with the mouse + scrambling headline + watermark (current); "strata" / "aura" / "" = the other layouts
     // films re-encoded with a keyframe on every frame (mouse scrubbing seeks without decoding the whole clip); srcMobile is used on screens <= 760px.
     // original: https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4
-    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m.mp4", watermark: "iTECH" },
+    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m.mp4", poster: "img/hero-synapse-poster.webp", posterMobile: "img/hero-synapse-poster-m.webp", watermark: "iTECH", layout: "split" },   // layout: "split" = the film is a stage on the right, copy on clean black (current); "full" = the film fills the whole screen behind the copy   // poster = the film's first frame: shown at once, so nothing blinks while the film loads
     //   previous look was: "strata"
     bg: "img/hero-bg-4k.webp?v=3",
     bgMobile: "img/hero-bg-mobile.webp?v=3",   // portrait picture used on phones (<= 760px)           // still background image of the first screen (hero.bg); remove it for the plain dark grid
@@ -159,7 +161,7 @@ window.ITECH_CONFIG = {
     accentWord: "sell.",
     // hidden by the owner (2026-10-26); was: "iTECH designs and develops premium websites for businesses, brands and entrepreneurs. Custom-made, fast, and built to turn visitors into clients."
     subheadline: "",
-    primaryCta: { label: "Start a project", target: "brief" },
+    primaryCta: { label: "Start a project", target: "packages" },
     secondaryCta: { label: "View our work", target: "work" },
     credibility: [],   // hidden by the owner; was: ["Strategy", "Design", "Development", "Launch"]
     mockupUrl: "yourbrand.com",
@@ -248,7 +250,11 @@ window.ITECH_CONFIG = {
   portfolioShowcase: {
     header: { label: "Selected projects", title: "Different brands.\nDifferent worlds.", accent: "Different worlds.", intro: "" },   // intro hidden by the owner; was: "Built around your business.\nDesigned to feel unmistakably yours."
     viewLabel: "View project",
-    closeLabel: "Close project"
+    closeLabel: "Close project",
+    /* layout: "index" = one large screen playing the active project + a typographic list of all projects beside it (current);
+       "carousel" = the 3D carousel (settings in portfolio3D). autoAdvance: seconds each project stays on screen once its page has loaded (0 = off). */
+    layout: "index",
+    autoAdvance: 15
   },
   portfolio3D: {
     enabled: true,
@@ -342,12 +348,12 @@ window.ITECH_CONFIG = {
       id: "prmpt", name: "prmpt", slug: "prmpt", category: "Fashion", industry: "Fashion · Archive store", type: "Fashion store landing page", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
       live: "projects/prmpt.html", livePoster: "img/live/prmpt.webp",
-      description: "A fashion archive store: a film you turn with the cursor, then a black gallery where each piece scales in as you scroll, ending on one clear buy button.",
-      direction: "Pure black and white with oversized type and a custom cursor. The product leads and the interface stays out of the way.",
+      description: "A fashion archive store: a film you turn with the cursor, a catalogue index where every piece opens in a large frame, and one clear way to shop.",
+      direction: "A white studio, black type and a wide wordmark under the film. Catalogue numbers and a live angle readout; nothing competes with the product.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
       thumbnail: "", desktopPreview: "", mobilePreview: "",
       accentColor: "#FFFFFF", backgroundColor: "#000000", textColor: "#FFFFFF",
-      site: { brand: "PRMPT", eyebrow: "Archive collection", headline: "Archive collection\n\"PROMPT\"", cta: "view", meta: ["Scroll gallery", "Video scrub", "Custom cursor"] }
+      site: { brand: "PRMPT", eyebrow: "Archive collection", headline: "Archive collection\n\"PROMPT\"", cta: "Shop the archive", meta: ["Turn the model", "Catalogue index", "Lookbook"] }
     },
     {
       id: "securify", name: "securify", slug: "securify", category: "SaaS", industry: "SaaS · Data security", type: "Cybersecurity landing page", year: "2026",
@@ -435,7 +441,7 @@ window.ITECH_CONFIG = {
     { id: "portfolio", image: { src: "img/build-portfolio.webp" }, title: "Portfolio", preview: "portfolio", briefType: "portfolio", headline: "Make your\nwork the story.",
       description: "A visual-first portfolio designed to make your work impossible to ignore.",
       features: ["Project showcase", "Case studies", "Editorial design", "Responsive gallery"], floaters: ["Case study", "Gallery"] },
-    { id: "custom", image: { src: "img/build-custom.webp" }, title: "Custom project", preview: "custom", briefType: "custom", headline: "Built\nwithout limits.",
+    { id: "custom", enabled: false, image: { src: "img/build-custom.webp" }, title: "Custom project", preview: "custom", briefType: "custom", headline: "Built\nwithout limits.",
       description: "For projects that need more than a standard website.",
       features: ["Custom functionality", "Advanced motion", "3D experiences", "Integrations"], floaters: ["3D layer", "API connected"] }
   ],
@@ -533,7 +539,7 @@ window.ITECH_CONFIG = {
     intro: "Every successful website is built from multiple layers working together.",
     endTitle: "Every detail has a purpose.",
     endText: "Design, performance and technology working as one system.",
-    endCta: { label: "Start a project", target: "brief" },
+    endCta: { label: "Start a project", target: "packages" },
     // background photo of the section (remove to use the plain background)
     background: { src: "img/why-bg.webp", opacity: 1, far: "img/why-bg-far.webp", band: "img/why-bg-band.webp" },   // far/band: the same photo with its blur / sharpen / colour pre-applied (faster than live CSS filters); remove them if you change src
     // the website shown on BOTH the laptop and the phone (one brand, every screen)
@@ -621,10 +627,12 @@ window.ITECH_CONFIG = {
     whatsappDisplay: "+40 724 972 017",
     brandLine: "Websites built around your business",
     contactStrip: { enabled: false, title: "Not sure which package fits?", text: "Let's talk about your project." },
-    header: { label: "Packages", title: "Clear starting\npoints.", accent: "points.", intro: "" },   // intro hidden by the owner; was: "Every project is quoted from its brief. These packages show where most projects begin."
+    header: { label: "Packages", title: "Clear\npackages.", accent: "packages.", intro: "" },   // intro hidden by the owner; was: "Every project is quoted from its brief. These packages show where most projects begin."
     /* hidden by the owner (2026-10-26): the line under each package name, the "Not included" lists and the price note under the cards.
        The texts stay in pricing.en / ro / de; set these back to true to show them again. */
     showSubtitles: false, showExcluded: false, showNote: false,
+    /* what the button on each package card does: "contact" = scrolls to the closing contact section (current); "whatsapp" = opens WhatsApp with the card's message (whatsappNumber below) */
+    cardCta: "contact",
     currency: "€",
     note: "Prices are starting points in EUR and exclude VAT where applicable. Your final quote follows the project brief.",
     /* PRICING PER LANGUAGE — the packages section reads pricing[active language] (en / ro / de).
@@ -640,7 +648,7 @@ window.ITECH_CONFIG = {
         packages: {
           start: { title: "Start", subtitle: "For entrepreneurs, freelancers and small businesses that need a professional online presence.",
             oldPrice: "€399", launchPrice: "€319", savings: "Save €80",
-            features: ["Custom design tailored to your brand", "Up to 4 pages", "Responsive on desktop, tablet and mobile", "Functional contact form", "Basic technical SEO", "Image and performance optimization", "Domain and SSL setup", "Launch and final verification", "14 days post-launch support"],
+            features: ["Custom design tailored to your brand", "Up to 4 pages", "Responsive on desktop, tablet and mobile", "Functional contact form", "Basic technical SEO", "Image and performance optimization", ["Domain, hosting and SSL setup", "Domain and hosting costs are paid separately."], "Launch and final verification", "14 days post-launch support"],
             excluded: ["Complex animations", "Booking system", "Online store", "Advanced custom functionality"],
             cta: "Start your project", whatsappMessage: "Hello! I'm interested in the iTECH Start package at the founding client price (€319). I'd like to discuss my project." },
           grow: { title: "Grow", badge: "Most popular", subtitle: "For growing businesses that need more than a simple presentation website.",
@@ -650,8 +658,8 @@ window.ITECH_CONFIG = {
             cta: "Choose Grow", whatsappMessage: "Hello! I'm interested in the iTECH Grow package at the founding client price (€699). I'd like to discuss my project." },
           premium: { title: "Premium", subtitle: "For brands that want a premium digital experience with advanced design, animations and custom interactions.",
             oldPrice: "€1,399", launchPrice: "€1,099", savings: "Save €300",
-            features: ["Everything included in Grow", "Advanced custom UI/UX", "Premium visual direction", "Custom interactions", "Premium animations", "Scroll storytelling", "Custom structures for complex pages", "Dedicated interactive components",
-              ["Standard integrations with external services", "Common tools only: Google Analytics, Google Maps, WhatsApp, newsletter platforms, Calendly or similar, standard forms and embeds, and a standard CRM connection where technically supported."],
+            features: ["Everything included in Grow", "Advanced custom UI/UX", "Premium visual direction", "Custom interactions", "Premium animations", "Animations that tell your brand's story as you scroll", "Page structures designed around your business", "Interactive elements built for your site",
+              "Standard integrations with external services (Analytics, Maps, newsletter, Calendly)",
               "Advanced performance optimization", "Extended device and browser testing", "60 days post-launch support"],
             excludedLabel: "Quoted separately",
             excluded: ["Complex 3D / WebGL", "Complex e-commerce", "Custom APIs", "User accounts / authentication", "Custom dashboards", "Complex automations", "Advanced databases", "Marketplaces", "Membership systems", "SaaS functionality", "Custom checkout", "Complex booking engines", "Complex CRM / ERP", "Custom portals", "Multi-role user systems", "Advanced Three.js experiences", "Complex configurators", "Backend-heavy functionality"],
@@ -669,7 +677,7 @@ window.ITECH_CONFIG = {
         packages: {
           start: { title: "Start", subtitle: "Pentru antreprenori, freelanceri și afaceri mici care au nevoie de o prezență online profesionistă.",
             oldPrice: "2.000 lei", launchPrice: "1.590 lei", savings: "Economisești 410 lei",
-            features: ["Design personalizat pentru brandul tău", "Până la 4 pagini", "Responsive pe telefon, tabletă și desktop", "Formular de contact funcțional", "SEO tehnic de bază", "Optimizare imagini și performanță", "Configurare domeniu și SSL", "Publicare și verificare la lansare", "14 zile suport după lansare"],
+            features: ["Design personalizat pentru brandul tău", "Până la 4 pagini", "Responsive pe telefon, tabletă și desktop", "Formular de contact funcțional", "SEO tehnic de bază", "Optimizare imagini și performanță", ["Configurare domeniu, hosting și SSL", "Costul domeniului și al hosting-ului se plătește separat."], "Publicare și verificare la lansare", "14 zile suport după lansare"],
             excluded: ["Animații complexe", "Sistem de rezervări", "Magazin online", "Funcționalități custom avansate"],
             cta: "Începe proiectul", whatsappMessage: "Bună! Sunt interesat de pachetul iTECH Start la prețul de lansare (1.590 lei). Aș vrea să discutăm despre proiectul meu." },
           grow: { title: "Grow", badge: "Cel mai ales", subtitle: "Pentru afaceri care vor să crească online și au nevoie de mai mult decât un simplu site de prezentare.",
@@ -680,8 +688,8 @@ window.ITECH_CONFIG = {
             cta: "Alege Grow", whatsappMessage: "Bună! Sunt interesat de pachetul iTECH Grow la prețul de lansare (3.499 lei). Aș vrea să discutăm despre proiectul meu." },
           premium: { title: "Premium", subtitle: "Pentru branduri care vor o experiență digitală premium, cu design avansat, animații și interacțiuni personalizate.",
             oldPrice: "7.000 lei", launchPrice: "5.499 lei", savings: "Economisești 1.501 lei",
-            features: ["Tot ce include Grow", "UI/UX custom avansat", "Direcție vizuală premium", "Interacțiuni personalizate", "Animații premium", "Scroll storytelling", "Structuri custom pentru pagini complexe", "Componente interactive dedicate",
-              ["Integrări standard cu servicii externe", "Doar instrumente uzuale: Google Analytics, Google Maps, WhatsApp, platforme de newsletter, Calendly sau similar, formulare și embed-uri standard, conectare CRM standard acolo unde e posibil tehnic."],
+            features: ["Tot ce include Grow", "UI/UX custom avansat", "Direcție vizuală premium", "Interacțiuni personalizate", "Animații premium", "Animații care spun povestea brandului la derulare", "Pagini cu structură creată special pentru afacerea ta", "Elemente interactive făcute special pentru site-ul tău",
+              "Integrări standard cu servicii externe (Analytics, Maps, newsletter, Calendly)",
               "Optimizare avansată de performanță", "Testare extinsă pe dispozitive și browsere", "60 zile suport după lansare"],
             excludedLabel: "Se estimează separat",
             excluded: ["3D complex / WebGL", "E-commerce complex", "API custom", "Conturi utilizator / autentificare", "Dashboard-uri custom", "Automatizări complexe", "Baze de date avansate", "Marketplace", "Sisteme de membership", "Funcționalități SaaS", "Checkout personalizat", "Sisteme complexe de rezervări", "CRM / ERP complex", "Portaluri custom", "Sisteme cu mai multe roluri de utilizator", "Experiențe Three.js avansate", "Configuratoare complexe", "Funcționalități backend-heavy"],
@@ -699,7 +707,7 @@ window.ITECH_CONFIG = {
         packages: {
           start: { title: "Start", subtitle: "Für Selbstständige, Freelancer und kleine Unternehmen, die einen professionellen Online-Auftritt benötigen.",
             oldPrice: "€399", launchPrice: "€319", savings: "Du sparst €80",
-            features: ["Individuelles Design für deine Marke", "Bis zu 4 Seiten", "Responsive auf Desktop, Tablet und Smartphone", "Funktionierendes Kontaktformular", "Technisches Basis-SEO", "Bild- und Performance-Optimierung", "Domain- und SSL-Einrichtung", "Veröffentlichung und Launch-Check", "14 Tage Support nach dem Launch"],
+            features: ["Individuelles Design für deine Marke", "Bis zu 4 Seiten", "Responsive auf Desktop, Tablet und Smartphone", "Funktionierendes Kontaktformular", "Technisches Basis-SEO", "Bild- und Performance-Optimierung", ["Einrichtung von Domain, Hosting und SSL", "Kosten für Domain und Hosting werden separat getragen."], "Veröffentlichung und Launch-Check", "14 Tage Support nach dem Launch"],
             excluded: ["Komplexe Animationen", "Buchungssystem", "Online-Shop", "Erweiterte individuelle Funktionen"],
             cta: "Projekt starten", whatsappMessage: "Hallo! Ich interessiere mich für das iTECH-Paket Start zum Einführungspreis (€319). Ich würde gern über mein Projekt sprechen." },
           grow: { title: "Grow", badge: "Am beliebtesten", subtitle: "Für wachsende Unternehmen, die mehr als eine einfache Unternehmenswebsite benötigen.",
@@ -709,8 +717,8 @@ window.ITECH_CONFIG = {
             cta: "Grow wählen", whatsappMessage: "Hallo! Ich interessiere mich für das iTECH-Paket Grow zum Einführungspreis (€699). Ich würde gern über mein Projekt sprechen." },
           premium: { title: "Premium", subtitle: "Für Marken, die ein hochwertiges digitales Erlebnis mit fortschrittlichem Design, Animationen und individuellen Interaktionen wünschen.",
             oldPrice: "€1,399", launchPrice: "€1,099", savings: "Du sparst €300",
-            features: ["Alles aus Grow", "Fortgeschrittenes individuelles UI/UX", "Premium-Designrichtung", "Individuelle Interaktionen", "Premium-Animationen", "Scroll-Storytelling", "Individuelle Strukturen für komplexe Seiten", "Eigene interaktive Komponenten",
-              ["Standard-Integrationen externer Dienste", "Nur gängige Tools: Google Analytics, Google Maps, WhatsApp, Newsletter-Plattformen, Calendly o. Ä., Standardformulare und -Embeds sowie eine Standard-CRM-Anbindung, sofern technisch möglich."],
+            features: ["Alles aus Grow", "Fortgeschrittenes individuelles UI/UX", "Premium-Designrichtung", "Individuelle Interaktionen", "Premium-Animationen", "Animationen, die beim Scrollen die Geschichte deiner Marke erzählen", "Seitenstrukturen, die auf dein Unternehmen zugeschnitten sind", "Interaktive Elemente, speziell für deine Website entwickelt",
+              "Standard-Integrationen externer Dienste (Analytics, Maps, Newsletter, Calendly)",
               "Erweiterte Performance-Optimierung", "Erweitertes Testing auf Geräten und Browsern", "60 Tage Support nach dem Launch"],
             excludedLabel: "Separat kalkuliert",
             excluded: ["Komplexes 3D / WebGL", "Komplexer E-Commerce", "Individuelle APIs", "Benutzerkonten / Authentifizierung", "Individuelle Dashboards", "Komplexe Automatisierungen", "Erweiterte Datenbanken", "Marktplätze", "Mitgliedschaftssysteme", "SaaS-Funktionen", "Individueller Checkout", "Komplexe Buchungssysteme", "Komplexes CRM / ERP", "Individuelle Portale", "Mehrrollen-Benutzersysteme", "Fortgeschrittene Three.js-Erlebnisse", "Komplexe Konfiguratoren", "Backend-intensive Funktionen"],
@@ -748,7 +756,7 @@ window.ITECH_CONFIG = {
         features: ["Everything in Grow", "Advanced custom UI", "Custom interactions", "Premium animations", "Advanced page templates", "Third-party integrations"],
         excludedFeatures: [], featured: false, badge: "", ctaLabel: "Request project",
         whatsappMessage: "Hello! I'm interested in the iTECH Premium website package at the founding client price (€1,290). I'd like to discuss my project." },
-      { id: "custom", enabled: true, name: "Custom", subtitle: "For custom architecture or functionality.", description: "Platforms, complex stores, multilingual sites and bespoke builds.",
+      { id: "custom", enabled: false, name: "Custom", subtitle: "For custom architecture or functionality.", description: "Platforms, complex stores, multilingual sites and bespoke builds.",
         price: { type: "quote", label: "Let's talk" }, pricePrefix: "Pricing", billingLabel: "",
         features: ["Discovery workshop", "Custom architecture", "Complex integrations", "Dedicated project plan"],
         excludedFeatures: [], featured: false, badge: "", ctaLabel: "Let's talk",
@@ -1134,7 +1142,7 @@ window.ITECH_CONFIG = {
     showAvailability: true,
     availabilityText: "Available for selected projects",
     location: "Romania · Available worldwide",
-    cta: { label: "Start a project", text: "Tell us what you want to build.", micro: "Start here", target: "brief" },
+    cta: { label: "Start a project", text: "Tell us what you want to build.", micro: "Start here", target: "packages" },
     showNumbers: false                // true: 01 / 02 / 03 before each contact row
   },
 

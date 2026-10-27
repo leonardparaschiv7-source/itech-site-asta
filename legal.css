@@ -1,11 +1,12 @@
 /* Legal pages (confidentialitate.html, termeni.html): same dark theme as the site, no scripts. */
-:root{--bg:#09080B;--card:#161319;--text:#FAF7F8;--muted:#A5A9B2;--a1:#FF6FB1;--a2:#C58BFF;--line:rgba(250,247,248,.12)}
+:root{--f-logo-i:'Outfit';--logo-i-w:500;--logo-i-s:1.06em;--bg:#09080B;--card:#161319;--text:#FAF7F8;--muted:#A5A9B2;--a1:#FF6FB1;--a2:#C58BFF;--line:rgba(250,247,248,.12)}
 *{box-sizing:border-box}
 html{color-scheme:dark}
 body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.7 'Geist','Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--a1);text-underline-offset:3px}
 a:hover{color:#fff}
 .lg-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px clamp(16px,4vw,56px);border-bottom:1px solid var(--line)}
+.lg-i{display:inline-block;font-family:var(--f-logo-i),"Geist",sans-serif;font-style:normal;font-weight:var(--logo-i-w);font-size:var(--logo-i-s);line-height:1;letter-spacing:0;padding-right:.04em;background:linear-gradient(100deg,#FF6FB1,#C58BFF);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .lg-brand{font-weight:600;font-size:1.25rem;letter-spacing:.02em;color:var(--text);text-decoration:none}
 .lg-nav{display:flex;gap:18px;flex-wrap:wrap;font-size:.92rem}
 main{max-width:820px;margin:0 auto;padding:clamp(32px,6vw,72px) clamp(16px,4vw,32px) 96px}

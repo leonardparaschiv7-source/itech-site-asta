@@ -62,10 +62,12 @@ function applySEO() {
 }
 
 /* ───────────────────────── shared components ───────────────────────── */
+/* brand wordmark: the small leading "i" is set in the accent serif (italic, rose-violet gradient) instead of the squarish sans i */
+const logoName = n => /^i[A-Z]/.test(n || '') ? `<span class="logo-i" aria-hidden="true">i</span>${esc(n.slice(1))}` : esc(n);
 function logoHTML() {
   const b = C.brandConfig;
   if (b.logoImage) return `<img src="${esc(b.logoImage)}" alt="${esc(b.name)}">`;
-  return `${b.logoPrefix ? `<span class="logo-mark" aria-hidden="true">${esc(b.logoPrefix)}</span>` : ''}${esc(b.name)}`;
+  return `${b.logoPrefix ? `<span class="logo-mark" aria-hidden="true">${esc(b.logoPrefix)}</span>` : ''}${logoName(b.name)}`;
 }
 function sectionHead(key, h, opts = {}) {
   const n = S.sectionNums[key];
@@ -119,7 +121,7 @@ function laptopHTML() {
 function itechPhoneHTML() {
   const p = C.hero.phone || {}, b = C.brandConfig;
   return `<div class="ip">
-    <div class="ip-top"><b>${b.logoPrefix ? `<span>${esc(b.logoPrefix)}</span>` : ''}${esc(b.name)}</b><i class="ip-burger"></i></div>
+    <div class="ip-top"><b>${b.logoPrefix ? `<span>${esc(b.logoPrefix)}</span>` : ''}${logoName(b.name)}</b><i class="ip-burger"></i></div>
     <p class="ip-k">${esc(p.kicker || b.tagline)}</p>
     <p class="ip-h">${accentize(p.headline || '', 'sell.')}</p>
     <div class="ip-card"><span class="ip-lab">${esc(p.projectLabel || '')}</span><b>${esc(p.projectName || '')}</b>
@@ -148,10 +150,10 @@ R.hero = () => {
   const S = h.look === 'strata' && h.art && h.art.src;
   const SY = h.look === 'synapse' && h.sy && h.sy.src;
   const V = !S && !SY && h.video && h.video.enabled !== false && h.video.src ? h.video : null;
-  return `<section class="hero${V ? ' has-video' : ''}${(V && V.hideScene) || S || SY ? ' no-scene' : ''}${SY ? ' hero-synapse' : ''}${h.look === 'aura' && !S ? ' hero-aura' : ''}${S ? ' hero-strata' : ''}" id="home" aria-labelledby="hero-title">
+  return `<section class="hero${V ? ' has-video' : ''}${(V && V.hideScene) || S || SY ? ' no-scene' : ''}${SY ? ' hero-synapse' + (h.sy.layout === 'full' ? '' : ' sy-split') : ''}${h.look === 'aura' && !S ? ' hero-aura' : ''}${S ? ' hero-strata' : ''}" id="home" aria-labelledby="hero-title">
   ${h.look === 'aura' && !S ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
   ${V ? `<div class="hero-video" aria-hidden="true"><video muted loop playsinline preload="metadata"${V.poster ? ` poster="${esc(V.poster)}"` : ''}><source src="${esc(V.src)}" type="video/mp4"></video><span class="hero-video-shade"></span></div>` : ''}
-  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="auto"><source src="${esc(small() && h.sy.srcMobile || h.sy.src)}" type="video/mp4"></video></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div>` : ''}
+  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="none" data-src="${esc(small() && h.sy.srcMobile || h.sy.src)}"${(small() && h.sy.posterMobile || h.sy.poster) ? ` poster="${esc(small() && h.sy.posterMobile || h.sy.poster)}"` : ''}></video></div><div class="sy-glow" aria-hidden="true"></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div>` : ''}
   ${h.bg && !SY ? `<div class="hero-photo" aria-hidden="true"><picture>${h.bgMobile ? `<source media="(max-width:760px)" srcset="${esc(h.bgMobile)}">` : ''}<img src="${esc(h.bg)}" alt="" decoding="async" fetchpriority="high"></picture></div>` : ''}
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-grid">
@@ -171,7 +173,7 @@ R.hero = () => {
         <div class="floor"></div>
         <div class="layer ly-back" data-z="-240"><div class="float" style="--fd:11s"><div class="tablet"><div class="tablet-screen"><div class="tab-app">
           <span class="tab-status"><i>9:41</i><i>iTECH</i><i>100%</i></span>
-          <div class="app-row"><div class="app-icon">${esc(C.brandConfig.logoPrefix || '')}<span>i</span></div><div><b class="app-name">${esc(C.brandConfig.name)}</b><p class="app-tag">${esc(C.brandConfig.tagline)}</p></div></div>
+          <div class="app-row"><div class="app-icon">${esc(C.brandConfig.logoPrefix || '')}<span>i</span></div><div><b class="app-name">${logoName(C.brandConfig.name)}</b><p class="app-tag">${esc(C.brandConfig.tagline)}</p></div></div>
           <div class="app-tiles"><i></i><i></i><i></i></div>
           <span class="app-load"><i></i></span>
         </div></div></div></div></div>
@@ -269,10 +271,39 @@ function w3Info(i) {
     <div class="w3-right"><p class="w3-desc"${ed(k + '.description')}>${esc(p.description)}</p><ul class="tags">${(p.services || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <button class="link w3-link" data-act="w3-open" data-i="${i}">${esc(C.portfolioShowcase.viewLabel)} ${I.arrow}</button></div>`;
 }
+/* portfolioShowcase.layout "index": one large screen playing the active project, a typographic index of every project beside it.
+   The cards keep the .w3-card / .w3-live markup, so loading, pausing and the stills work exactly as in the 3D carousel. */
+const w3Index = () => C.portfolioShowcase.layout === 'index';
+const wiHost = p => (p.slug || p.name || '').toLowerCase().replace(/\s+/g, '') + '.com';
+function wiCaption(p) {
+  return `<span class="wi-type">${esc(p.type)}</span><span class="wi-tags mono">${(p.services || []).map(esc).join(' · ')}</span>`;
+}
+function workIndex(H, P) {
+  const a = S.w3.active, dur = +H.autoAdvance || 0;
+  return `<section class="sec work3d work-index${dur && !reduced ? ' is-auto' : ''}" id="work" aria-labelledby="work-title" style="--wi-dur:${dur || 9}s">
+  <div class="container">${sectionHead('work', H.header, { path: 'portfolioShowcase' })}
+    <div class="wi-grid">
+      <div class="wi-stage" id="w3Stage">
+        <div class="wi-screen">
+          <div class="wi-bar" aria-hidden="true"><span class="wi-live mono"><i></i>${esc(T('Live'))}</span><span class="wi-url mono" id="wiUrl">${esc(wiHost(P[a]))}</span><span class="wi-count mono" id="w3Count">${pad2(a + 1)} / ${pad2(P.length)}</span></div>
+          <div class="wi-view">${P.map((p, i) => `<article class="w3-card wi-card${i === a ? ' is-active' : ''}" data-i="${i}" aria-hidden="${i === a ? 'false' : 'true'}">
+            <div class="w3-site" data-act="w3-card" data-i="${i}" role="img" aria-label="${esc(p.name)} homepage preview">${desktopSite(p)}</div></article>`).join('')}
+            <button class="wi-open mono" data-act="w3-open" data-i="${a}" id="wiOpen">${esc(H.viewLabel)} ${I.arrow}</button>
+          </div>
+        </div>
+        <p class="wi-cap" id="wiCap">${wiCaption(P[a])}</p>
+      </div>
+      <ol class="wi-list" aria-label="${esc(H.header.label || 'Selected projects')}">${P.map((p, i) => `<li><button class="wi-row${i === a ? ' is-active' : ''}" data-act="w3-card" data-i="${i}" aria-current="${i === a ? 'true' : 'false'}">
+        <span class="wi-nm">${esc(p.name)}</span><span class="wi-prog" aria-hidden="true"><i></i></span></button></li>`).join('')}</ol>
+    </div>
+  </div>
+</section>`;
+}
 R.work = () => {
   const H = C.portfolioShowcase, P = showcaseProjects();
   if (!P.length) return '';
   S.w3.active = Math.min(S.w3.active, P.length - 1);
+  if (w3Index()) return workIndex(H, P);
   return `<section class="sec work3d" id="work" aria-labelledby="work-title" aria-roledescription="carousel">
   <div class="container">${sectionHead('work', H.header, { path: 'portfolioShowcase' })}</div>
   <div class="w3-stage" id="w3Stage" style="--w3-persp:${+C.portfolio3D.perspective || 1800}px">
@@ -296,6 +327,7 @@ function w3ShowInfo(i) {
 }
 function w3Layout() {
   const stage = $('#w3Stage'); if (!stage) return;
+  if (w3Index()) return wiLayout(stage);
   const P3 = C.portfolio3D, cards = $$('.w3-card', stage), N = cards.length, a = S.w3.active, h = S.w3.hover, flat = w3Flat();
   stage.classList.toggle('flat', flat);
   const cnt = $('#w3Count'); if (cnt) cnt.textContent = `${pad2(a + 1)} / ${pad2(N)}`;
@@ -316,14 +348,39 @@ function w3Layout() {
     c.setAttribute('aria-hidden', ad > 1 ? 'true' : 'false');
   });
 }
+function wiLayout(stage) {
+  const P = showcaseProjects(), a = S.w3.active, p = P[a]; if (!p) return;
+  $$('.w3-card', stage).forEach(c => { const on = +c.dataset.i === a; c.classList.toggle('is-active', on); c.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+  $$('.wi-row').forEach(r => { const on = +r.dataset.i === a; r.classList.toggle('is-active', on); r.setAttribute('aria-current', on ? 'true' : 'false'); });
+  const url = $('#wiUrl'), cnt = $('#w3Count'), cap = $('#wiCap'), open = $('#wiOpen');
+  if (url) url.textContent = wiHost(p);
+  if (cnt) cnt.textContent = `${pad2(a + 1)} / ${pad2(P.length)}`;
+  if (cap && cap.dataset.i !== String(a)) { cap.dataset.i = a; cap.innerHTML = wiCaption(p); }
+  if (open) open.dataset.i = a;
+  liveSync();
+}
+/* index layout: the progress line under the active project fills, then the next project takes the screen.
+   It rests while the pointer or keyboard focus is in the section, and while the section is off screen. */
+function setupWorkIndex() {
+  const sec = $('#work.work-index'); if (!sec) return;
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => sec.classList.toggle('is-vis', es[es.length - 1].isIntersecting), { threshold: .25 }).observe(sec);
+  else sec.classList.add('is-vis');
+  const grid = $('.wi-grid', sec), hold = on => sec.classList.toggle('is-hold', on);
+  grid.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') hold(true); });
+  grid.addEventListener('pointerleave', () => hold(false));
+  grid.addEventListener('focusin', () => hold(true));
+  grid.addEventListener('focusout', e => { if (!grid.contains(e.relatedTarget)) hold(false); });
+  sec.addEventListener('animationend', e => { if (e.animationName === 'wiProg' && e.target.closest('.wi-row.is-active')) w3Go(S.w3.active + 1); });
+}
 function w3Go(i, fromScroll) {
   const N = showcaseProjects().length; if (!N) return;
   S.w3.active = (i + N) % N; S.w3.hover = null; w3ShowInfo(S.w3.active); w3Layout();
-  if (w3Flat() && !fromScroll) { const rig = $('#w3Rig'), c = $$('.w3-card', rig)[S.w3.active]; if (rig && c) rig.scrollTo({ left: c.offsetLeft - (rig.clientWidth - c.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth' }); }
+  if (w3Flat() && !fromScroll && !w3Index()) { const rig = $('#w3Rig'), c = $$('.w3-card', rig)[S.w3.active]; if (rig && c) rig.scrollTo({ left: c.offsetLeft - (rig.clientWidth - c.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth' }); }
 }
 function setupW3() {
   const stage = $('#w3Stage'); if (!stage) return;
   w3Shown = S.w3.active; w3Layout();
+  if (w3Index()) return setupWorkIndex();
   // browsers can keep a stale (empty) frame of 3D panels after images decode: redraw once they are ready
   const imgs = $$('img', stage), redraw = () => { S.w3.sep += 0.0001; w3Layout(); requestAnimationFrame(() => { S.w3.sep -= 0.0001; w3Layout(); }); };
   imgs.forEach(img => { if (!img.complete) img.addEventListener('load', () => requestAnimationFrame(redraw), { once: true }); });
@@ -335,7 +392,7 @@ function setupW3() {
   stage.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); w3Go(S.w3.active + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); w3Go(S.w3.active - 1); } });
 }
 function w3Scroll() {
-  const sec = $('#work'); if (!sec || w3Flat()) return;
+  const sec = $('#work'); if (!sec || w3Flat() || w3Index()) return;
   const P3 = C.portfolio3D; let sep = 1;
   if (P3.scrollSeparation && root.classList.contains('motion')) { const r = sec.getBoundingClientRect(); const p = clamp01((innerHeight - r.top) / (innerHeight * .9)); sep = lerp(.3, 1, 1 - Math.pow(1 - p, 3)); }
   if (Math.abs(sep - S.w3.sep) > .004) { S.w3.sep = sep; w3Layout(); }
@@ -346,11 +403,11 @@ function openShowcase(i) {
   showModal(`<div class="modal-card w3m">
     <div class="w3m-head"><div><p class="mono muted">${esc(p.label || T('Concept project'))} · ${esc(p.industry)} · ${esc(p.year)}</p><h3 id="modal-title">${esc(p.name)}</h3><p class="w3-type">${esc(p.type)}</p></div><button class="btn btn-ghost btn-sm" data-act="modal-close">${esc(H.closeLabel)}</button></div>
     <div class="w3m-media"><div class="w3m-desk">${p.scene ? '' : `<div class="w3-chrome" aria-hidden="true"><i></i><span class="w3-url">${esc(p.slug)}.com</span></div>`}<div class="w3-site" role="img" aria-label="${esc(p.name)} desktop preview"${siteAspect(p)}>${desktopSite(p)}</div></div>
-      <div class="w3m-phone phone" role="img" aria-label="${esc(p.name)} mobile preview"><div class="phone-screen">${mobileSite(p)}</div></div></div>
+      <div class="w3m-phone phone" role="img" aria-label="${esc(p.name)} mobile preview"><div class="phone-screen">${p.live ? `<div class="w3-live w3-live-phone" data-name="${esc(p.name)}" data-live="${esc(p.live)}" data-w="390"><iframe title="${esc(p.name)} (mobile)" tabindex="-1" allow="autoplay" sandbox="allow-scripts allow-same-origin"></iframe></div>` : mobileSite(p)}</div></div></div>
     <div class="modal-body"><div class="cs"><h4>${esc(T('Overview'))}</h4><p>${esc(p.description)}</p><h4>${esc(T('Design direction'))}</h4><p>${esc(p.direction || '')}</p></div>
       <div class="cs"><h4>${esc(T('Services'))}</h4><ul class="tags">${(p.services || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <p class="muted" style="font-size:13.5px">${esc(T('This is a concept project created by iTECH to show a design direction. It is not client work.'))}</p>
-      <button class="btn btn-primary" data-act="go" data-target="brief">${esc(T('Start a similar project'))} ${I.arrow}</button></div></div></div>`);
+      <button class="btn btn-primary" data-act="go" data-target="packages">${esc(T('Start a similar project'))} ${I.arrow}</button></div></div></div>`);
   setupLive(document.querySelector('.w3m') || document);
 }
 
@@ -455,16 +512,16 @@ R.packages = () => {
       ${L && L.offer ? ''
         : `<div class="pkg-offer-side">${off.bonus ? `<span class="pkg-offer-bonus mono">${esc(off.bonus)}</span>` : ''}${off.availability ? `<span class="pkg-offer-av mono">${esc(off.availability)}${off.note ? ` · <em>${esc(off.note)}</em>` : ''}</span>` : ''}</div>`}
     </div>` : ''}
-    <div class="pkg-grid">${items.map(({ pk, idx, P }) => {
+    <div class="pkg-grid n${items.length}">${items.map(({ pk, idx, P }) => {
       const name = P ? P.title : pk.name, cta = P ? P.cta : pk.ctaLabel, badge = P ? P.badge : pk.badge, msg = P && P.whatsappMessage || pk.whatsappMessage;
       return `<article class="pkg lit${pk.featured ? ' featured' : ''}${pk.price && pk.price.type === 'quote' ? ' is-custom' : ''}" data-reveal>
       ${badge ? `<span class="badge">${esc(badge)}</span>` : ''}
-      <div><h3 class="pkg-name"${P ? '' : ed(`packagesConfig.items.${idx}.name`)}>${esc(name)}</h3>${K.showSubtitles === false ? '' : `<p class="pkg-sub"${P ? '' : ed(`packagesConfig.items.${idx}.subtitle`)}>${esc(P ? P.subtitle : pk.subtitle)}</p>`}</div>
+      <div class="pkg-head"><h3 class="pkg-name"${P ? '' : ed(`packagesConfig.items.${idx}.name`)}>${esc(name)}</h3>${K.showSubtitles === false ? '' : `<p class="pkg-sub"${P ? '' : ed(`packagesConfig.items.${idx}.subtitle`)}>${esc(P ? P.subtitle : pk.subtitle)}</p>`}</div>
       ${P ? localPrice(L, P) : priceBlock(pk, K.currency)}
       <ul class="checks">${(P ? P.features : pk.features).map(pkgFeature).join('')}${P ? '' : (pk.excludedFeatures || []).map(f => `<li class="x">${I.minus}<span>${esc(f)}</span></li>`).join('')}</ul>
       ${P && K.showExcluded !== false ? pkgExcluded(P.excludedLabel || L.notIncluded, P.excluded) : ''}
-      ${K.whatsappNumber ? `<a class="btn pkg-cta ${pk.featured ? 'btn-primary' : 'btn-ghost'}" href="${esc(waLink(msg))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(cta)}: ${esc(name)} (WhatsApp)">${WA_ICON}<span>${esc(cta)}</span>${I.arrow}</a>`
-        : `<button class="btn ${pk.featured ? 'btn-primary' : 'btn-ghost'}" data-act="package" data-id="${esc(pk.id)}" data-target="${esc(pk.ctaTarget || 'brief')}">${esc(cta)} ${I.arrow}</button>`}
+      ${K.cardCta === 'whatsapp' && K.whatsappNumber ? `<a class="btn pkg-cta ${pk.featured ? 'btn-primary' : 'btn-ghost'}" href="${esc(waLink(msg))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(cta)}: ${esc(name)} (WhatsApp)">${WA_ICON}<span>${esc(cta)}</span>${I.arrow}</a>`
+        : `<button class="btn ${pk.featured ? 'btn-primary' : 'btn-ghost'}" data-act="package" data-id="${esc(pk.id)}" data-target="${esc(pk.ctaTarget || 'start')}">${esc(cta)} ${I.arrow}</button>`}
     </article>`; }).join('')}</div>
     ${K.whatsappNumber && K.contactStrip && K.contactStrip.enabled !== false ? `<div class="pkg-wa-strip"><div><p class="mono">${esc(K.contactStrip.title)}</p><p>${esc(K.contactStrip.text)}</p></div>
       <a class="pkg-wa-num" href="${esc(waLink(''))}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${esc(K.whatsappDisplay)} (opens in a new tab)">${WA_ICON}<span>${esc(K.whatsappDisplay || K.whatsappNumber)}</span>${I.arrow}</a></div>` : ''}
@@ -492,7 +549,7 @@ R.addons = () => {
 function addonBar() {
   const n = S.addons.size;
   if (!n) return `<span>Nothing selected yet. Tap any add-on to include it in your brief.</span>`;
-  return `<span><b>${n} add-on${n > 1 ? 's' : ''} selected.</b> ${n > 1 ? 'They are' : 'It is'} included in your project brief.</span><span style="display:flex;gap:16px"><button class="link" data-act="addons-clear">Clear</button><button class="link" data-act="go" data-target="brief">Go to brief ${I.arrow}</button></span>`;
+  return `<span><b>${n} add-on${n > 1 ? 's' : ''} selected.</b> ${n > 1 ? 'They are' : 'It is'} included in your project brief.</span><span style="display:flex;gap:16px"><button class="link" data-act="addons-clear">Clear</button><button class="link" data-act="go" data-target="packages">Go to brief ${I.arrow}</button></span>`;
 }
 
 /* estimator */
@@ -769,7 +826,7 @@ function footerHTML() {
       })()}</div>
       <div class="foot-col foot-studio"><span class="mono">${esc(T('Studio'))}</span>${C.finalCTAConfig.showAvailability && C.finalCTAConfig.availabilityText ? `<p class="foot-av"><b aria-hidden="true"></b>${esc(C.finalCTAConfig.availabilityText)}</p>` : ''}${(F.studio || []).map(t => `<p>${esc(t)}</p>`).join('')}</div>
     </div>
-    <p class="foot-mark" aria-hidden="true"><span>${esc(b.name.slice(0, 1))}</span>${esc(b.name.slice(1))}</p>
+    <p class="foot-mark" aria-hidden="true">${logoName(b.name)}</p>
     <div class="foot-legal"><span>&copy; ${new Date().getFullYear()} ${esc(F.copyrightName)}. ${esc(T('All rights reserved.'))}</span><nav aria-label="Legal">${F.legal.map(l => l.url ? `<a class="link" href="${esc(l.url)}">${esc(l.label)}</a>` : `<span aria-disabled="true">${esc(l.label)}</span>`).join('')}</nav></div>
   </div></footer>`;
 }
@@ -797,7 +854,7 @@ const pageOrder = list => list.filter(it => sectionOn(it.target)).map((it, i) =>
 const app = document.getElementById('app');
 /* standalone section components (e.g. experience.js) register in window.ITECH_EXT */
 const EXT = window.ITECH_EXT || {};
-const extHelpers = () => ({ esc, nl, accentize, desktopSite, I });
+const extHelpers = () => ({ esc, nl, accentize, desktopSite, I, logoName });
 const EXT_ONLY = new Set(Object.keys(EXT).filter(k => !R[k]));   // standalone sections (not numbered)
 Object.keys(EXT).forEach(k => { if (!R[k]) R[k] = () => EXT[k].render(C, extHelpers()); });
 function renderAll() {
@@ -813,7 +870,7 @@ function renderAll() {
   }).join('');
   root.classList.toggle('has-announce', !!(C.announcementConfig.enabled));
   app.innerHTML = announceHTML() + navHTML() + `<main id="main">${html}</main>` + footerHTML() +
-    (C.mobileStickyCta.enabled ? `<div class="mcta" id="mcta"><button class="btn btn-primary" data-act="go" data-target="brief">${esc(C.mobileStickyCta.label)} ${I.arrow}</button></div>` : '');
+    (C.mobileStickyCta.enabled ? `<div class="mcta" id="mcta"><button class="btn btn-primary" data-act="go" data-target="packages">${esc(C.mobileStickyCta.label)} ${I.arrow}</button></div>` : '');
   if (!$('#announce')) root.classList.remove('has-announce');
   afterRender();
 }
@@ -873,12 +930,12 @@ function openProject(id) {
       ${p.challenge ? `<h4>Challenge</h4><p>${esc(p.challenge)}</p>` : ''}${p.solution ? `<h4>Solution</h4><p>${esc(p.solution)}</p>` : ''}</div>
       <div class="cs"><h4>${esc(T('Services'))}</h4><ul class="tags">${(p.services || []).map(s => `<li>${esc(s)}</li>`).join('')}</ul>${(p.technologies || []).length ? `<h4>Technology</h4><ul class="tags">${p.technologies.map(s => `<li>${esc(s)}</li>`).join('')}</ul>` : ''}
       ${p.websiteURL ? `<a class="btn btn-ghost" href="${esc(p.websiteURL)}" target="_blank" rel="noopener">Visit website ${I.out}</a>` : ''}
-      <button class="btn btn-primary" data-act="go" data-target="brief">Start a similar project ${I.arrow}</button></div></div></div>`;
+      <button class="btn btn-primary" data-act="go" data-target="packages">Start a similar project ${I.arrow}</button></div></div></div>`;
   document.body.appendChild(m); root.classList.add('lock');
   requestAnimationFrame(() => m.classList.add('open'));
   $('.modal-close', m).focus();
 }
-function closeModal(silent) { const m = $('#modal'); if (!m) return; if (silent === true) { m.remove(); return; } m.classList.remove('open'); root.classList.remove('lock'); setTimeout(() => m.remove(), 400); modalReturn && modalReturn.focus && modalReturn.focus({ preventScroll: true }); }
+function closeModal(silent) { const m = $('#modal'); if (!m) return; if (silent === true) { m.remove(); return; } m.classList.remove('open'); root.classList.remove('lock'); setTimeout(() => { m.remove(); if (typeof liveSync === 'function') liveSync(); }, 400); modalReturn && modalReturn.focus && modalReturn.focus({ preventScroll: true }); }
 function trapFocus(container, e) {
   if (e.key !== 'Tab') return;
   const f = $$('a[href],button:not([disabled]),input,textarea,select', container).filter(el => el.offsetParent !== null);
@@ -888,6 +945,11 @@ function trapFocus(container, e) {
 
 function toast(t) { const n = document.createElement('div'); n.className = 'toast'; n.setAttribute('role', 'status'); n.textContent = t; document.body.appendChild(n); setTimeout(() => n.classList.add('show'), 20); setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 500); }, 3600); }
 
+/* every window closes with a click on the dimmed area around it; the press has to start there too, so selecting text
+   inside the window and releasing the mouse outside does not close it */
+let modalDown = false;
+document.addEventListener('pointerdown', e => { modalDown = !!(e.target && e.target.id === 'modal'); }, true);
+document.addEventListener('click', e => { if (e.target && e.target.id === 'modal' && modalDown) { modalDown = false; closeModal(); } });
 document.addEventListener('click', e => {
   const t = e.target.closest('[data-act]'); if (!t) return;
   if (root.classList.contains('editing') && e.target.closest('[data-e]') && t.contains(e.target.closest('[data-e]'))) return;
@@ -902,7 +964,7 @@ document.addEventListener('click', e => {
     case 'w3-prev': w3Go(S.w3.active - 1); break;
     case 'w3-next': w3Go(S.w3.active + 1); break;
     case 'w3-open': e.stopPropagation(); openShowcase(+t.dataset.i); break;
-    case 'w3-card': { const i = +t.dataset.i; if (i === S.w3.active || w3Flat()) openShowcase(i); else w3Go(i); break; }
+    case 'w3-card': { const i = +t.dataset.i; if (i === S.w3.active || (w3Flat() && !w3Index())) openShowcase(i); else w3Go(i); break; }
     case 'project': openProject(t.dataset.id); break;
     case 'svc': {
       const i = +t.dataset.i; S.service = i; S.serviceOpen = S.serviceOpen === i && small() ? -1 : i;
@@ -1212,13 +1274,33 @@ function liveSync() {
     const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
     if ((phoneLite || b.box.classList.contains('has-poster')) && !active) { liveUnload(b); return; }   // cards with a still run no page until they are the active one
     if (liveNear) liveLoad(b, active ? 0 : 900 + n * 700);
-    liveSetActive(b, active && liveNear);
+    liveSetActive(b, active && liveNear && !document.querySelector('.w3m'));   // the cards behind an open project window rest
   });
+  if (w3Index()) wiWatchReady();
+}
+/* index layout: the progress line only starts once the active page has loaded and its film can play,
+   so a project is never cut away while it is still appearing (a slow link still moves on after 8 s) */
+let wiReadyFor = -1, wiReadyT = 0;
+function wiWatchReady() {
+  const sec = $('#work.work-index'); if (!sec) return;
+  const a = S.w3.active, card = $(`.wi-card[data-i="${a}"]`, sec), box = card && $('.w3-live', card);
+  if (wiReadyFor !== a) { wiReadyFor = a; sec.classList.remove('is-ready'); clearTimeout(wiReadyT); wiReadyT = 0; }
+  if (sec.classList.contains('is-ready')) return;
+  const done = () => { if (wiReadyFor === a) sec.classList.add('is-ready'); };
+  if (!box || box.classList.contains('is-still')) return done();   // a picture card, or a still on data saver
+  if (!box.classList.contains('loaded')) return;                    // liveSync runs again when the page has loaded
+  if (wiReadyT) return;
+  wiReadyT = setTimeout(done, 8000);
+  let vids = [];
+  try { vids = $$('video', $('iframe', box).contentDocument); } catch (e) { }
+  if (!vids.length) return void setTimeout(done, 600);
+  const check = () => { if (vids.some(v => v.readyState >= 3)) { setTimeout(done, 600); return true; } return false; };
+  if (!check()) vids.forEach(v => v.addEventListener('canplay', check, { once: true }));
 }
 function setupLive(root = document) {
   $$('.w3-live', root).forEach(box => {
     const f = $('iframe', box); if (!f || box.dataset.ready) return; box.dataset.ready = '1';
-    const fit = () => { const w = box.clientWidth; if (!w) return; const s = w / LIVE_W; f.style.width = LIVE_W + 'px'; f.style.height = (box.clientHeight / s) + 'px'; f.style.transform = `scale(${s})`; };
+    const DW = +box.dataset.w || LIVE_W, fit = () => { const w = box.clientWidth; if (!w) return; const s = w / DW; f.style.width = DW + 'px'; f.style.height = (box.clientHeight / s) + 'px'; f.style.transform = `scale(${s})`; };
     fit(); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(box);
     const b = { box, f, modal: !!box.closest('.w3m') };
     if (b.modal) {   /* detail window: a normal, interactive page */
@@ -1243,45 +1325,81 @@ const SY_CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#
 function scrambleIn(el, delay) {
   const nodes = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
   while ((n = w.nextNode())) nodes.push({ n, t: n.nodeValue });
+  const fixW = el.getBoundingClientRect().width; el.style.minWidth = fixW + 'px';   // keep the final width: the line never reflows while letters change
+  const unfix = () => { el.style.minWidth = ''; };
   const total = nodes.reduce((s, o) => s + o.t.length, 0); let rev = 0;
   nodes.forEach(o => { o.n.nodeValue = ''; });
   const timers = [];
   timers.push(setTimeout(() => {
     const iv = setInterval(() => {
       rev += .5; let pos = 0;
-      nodes.forEach(o => { let out = ''; for (let i = 0; i < o.t.length; i++, pos++) { const c = o.t[i]; out += (c === ' ' || pos < rev) ? c : pos < rev + 3 ? SY_CH[Math.floor(Math.random() * SY_CH.length)] : ''; } o.n.nodeValue = out; });
-      if (rev >= total + 1) { clearInterval(iv); nodes.forEach(o => { o.n.nodeValue = o.t; }); }
-    }, 25); timers.push(iv);
+      nodes.forEach(o => { let out = ''; for (let i = 0; i < o.t.length; i++, pos++) { const c = o.t[i]; out += (c === ' ' || pos < rev) ? c : pos < rev + 2 ? SY_CH[Math.floor(Math.random() * SY_CH.length)] : ''; } o.n.nodeValue = out; });
+      if (rev >= total + 1) { clearInterval(iv); nodes.forEach(o => { o.n.nodeValue = o.t; }); unfix(); }
+    }, 40); timers.push(iv);
   }, delay));
-  return () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); nodes.forEach(o => { o.n.nodeValue = o.t; }); };
+  return () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); nodes.forEach(o => { o.n.nodeValue = o.t; }); unfix(); };
 }
+let syFilm = null;   // {src, url: Promise<blob URL>} shared by every setup of the hero
 function setupHeroSynapse() {
   if (syCleanup) { syCleanup(); syCleanup = null; }
-  const box = $('.sy-video'), v = box && $('video', box); if (!v) return;
+  const hero = $('.hero-synapse'), box = $('.sy-video'), v = box && $('video', box); if (!v) return;
+  const mark = $('.sy-mark', hero), glow = $('.sy-glow', hero), grid = $('.hero-grid', hero);
   const cleans = [];
   if (!reduced) $$('.hero-synapse .hero-title .ln>span').forEach((el, i) => cleans.push(scrambleIn(el, 200 + i * 300)));
   /* keep the clip in memory: seeking from the network is what makes scrubbing lag */
   const nc = navigator.connection || {};
   if (nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // 5 MB film: skipped on data saver / 2G (the headline still animates)
-  fetch($('source', v).src).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => { v.src = URL.createObjectURL(b); v.load(); }).catch(() => { });
+  const filmSrc = v.dataset.src;   // one download only, however often the hero is set up again (language change, resize...): the film comes into memory as a blob; until then the poster (its first frame) is on screen
+  if (!syFilm || syFilm.src !== filmSrc) syFilm = { src: filmSrc, url: fetch(filmSrc).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => URL.createObjectURL(b)) };
+  syFilm.url.then(u => { v.src = u; }).catch(() => { v.src = filmSrc; });
   v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
-  let target = 0, shown = 0, lastX = null, lastMove = -1e9, dir = 1, vis = true, last = 0, raf = 0;
-  const coarse = matchMedia('(pointer: coarse)').matches;
-  const apply = () => { if (!v.duration || v.seeking) return; if (Math.abs(v.currentTime - shown) > 1 / 30) v.currentTime = shown; };   // the film is 24 fps: smaller seeks only re-decode the same frame
+
+  /* Motion model — everything that moves is a spring or an eased curve; only transform and opacity are written, three elements per frame:
+       playhead   critically damped spring toward the mouse (inertia, no stepping feel); with no pointer it follows a sine, so it
+                  eases to a stop at both ends and then turns, starting exactly where the mouse left it (no jump)
+       stage      spring-smoothed pointer parallax: film, giant wordmark and headline sit at different depths
+       exit       on scroll the stage drifts down slower than the page and the copy lifts away                                     */
+  const fine = matchMedia('(pointer: fine)').matches, FPS = 24, TAU = Math.PI * 2, DRIFT_S = 14;
+  let pos = 0, vel = 0, target = 0, phase = 0, drifting = false, lastX = null, lastMove = -1e9, vis = true, last = 0, raf = 0, hh = hero.offsetHeight || 1;
+  let nx = 0, ny = 0, px = 0, py = 0, pvx = 0, pvy = 0, gx = 0, gy = 0, gvx = 0, gvy = 0, mx = innerWidth / 2, my = innerHeight / 2, lastP = -1;
+  const apply = () => { if (!v.duration || v.seeking) return; const want = Math.min(v.duration - .001, Math.round(pos * FPS) / FPS); if (Math.abs(v.currentTime - want) > .5 / FPS) v.currentTime = want; };   // the playhead moves in whole frames, so a seek only happens when the frame really changes
   v.addEventListener('seeked', apply);
-  const onMove = e => { if (!vis || reduced || !v.duration) return; const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now(); target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8)); };
-  addEventListener('mousemove', onMove);
+  const onMove = e => {
+    mx = e.clientX; my = e.clientY;
+    if (!vis || reduced || !v.duration) return;
+    const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now();
+    target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8));
+  };
+  const onResize = () => { hh = hero.offsetHeight || 1; };
+  addEventListener('mousemove', onMove, { passive: true }); addEventListener('resize', onResize, { passive: true });
   const tick = now => {
     raf = requestAnimationFrame(tick);
-    if (!vis || document.hidden || !v.duration) { last = now; return; }
-    const dt = Math.min(64, now - (last || now)); last = now;
-    if (!reduced && (coarse || now - lastMove > 3000)) { target += dir * dt / 1000 * v.duration * .1; if (target >= v.duration) { target = v.duration; dir = -1; } else if (target <= 0) { target = 0; dir = 1; } }
-    shown += (target - shown) * .25; apply();
+    if (!vis || document.hidden) { last = now; return; }
+    const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+    const dur = v.duration;
+    if (dur) {
+      const idle = !reduced && (!fine || now - lastMove > 3000);
+      if (idle) { if (!drifting) { drifting = true; phase = Math.acos(1 - 2 * Math.min(1, Math.max(0, pos / dur))); } phase += dt * TAU / DRIFT_S; target = dur * (.5 - .5 * Math.cos(phase)); }
+      else drifting = false;
+      vel += (170 * (target - pos) - 2 * Math.sqrt(170) * .92 * vel) * dt; pos += vel * dt;   // critically damped spring
+      if (pos < 0) { pos = 0; vel = 0; } else if (pos > dur) { pos = dur; vel = 0; }
+      apply();
+    }
+    if (reduced) return;
+    const sy = scrollY, p = sy <= 0 ? 0 : sy >= hh ? 1 : sy / hh;
+    if (fine) {   // pointer depth: with no pointer the stage sways gently by itself
+      const idleP = now - lastMove > 3000, tx = idleP ? Math.sin(now / 3400) * .35 : mx / innerWidth * 2 - 1, ty = idleP ? Math.cos(now / 4100) * .25 : my / innerHeight * 2 - 1;
+      pvx += (46 * (tx - px) - 2 * Math.sqrt(46) * pvx) * dt; px += pvx * dt; pvy += (46 * (ty - py) - 2 * Math.sqrt(46) * pvy) * dt; py += pvy * dt;
+      if (glow) { gvx += (60 * (mx - gx) - 2 * Math.sqrt(60) * .9 * gvx) * dt; gx += gvx * dt; gvy += (60 * (my + sy - gy) - 2 * Math.sqrt(60) * .9 * gvy) * dt; gy += gvy * dt; glow.style.transform = 'translate3d(' + (gx - 280).toFixed(1) + 'px,' + (gy - 280).toFixed(1) + 'px,0)'; }
+    }
+    box.style.transform = 'translate3d(' + (px * 16).toFixed(2) + 'px,' + (py * 10 + p * 72).toFixed(2) + 'px,0) scale(' + (1.04 + p * .07).toFixed(4) + ')';
+    if (mark) mark.style.transform = 'translate3d(' + (-px * 28).toFixed(2) + 'px,calc(-50% + ' + (50 - py * 14 + p * 36).toFixed(2) + 'px),0)';
+    if (grid && p !== lastP) { grid.style.transform = 'translate3d(0,' + (-p * 52).toFixed(2) + 'px,0)'; grid.style.opacity = Math.max(0, 1 - p * 1.3).toFixed(3); lastP = p; }
   };
   raf = requestAnimationFrame(tick);
-  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; }, { threshold: .05 }) : null;
-  if (io) io.observe(box);
-  syCleanup = () => { removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); if (io) io.disconnect(); cleans.forEach(f => f()); };
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; }, { threshold: 0 }) : null;
+  if (io) io.observe(hero);
+  syCleanup = () => { removeEventListener('mousemove', onMove); removeEventListener('resize', onResize); cancelAnimationFrame(raf); if (io) io.disconnect(); cleans.forEach(f => f()); };
 }
 function setupScene() {
   rig = $('#rig'); scene = $('#scene'); layers = $$('#rig .layer').map(el => ({ el, z: +el.dataset.z || 0 }));
@@ -1478,7 +1596,7 @@ function setupPerf() {
 
 function boot() {
   const L = C.loaderConfig;
-  if (L.enabled && !reduced) { const l = document.createElement('div'); l.className = 'loader'; l.innerHTML = `<b><span>${esc(C.brandConfig.logoPrefix || '')}</span>${esc(C.brandConfig.name)}</b>`; document.body.appendChild(l); setTimeout(() => { l.classList.add('done'); setTimeout(() => l.remove(), 700); }, L.durationMs); }
+  if (L.enabled && !reduced) { const l = document.createElement('div'); l.className = 'loader'; l.innerHTML = `<b><span>${esc(C.brandConfig.logoPrefix || '')}</span>${logoName(C.brandConfig.name)}</b>`; document.body.appendChild(l); setTimeout(() => { l.classList.add('done'); setTimeout(() => l.remove(), 700); }, L.durationMs); }
   renderAll(); setupCursor(); setupPerf();
   fetch('content.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(d => { if (d && d.fields && Object.keys(d.fields).length) { saved = d.fields; applyOverrides(saved); renderAll(); } }).catch(() => { });
   initEditor().then(ok => { if (!ok) addEventListener('load', () => initEditor(), { once: true }); });

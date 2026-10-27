@@ -1,0 +1,8 @@
+# Cloudflare Pages: browser caching for static assets. Text files (html/css/js) keep default revalidation;
+# css/js links carry ?v=... so a new version is always fetched.
+/fonts/*
+  Cache-Control: public, max-age=2592000
+/media/*
+  Cache-Control: public, max-age=604800
+/img/*
+  Cache-Control: public, max-age=604800
