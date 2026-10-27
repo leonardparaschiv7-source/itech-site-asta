@@ -2,7 +2,7 @@
    Layout concept: an obsidian editorial page where web interfaces float in depth,
    alternating quiet typographic sections with immersive showcase sections. */
 :root{
-  --bg:#09080B; --bg2:#111015; --card:#161319; --text:#FAF7F8; --muted:#A5A9B2;
+  --bg:#000000; --bg2:#111015; --card:#161319; --text:#FAF7F8; --muted:#A5A9B2;
   --a1:#FF6FB1; --a2:#C58BFF; --a3:#FFB3D6;
   --line:rgba(250,247,248,.09); --line2:rgba(250,247,248,.16);
   --grad:linear-gradient(100deg,#FF6FB1 0%,#C58BFF 100%);

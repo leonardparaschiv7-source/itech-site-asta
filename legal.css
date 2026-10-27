@@ -1,5 +1,5 @@
 /* Legal pages (confidentialitate.html, termeni.html): same dark theme as the site, no scripts. */
-:root{--f-logo-i:'Outfit';--logo-i-w:500;--logo-i-s:1.06em;--bg:#09080B;--card:#161319;--text:#FAF7F8;--muted:#A5A9B2;--a1:#FF6FB1;--a2:#C58BFF;--line:rgba(250,247,248,.12)}
+:root{--f-logo-i:'Outfit';--logo-i-w:500;--logo-i-s:1.06em;--bg:#000000;--card:#161319;--text:#FAF7F8;--muted:#A5A9B2;--a1:#FF6FB1;--a2:#C58BFF;--line:rgba(250,247,248,.12)}
 *{box-sizing:border-box}
 html{color-scheme:dark}
 body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.7 'Geist','Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}

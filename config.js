@@ -13,7 +13,7 @@ window.ITECH_CONFIG = {
     ogDescription: "Custom-designed, fast, responsive websites for businesses that want to look as good online as they are.",
     ogImage: "https://itechdigitalstudio.com/img/og-image.jpg",   // absolute URL, 1200×630
     favicon: "",            // PLACEHOLDER: URL of your favicon
-    themeColor: "#09080B"
+    themeColor: "#000000"
   },
 
   /* ── BRAND ─────────────────────────────────────────────────────────────── */
@@ -35,7 +35,7 @@ window.ITECH_CONFIG = {
 
   /* ── THEME TOKENS (applied as CSS variables) ───────────────────────────── */
   themeConfig: {
-    backgroundPrimary: "#09080B",
+    backgroundPrimary: "#000000",   // pure black: the hero, the llama film, the plans and the reviews are #000, so the page must be the same black (a #09080B page showed a hard grey edge between them)
     backgroundSecondary: "#111015",
     cardBackground: "#161319",
     textPrimary: "#FAF7F8",
