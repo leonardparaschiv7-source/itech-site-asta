@@ -134,6 +134,9 @@ window.ITECH_CONFIG = {
       metrics: "media/synapse-metrics.mp4?v=2",
       foot: "media/synapse-foot.mp4?v=2"
     },
+    videosMobile: { metrics: "media/synapse-metrics-m.mp4", foot: "media/synapse-foot-m.mp4" },   // phones (<= 760px): light encodes, about 0.5 MB and 0.3 MB
+    postersMobile: { metrics: "img/synapse-metrics-m.webp", foot: "img/synapse-foot-m.webp" },
+
     metrics: { subtitle: "At a glance", items: [["6", "Website types"], ["7", "Steps from idea to launch"], ["3", "Languages: RO · EN · DE"]] },
     foot: { text: "" /* hidden by the owner; was: "Websites built to sell: custom-made, fast and ready for every screen." */, copy: "© 2026 iTECH Digital Studio. All rights reserved." }
   },

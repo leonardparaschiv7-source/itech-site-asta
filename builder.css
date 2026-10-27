@@ -225,3 +225,6 @@
 @keyframes bldTextIn{from{opacity:0;transform:translateY(8px);filter:blur(4px)}}
 @media (prefers-reduced-motion:reduce){.bld-pv,.bld-pv.is-out{transform:none;filter:none}.bld-info.swap>*{animation:none}}
 @media (max-width:760px){.bld-opt .t,.bld-opt.is-on .t{transform:none!important}.bld-opt::after{display:none}.bld-opt.is-on{background:rgba(255,111,177,.07)}}
+
+/* phones: the laptop/phone mock-up stage is removed completely (list + info + CTA remain) */
+@media (max-width:760px){.bld-stage{display:none!important}}

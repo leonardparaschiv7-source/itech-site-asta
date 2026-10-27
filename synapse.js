@@ -8,7 +8,12 @@ const T = s => (window.ITECH_T ? window.ITECH_T(s) : s);
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let H = null, cleanup = null;
 
-const vid = (src) => `<video class="syx-vid" muted loop playsinline preload="none" data-src="${H.esc(src)}" aria-hidden="true"></video>`;
+/* phones get a light portrait/landscape encode (about 0.3-0.5 MB instead of 6-7 MB) and a poster, so the section is never an empty black box */
+const phone = () => matchMedia('(max-width:760px)').matches;
+const vid = (key, S) => {
+  const m = phone() && S.videosMobile && S.videosMobile[key], src = m || S.videos[key], poster = phone() ? (S.postersMobile || {})[key] : (S.posters || {})[key];
+  return `<video class="syx-vid" muted loop playsinline webkit-playsinline preload="none" data-src="${H.esc(src)}"${poster ? ` poster="${H.esc(poster)}"` : ''} aria-hidden="true"></video>`;
+};
 
 /* contact icons: only the confirmed channels of config.finalContact; a channel without an address is skipped */
 const GMAIL = to => `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}`;
@@ -31,7 +36,7 @@ function renderBrand(C, h) {
   const S = C.synapseConfig, e = h.esc, b = C.brandConfig, links = contactLinks(C.finalContact || {});
   return `<div data-ext="synapse" class="syx">
   <section class="syx-sec syx-brand" aria-label="${e(b.name)}">
-    ${vid(S.videos.metrics)}
+    ${vid('metrics', S)}
     <div class="syx-inner">
       <p class="syx-logo syx-r" role="img" aria-label="${e(b.name)}">${b.logoPrefix ? '<span class="syx-us" aria-hidden="true"></span>' : ''}${h.logoName ? h.logoName(b.name) : e(b.name)}</p>
       <ul class="syx-ct" role="list">${links.map((l, i) => `<li class="syx-r" style="--d:${.18 + i * .08}s"><a class="syx-ico syx-ico-${l[0]}" href="${e(l[2])}" target="_blank" rel="noopener noreferrer" aria-label="${e(l[1])} ${e(T('(opens in a new tab)'))}">${ICO[l[0]]}</a></li>`).join('')}</ul>
@@ -45,7 +50,7 @@ function render(C, h) {
   if (S.brandBlock && S.brandBlock.enabled) return renderBrand(C, h);
   return `<div data-ext="synapse" class="syx">
   <section class="syx-sec syx-metrics" aria-label="${e(T(S.metrics.subtitle))}">
-    ${vid(S.videos.metrics)}
+    ${vid('metrics', S)}
     <div class="syx-inner">
       <p class="syx-k syx-r">${e(T(S.metrics.subtitle))}</p>
       <div class="syx-grid3">${S.metrics.items.map((m, i) => `<div class="syx-r syx-m" style="--d:${i * .15}s"><b>${e(m[0])}</b><span>${e(T(m[1]))}</span></div>`).join('')}</div>
@@ -57,7 +62,7 @@ function render(C, h) {
 function renderFoot(C, h) {
   H = h; const S = C.synapseConfig, e = h.esc;
   return `<section data-ext="synapseFoot" class="syx-foot" aria-label="${e(C.brandConfig.name)}">
-  <div class="syx-fvid">${vid(S.videos.foot)}</div>
+  <div class="syx-fvid">${vid('foot', S)}</div>
   <div class="syx-fcol">
     <div>
       <p class="syx-fbrand">${h.logoName ? h.logoName(C.brandConfig.name) : e(C.brandConfig.name)}</p>
@@ -72,10 +77,10 @@ function renderFoot(C, h) {
 function wireVideos(root, offs) {
   const nc = navigator.connection || {};
   const vids = [].slice.call(root.querySelectorAll('video[data-src]'));
-  if (!('IntersectionObserver' in window) || nc.saveData || /(^|-)(2|3)g$/.test(nc.effectiveType || '')) return;   // the films are 12-13 MB: not on slow connections / data saver
+  if (!('IntersectionObserver' in window) || nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // data saver / 2G: the poster stays
   const io = new IntersectionObserver(es => es.forEach(en => {
     const v = en.target;
-    if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { }); }
+    if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { const go = () => { v.play().catch(() => { }); }; addEventListener('touchstart', go, { once: true, passive: true }); }); }   // low-power mode blocks autoplay: the first touch starts it
     else v.pause();
   }), { rootMargin: '250px 0px', threshold: 0.01 });
   vids.forEach(v => io.observe(v));

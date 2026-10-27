@@ -1385,3 +1385,13 @@ select.input option{background:#161319}
 @media (prefers-reduced-motion:reduce){.sy-video::before{animation:none;opacity:0}.sy-video video{animation:none}}
 /* the giant ghost wordmark in the footer: its "i" is an echo, as soft as the letters next to it */
 .foot-mark .logo-i{font-size:var(--logo-i-s);opacity:.34;margin-left:.05em}
+
+/* hero "synapse" on phones (<= 760px): full-bleed film like a lookbook page, headline over it, giant wordmark at the foot, no buttons */
+@media (max-width:760px){
+  .hero-synapse{min-height:100svh;display:flex;align-items:flex-end}
+  .hero-synapse .sy-video{inset:0;height:auto;-webkit-mask-image:none;mask-image:none}
+  .hero-synapse::after{background:linear-gradient(180deg,rgba(0,0,0,.55),transparent 24%,transparent 48%,rgba(0,0,0,.82) 82%,#000)}
+  .hero-synapse .hero-grid{width:100%;padding-bottom:calc(clamp(96px,33vw,170px) + 28px)}
+  .hero-synapse .hero-ctas{display:none}
+  .sy-mark{top:auto;bottom:14px;transform:none!important;font-size:clamp(96px,33vw,170px);opacity:.9;background:none;-webkit-text-fill-color:#fff;color:#fff;-webkit-background-clip:border-box;background-clip:border-box;z-index:0}
+}
