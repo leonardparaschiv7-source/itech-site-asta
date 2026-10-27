@@ -1356,8 +1356,10 @@ function setupHeroSynapse() {
   if (small()) {
     v.loop = true; v.muted = true;
     const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => addEventListener('touchstart', () => v.play().catch(() => { }), { once: true, passive: true })); };
+    v.addEventListener('playing', () => box.classList.add('ready'));
     v.addEventListener('loadeddata', () => { box.classList.add('ready'); go(); });
-    if (v.readyState >= 2) { box.classList.add('ready'); go(); }
+    v.preload = 'auto';   // markup says preload="none", which phones with data saver honour: the film would never start
+    syFilm.url.catch(() => { }).then(() => { v.load(); go(); });
     syCleanup = () => cleans.forEach(f => f());
     return;
   }
