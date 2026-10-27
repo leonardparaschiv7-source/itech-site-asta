@@ -92,8 +92,8 @@ html,body{background:#fff;font-family:"Inter Tight",system-ui,sans-serif;font-we
   <div id="cursor" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22.75" stroke="#fff" stroke-width="2.5"/><path d="M15 17h18M24 13v22M17 24c2 5 5 8 7 11M31 24c-2 5-5 8-7 11" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
 
   <div id="main-canvas" aria-hidden="true">
-    <video id="vL" muted playsinline preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154433_532a85d3-dabf-4265-b8bd-19ac6af31842.mp4"></video>
-    <video id="vR" muted playsinline preload="auto" src="https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154401_a664f076-b971-4557-8728-40ef9ea4c49b.mp4"></video>
+    <video id="vL" muted playsinline preload="auto" src="../media/prmpt-l.mp4"></video>
+    <video id="vR" muted playsinline preload="auto" src="../media/prmpt-r.mp4"></video>
   </div>
 
   <div id="panel"><div id="wrap"></div></div>
@@ -209,7 +209,7 @@ html,body{background:#fff;font-family:"Inter Tight",system-ui,sans-serif;font-we
   function seekTo(v, key){
     if (!v.duration || v.seeking) return;
     var want = shown[key] * v.duration;
-    if (Math.abs(v.currentTime - want) > 1 / 90) v.currentTime = want;
+    if (Math.abs(v.currentTime - want) > 1 / 30) v.currentTime = want;   /* 24 fps film: smaller seeks only re-decode the same frame */
   }
   vL.addEventListener('seeked', function(){ if (side === 'L') seekTo(vL, 'L'); });
   vR.addEventListener('seeked', function(){ if (side === 'R') seekTo(vR, 'R'); });

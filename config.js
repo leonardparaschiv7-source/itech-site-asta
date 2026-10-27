@@ -125,8 +125,11 @@ window.ITECH_CONFIG = {
      The numbers are facts about the site: 6 website types (builder), 7 process steps, 3 languages. */
   synapseConfig: {
     videos: {
-      metrics: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589.mp4",
-      foot: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4"
+      /* re-encoded 1080p copies with a keyframe every 2 s (the originals were 12-14 MB each and lagged in Chrome); originals:
+         metrics https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589.mp4
+         foot    https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4 */
+      metrics: "media/synapse-metrics.mp4",
+      foot: "media/synapse-foot.mp4"
     },
     metrics: { subtitle: "At a glance", items: [["6", "Website types"], ["7", "Steps from idea to launch"], ["3", "Languages: RO · EN · DE"]] },
     foot: { text: "" /* hidden by the owner; was: "Websites built to sell: custom-made, fast and ready for every screen." */, copy: "© 2026 iTECH Digital Studio. All rights reserved." }
