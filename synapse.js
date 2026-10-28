@@ -80,7 +80,7 @@ function wireVideos(root, offs) {
   if (!('IntersectionObserver' in window) || nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // data saver / 2G: the poster stays
   const io = new IntersectionObserver(es => es.forEach(en => {
     const v = en.target;
-    if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { const go = () => { v.play().catch(() => { }); }; addEventListener('touchstart', go, { once: true, passive: true }); }); }   // low-power mode blocks autoplay: the first touch starts it
+    if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { const go = () => { v.play().catch(() => { }); }; ['touchend', 'pointerup', 'click'].forEach(t => addEventListener(t, go, { once: true, passive: true })); }); }   // low-power mode blocks autoplay: the first tap starts it
     else v.pause();
   }), { rootMargin: phone() ? '1600px 0px' : '250px 0px', threshold: 0.01 });
   vids.forEach(v => io.observe(v));

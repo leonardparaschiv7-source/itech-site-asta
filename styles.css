@@ -1404,3 +1404,8 @@ select.input option{background:#161319}
 
 /* a still card with a poster shows the poster only, not the project name on top of it */
 .w3-live.has-poster.is-still::after{display:none}
+
+/* autoplay blocked (iOS Low Power Mode): the poster drifts slowly until a tap starts the film */
+.sy-video.is-blocked video{animation:syDrift 16s ease-in-out infinite alternate}
+@keyframes syDrift{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.1) translate3d(-1.5%,-1%,0)}}
+@media (prefers-reduced-motion:reduce){.sy-video.is-blocked video{animation:none}}

@@ -63,7 +63,7 @@ window.ITECH_CONFIG = {
     threeDEnabled: true,
     threeDIntensity: 1,         // 0–1.5
     threeDOnMobile: true,       // lighter 3D scene on phones; false = flat hero on phones
-    liveCardsOnPhones: false,   // false = on phones the project cards show their still image instead of running the page inside the card (faster, no lag)
+    liveCardsOnPhones: true,    // false = on phones the project cards show their still image instead of running the page inside the card
     heroFilmFollowsMouse: false, // hero film scrubs with the mouse; off = it only plays its own slow drift (lighter, no seeking lag)
     cursorEffectsEnabled: true, // desktop only, disabled automatically on touch
     scrollAnimationsEnabled: true,

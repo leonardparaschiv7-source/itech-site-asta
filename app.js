@@ -1355,7 +1355,13 @@ function setupHeroSynapse() {
   /* phones play the light forward-and-back clip natively (no seeking: it lags and some phones never show the first seek); a blocked autoplay starts on the first touch */
   if (small()) {
     v.loop = true; v.muted = true;
-    const go = () => { const p = v.play(); if (p && p.catch) p.catch(() => addEventListener('touchstart', () => v.play().catch(() => { }), { once: true, passive: true })); };
+    /* iOS Low Power Mode (yellow battery) blocks autoplay: until a tap lets it play, the poster drifts slowly with CSS so the page is never frozen */
+    const wake = () => { v.play().then(() => box.classList.remove('is-blocked')).catch(() => { }); };
+    const go = () => {
+      const p = v.play();
+      if (p && p.catch) p.catch(() => { box.classList.add('is-blocked'); ['touchend', 'pointerup', 'click'].forEach(t => addEventListener(t, wake, { once: true, passive: true })); });
+      setTimeout(() => { if (v.paused) box.classList.add('is-blocked'); }, 1500);
+    };
     v.addEventListener('playing', () => box.classList.add('ready'));
     v.addEventListener('loadeddata', () => { box.classList.add('ready'); go(); });
     v.preload = 'auto';   // markup says preload="none", which phones with data saver honour: the film would never start
