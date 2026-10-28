@@ -1386,14 +1386,16 @@ select.input option{background:#161319}
 /* the giant ghost wordmark in the footer: its "i" is an echo, as soft as the letters next to it */
 .foot-mark .logo-i{font-size:var(--logo-i-s);opacity:.34;margin-left:.05em}
 
-/* hero "synapse" on phones (<= 760px): full-bleed film like a lookbook page, headline over it, giant wordmark at the foot, no buttons */
+/* hero "synapse" on phones (<= 760px): the film fills the top and melts into black; the headline sits low over its foot,
+   and the "_iTECH" logo (same as the brand block further down) stands on the black below it. No eyebrow, no buttons. */
+.hero .sy-logo{display:none}   /* .syx-logo (synapse.css, loaded later) would show it otherwise */
 @media (max-width:760px){
   .hero-synapse{min-height:100svh;display:flex;align-items:flex-end}
-  .hero-synapse .sy-video{inset:0;height:auto;-webkit-mask-image:none;mask-image:none}
-  .hero-synapse::after{background:linear-gradient(180deg,rgba(0,0,0,.55),transparent 24%,transparent 48%,rgba(0,0,0,.82) 82%,#000)}
-  .hero-synapse .hero-grid{width:100%;padding-bottom:calc(clamp(96px,33vw,170px) + 28px)}
-  .hero-synapse .hero-ctas{display:none}
-  .sy-mark{top:auto;bottom:14px;transform:none!important;font-size:clamp(96px,33vw,170px);opacity:.9;background:none;-webkit-text-fill-color:#fff;color:#fff;-webkit-background-clip:border-box;background-clip:border-box;z-index:0}
+  .hero-synapse .sy-video{inset:0 0 auto 0;height:78svh;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);mask-image:linear-gradient(180deg,#000 60%,transparent)}
+  .hero-synapse::after{background:linear-gradient(180deg,rgba(0,0,0,.5),transparent 22%,transparent 46%,rgba(0,0,0,.7) 70%,#000 84%)}
+  .hero-synapse .hero-grid{width:100%;padding-bottom:calc(clamp(72px,24vw,130px) * .82 + 52px)}
+  .hero-synapse .eyebrow,.hero-synapse .hero-ctas,.sy-mark{display:none}
+  .hero .sy-logo{display:flex;justify-content:center;position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom));z-index:1;font-size:clamp(72px,24vw,130px)}
 }
 
 /* phones: finger-sized tap targets (>= 40px) for the language switch, logo and footer links */
