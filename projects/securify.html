@@ -15,7 +15,7 @@ body{font-family:'Readex Pro',system-ui,-apple-system,sans-serif;background:#000
 a{color:inherit;text-decoration:none}
 .hero-title{letter-spacing:-0.04em;line-height:.95}
 
-.hero{position:relative;height:100vh;width:100%;overflow:hidden;background:#000}
+.hero{position:relative;height:100vh;height:100svh;width:100%;overflow:hidden;background:#000}
 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 .nav{position:absolute;z-index:20;top:0;left:0;right:0;padding:24px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
@@ -30,10 +30,10 @@ a{color:inherit;text-decoration:none}
 
 .content{position:relative;height:100%;width:100%}
 .hero-title.w{position:absolute;color:#fff;font-weight:500;font-size:14vw}
-.w1{left:16px;top:18%}
-.w2{right:16px;top:38%}
-.w3{left:18%;top:58%}
-.desc{position:absolute;left:24px;top:46%;max-width:240px;font-size:15px;line-height:1.375;color:rgba(255,255,255,.9)}
+.w1{left:16px;top:21%}
+.w2{right:16px;top:40%}
+.w3{left:18%;top:60%}
+.desc{position:absolute;left:24px;top:50%;max-width:240px;font-size:15px;line-height:1.375;color:rgba(255,255,255,.9)}
 
 .stat{position:absolute}
 .stat .row{display:flex;align-items:center;gap:12px}
@@ -65,7 +65,12 @@ a{color:inherit;text-decoration:none}
   .s2{left:80px;bottom:96px}
   .s3{right:80px;bottom:80px}
 }
+/* inside a preview card (?card=1) the Vezi proiectul button covers the bottom-right corner: the third stat moves next to the second */
+html.card .s3{right:auto;left:36%;bottom:64px}
+html.card .s3 .row{justify-content:flex-start}
+html.card .s3 .lbl{text-align:left}
 </style>
+<script>if(/[?&]card=1/.test(location.search))document.documentElement.className='card'</script>
 </head>
 <body>
 <section class="hero">
