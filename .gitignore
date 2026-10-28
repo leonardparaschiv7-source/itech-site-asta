@@ -11,3 +11,6 @@ reviews.json
 img/addons-video.mp4
 img/experience-video.mp4
 img/hero-video.mp4
+
+# hand-off exports (frames for the owner), not part of the site
+exports/

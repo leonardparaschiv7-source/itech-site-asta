@@ -132,10 +132,10 @@ window.ITECH_CONFIG = {
       /* re-encoded 1080p copies (crf 20, SSIM 0.993-0.996 against the originals) with a keyframe every 2 s (the originals were 12-14 MB each and lagged in Chrome); originals:
          metrics https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589.mp4
          foot    https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75.mp4 */
-      metrics: "media/synapse-metrics.mp4?v=2",
-      foot: "media/synapse-foot.mp4?v=2"
+      metrics: "media/synapse-metrics.mp4?v=5",
+      foot: "media/synapse-foot.mp4?v=4"
     },
-    videosMobile: { metrics: "media/synapse-metrics-m.mp4", foot: "media/synapse-foot-m.mp4" },   // phones (<= 760px): light encodes, about 0.5 MB and 0.3 MB
+    videosMobile: { metrics: "media/synapse-metrics-m.mp4?v=5", foot: "media/synapse-foot-m.mp4?v=4" },   // phones (<= 760px): light encodes, about 0.5 MB and 0.3 MB
     postersMobile: { metrics: "img/synapse-metrics-m.webp", foot: "img/synapse-foot-m.webp" },
     posters: { metrics: "img/synapse-metrics.webp", foot: "img/synapse-foot.webp" },   // desktop: first frame, shown until the film plays (and on data saver / reduced motion)
 
@@ -338,17 +338,26 @@ window.ITECH_CONFIG = {
       site: { brand: "CLEANRIDE", eyebrow: "Premium car wash & detailing", headline: "More than\na car wash.", cta: "Book an appointment", meta: ["Premium products", "Professional team", "Longer protection"] }
     },
     {
-      /* live: a self-contained page in projects/ shown running inside the card (instead of a picture).
-         livePoster: a 1440x900 still of that page, shown on the cards that are not playing (only the active card runs the page) */
-      id: "petalyx", name: "Petalyx", slug: "petalyx", category: "SaaS", industry: "SaaS · AI analytics", type: "SaaS product page", year: "2026",
+      id: "timm", name: "TIMM", slug: "timm", category: "Automotive", industry: "Automotive · Private chauffeur", type: "Luxury automotive showroom website", year: "2026",
       label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
-      live: "projects/petalyx.html", livePoster: "img/live/petalyx.webp",
-      description: "A product page for an AI analytics tool: a cinematic hero, results that count up as you scroll and a clear three-step explanation that ends in sign-up.",
-      direction: "A soft cherry-blossom sky with olive and lime accents. Smooth scroll motion keeps a technical product friendly.",
+      live: "projects/timm.html", livePoster: "img/live/timm.webp",
+      description: "A showroom website for a private chauffeur brand: a quiet editorial hero, a collection that scrolls like a gallery and a 3D showroom to walk around.",
+      direction: "Warm ivory and deep black, fine serif headlines and generous white space, so the car always stays the hero.",
       services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
       thumbnail: "", desktopPreview: "", mobilePreview: "",
-      accentColor: "#B4CD52", backgroundColor: "#FFFFFF", textColor: "#121410",
-      site: { brand: "PETALYX", eyebrow: "AI benchmarking", headline: "Benchmark the impact of\nall your AI staff.", cta: "Start for $0", meta: ["Time freed", "Success rates", "Reliability"] }
+      accentColor: "#C9A878", backgroundColor: "#F4F1EC", textColor: "#111111",
+      site: { brand: "TIMM", eyebrow: "Private automotive", headline: "The art of\narriving.", cta: "Explore", meta: ["Collection", "3D showroom", "Experience"] }
+    },
+    {
+      id: "velor", name: "VÉLOR", slug: "velor", category: "Fintech", industry: "Fintech · Premium card", type: "Premium card landing page", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      live: "projects/velor.html", livePoster: "img/live/velor.webp",
+      description: "A landing page for a premium metal card: a dark hero where the card follows the cursor, a smooth scroll into three benefit tiles and glass hover states.",
+      direction: "Black stone, brushed silver and a cold blue glow. Light, widely spaced capitals; the card is the only bright object on the page.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#9FB4C7", backgroundColor: "#08090B", textColor: "#F2F2F2",
+      site: { brand: "VÉLOR", eyebrow: "Digital banking", headline: "Digital wealth.\nRedefined.", cta: "Explore VÉLOR", meta: ["Private control", "Instant movement", "Intelligent insight"] }
     },
     {
       id: "prmpt", name: "prmpt", slug: "prmpt", category: "Fashion", industry: "Fashion · Archive store", type: "Fashion store landing page", year: "2026",
@@ -363,7 +372,7 @@ window.ITECH_CONFIG = {
     },
     {
       id: "securify", name: "securify", slug: "securify", category: "SaaS", industry: "SaaS · Data security", type: "Cybersecurity landing page", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "bold",
       live: "projects/securify.html", livePoster: "img/live/securify.webp",
       description: "A confident landing page for a security product: a full-screen film, three giant words and three proof numbers, with one clear sign-up path.",
       direction: "Pure black and white, a floating pill navigation and huge lowercase type that cuts across the film.",
@@ -395,8 +404,19 @@ window.ITECH_CONFIG = {
       site: { brand: "AURAI", eyebrow: "Wellness companion", headline: "Your calm is\nalways within.", cta: "Join the list", meta: ["Smart Therapy", "Real-time Healing", "Insights into outcomes"] }
     },
     {
+      id: "novamare", name: "NOVAMARE", slug: "novamare", category: "Travel", industry: "Travel · Mediterranean journeys", type: "Travel storytelling website", year: "2026",
+      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "serif",
+      live: "projects/novamare.html", livePoster: "img/live/novamare.webp",
+      description: "A travel website that tells the Mediterranean as a story: a full-bleed coastal hero, an editorial collage panel and a second destination that takes over the page.",
+      direction: "Deep sea blues, sun-bleached stone and a thin, high-contrast serif. The photography carries the page and the type stays quiet.",
+      services: ["Brand direction", "UI/UX design", "Web development", "Motion"],
+      thumbnail: "", desktopPreview: "", mobilePreview: "",
+      accentColor: "#2A8FA6", backgroundColor: "#0E1A22", textColor: "#F5EFE6",
+      site: { brand: "NOVAMARE", eyebrow: "Coastal stories", headline: "Beyond\nthe shore.", cta: "Explore", meta: ["Destinations", "Stories", "Experiences"] }
+    },
+    {
       id: "looksmith", name: "Looksmith", slug: "looksmith", category: "Fashion", industry: "Fashion · Virtual try-on", type: "Interactive product demo page", year: "2026",
-      label: "Concept project", featured: true, enabled: true, template: "photo", scene: true, mobileStyle: "bold",
+      label: "Concept project", featured: true, enabled: false, template: "photo", scene: true, mobileStyle: "bold",
       live: "projects/looksmith.html", livePoster: "img/live/looksmith.webp",
       description: "An interactive page where shoppers change the scene, the lighting, the outfit or the model with a click and watch the change play as a short film.",
       direction: "Pale architecture, one model and a single frosted control. No scroll tricks: every change is a short film you trigger with a click.",

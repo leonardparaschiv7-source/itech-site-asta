@@ -1275,6 +1275,11 @@ function liveUnload(b) {
 /* the cards share the page's main thread (same origin): nothing loads until the Work section is near the screen,
    so the hero intro runs alone, and every card is paused while the section is off screen */
 let liveNear = false, liveNearIO = null;
+/* the cards wait until the hero film is running (2.5 s after load) or the visitor scrolls (wheel / touch / key): a 1600px film decoding next to the hero's is what made the start stutter */
+let liveGate = false;
+const liveGo = () => { if (liveGate) return; liveGate = true; liveSync(); };
+if (document.readyState === 'complete') setTimeout(liveGo, 2500); else addEventListener('load', () => setTimeout(liveGo, 2500), { once: true });
+['wheel', 'touchmove', 'keydown'].forEach(t => addEventListener(t, liveGo, { once: true, passive: true }));
 function liveSync() {
   const nc = navigator.connection || {};
   const stillOnly = reduced || nc.saveData || (innerWidth <= 760 && C.motionConfig.liveCardsOnPhones === false);   // phones: the card shows its still (instant, no 1440px page decoding a film); the full live page opens in the project window
@@ -1284,8 +1289,8 @@ function liveSync() {
     b.box.classList.remove('is-still');
     const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
     if ((phoneLite || b.box.classList.contains('has-poster')) && !active) { liveUnload(b); return; }   // cards with a still run no page until they are the active one
-    if (liveNear) liveLoad(b, active ? 0 : 900 + n * 700);
-    liveSetActive(b, active && liveNear && !document.querySelector('.w3m'));   // the cards behind an open project window rest
+    if (liveNear && liveGate) liveLoad(b, active ? 0 : 900 + n * 700);
+    liveSetActive(b, active && liveNear && liveGate && !document.querySelector('.w3m'));   // the cards behind an open project window rest
   });
   if (w3Index()) wiWatchReady();
 }
