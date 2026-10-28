@@ -126,6 +126,7 @@ EXT.reviewService = ReviewService;
 
 /* ── icons ── */
 const STAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.6l2.47 5.3 5.8.68-4.3 3.96 1.15 5.73L10 14.4l-5.12 2.87 1.15-5.73-4.3-3.96 5.8-.68z"/></svg>';
+const siteHost = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } };
 const stars = (n, cls = '') => `<span class="rv-stars ${cls}" role="img" aria-label="Rated ${n} out of 5">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= n ? 'on' : ''}">${STAR}</i>`).join('')}</span>`;
 const ARROW = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
 const CHEV = d => `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="${d ? 'M3 8h10M9 4l4 4-4 4' : 'M13 8H3M7 4L3 8l4 4'}"/></svg>`;
@@ -252,7 +253,7 @@ function mount(root, C) {
     const long = r.review.length > 360 ? ' is-long' : r.review.length > 200 ? ' is-mid' : '';
     return `<article class="rv-card${long}" data-i="${i}" role="group" aria-roledescription="slide" aria-label="Review ${i + 1} of ${n}">
       <i class="rv-hl" aria-hidden="true"></i>
-      <div class="rv-top">${stars(r.rating)}<span class="rv-no mono" aria-hidden="true">${pad(i + 1)}</span></div>
+      <div class="rv-top"><div class="rv-rate">${stars(r.rating)}${r.projectUrl ? `<a class="rv-site" href="${e(r.projectUrl)}" target="_blank" rel="noopener nofollow" aria-label="${e(tt('Visit site ↗'))}: ${e(siteHost(r.projectUrl))}">${e(siteHost(r.projectUrl))} <span aria-hidden="true">↗</span></a>` : ''}</div><span class="rv-no mono" aria-hidden="true">${pad(i + 1)}</span></div>
       <blockquote class="rv-q"><span class="rv-qm" aria-hidden="true">“</span><p>${e(r.review)}</p></blockquote>
       <footer class="rv-meta">
         <div class="rv-who">${r.logo ? `<img class="rv-logo" src="${e(r.logo)}" alt="" loading="lazy">` : `<span class="rv-av" aria-hidden="true">${e(initials(r.name))}</span>`}
@@ -261,7 +262,6 @@ function mount(root, C) {
           ${T.showProjectType !== false && r.projectType ? `<span class="rv-pill mono">${e(r.projectType)}</span>` : ''}
           ${T.verifiedBadge !== false && r.verified ? `<span class="rv-ver mono"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>${e(tt('Verified project'))}</span>` : ''}
           ${T.showDate !== false && fmtDate(r.createdAt) ? `<time class="mono" datetime="${e(r.createdAt)}">${e(fmtDate(r.createdAt))}</time>` : ''}
-          ${r.projectUrl ? `<a class="rv-site mono" href="${e(r.projectUrl)}" target="_blank" rel="noopener nofollow">${e(tt('Visit site ↗'))}</a>` : ''}
         </div>
       </footer>
     </article>`;

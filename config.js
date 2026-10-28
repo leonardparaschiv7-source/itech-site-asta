@@ -1099,7 +1099,11 @@ window.ITECH_CONFIG = {
     reviewMax: 600,
     cooldownSeconds: 120,
     publicFile: "reviews.json",
-    reviews: []
+    reviews: [
+      { id: "r-titus-sfp", status: "approved", name: "Titus", company: "SC.SFPPROJECT.SRL", projectType: "Business Website", rating: 5,
+        review: "Le mulțumesc celor de la ITECH pentru răbdarea cu care au primit fiecare idee „nebună” de-a noastră! Au fost mereu aproape, deschiși și gata să găsim împreună soluții. Am apreciat mult și ideile utile venite din partea lor, pe care le-am si pus în aplicare. Mulțumesc sincer întregii echipe! Si oricum pastram legatura in continuare pentru fiecare schimbare pe site-ul nostru. :)",
+        showUrl: true, projectUrl: "https://www.sfpproject.com/", createdAt: "2026-10-28" }
+    ]
   },
 
   /* ── FAQ ───────────────────────────────────────────────────────────────── */
