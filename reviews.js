@@ -253,7 +253,7 @@ function mount(root, C) {
     const long = r.review.length > 360 ? ' is-long' : r.review.length > 200 ? ' is-mid' : '';
     return `<article class="rv-card${long}" data-i="${i}" role="group" aria-roledescription="slide" aria-label="Review ${i + 1} of ${n}">
       <i class="rv-hl" aria-hidden="true"></i>
-      <div class="rv-top"><div class="rv-rate">${stars(r.rating)}${r.projectUrl ? `<a class="rv-site" href="${e(r.projectUrl)}" target="_blank" rel="noopener nofollow" aria-label="${e(tt('Visit site ↗'))}: ${e(siteHost(r.projectUrl))}">${e(siteHost(r.projectUrl))} <span aria-hidden="true">↗</span></a>` : ''}</div><span class="rv-no mono" aria-hidden="true">${pad(i + 1)}</span></div>
+      <div class="rv-top"><div class="rv-ratebox">${stars(r.rating)}${r.projectUrl ? `<a class="rv-site" href="${e(r.projectUrl)}" target="_blank" rel="noopener nofollow" aria-label="${e(tt('Visit site ↗'))}: ${e(siteHost(r.projectUrl))}">${e(siteHost(r.projectUrl))} <span aria-hidden="true">↗</span></a>` : ''}</div><span class="rv-no mono" aria-hidden="true">${pad(i + 1)}</span></div>
       <blockquote class="rv-q"><span class="rv-qm" aria-hidden="true">“</span><p>${e(r.review)}</p></blockquote>
       <footer class="rv-meta">
         <div class="rv-who">${r.logo ? `<img class="rv-logo" src="${e(r.logo)}" alt="" loading="lazy">` : `<span class="rv-av" aria-hidden="true">${e(initials(r.name))}</span>`}
@@ -352,7 +352,7 @@ function mount(root, C) {
     else if (a === 'open') openForm(t);
     else if (a === 'rate') { openForm(t); const r = form.querySelector(`#rv-r${t.dataset.v}`); if (r) { r.checked = true; touched.add('rating'); rateLabel(); check('rating', true); } }
     else if (a === 'close') closeModal(t.closest('dialog'));
-    else if (a === 'mod') { lastFocus = t; drawMod(); modPanel.showModal(); document.documentElement.classList.add('rv-lock'); }
+    else if (a === 'mod') { lastFocus = t; drawMod(); modPanel.showModal(); document.documentElement.classList.add('rv-lock', 'lock'); }
     else if (a === 'publish') publishApproved(t);
     else if (a === 'approve' || a === 'reject') moderateOne(t, a);
   });
@@ -402,10 +402,10 @@ function mount(root, C) {
   on(pick, 'mouseleave', () => rateLabel());
 
   function resetForm() { form.reset(); touched.clear(); $$('.rv-e').forEach(p => p.textContent = ''); $$('[aria-invalid]').forEach(x => x.removeAttribute('aria-invalid')); form.querySelector('.rv-rate').classList.remove('bad'); rateLabel(); counter(); form.querySelector('.rv-status').textContent = ''; form.hidden = false; done.hidden = true; setBusy(false); }
-  function openForm(t) { lastFocus = t; if (done.hidden === false) resetForm(); openedAt = Date.now(); modal.showModal(); document.documentElement.classList.add('rv-lock'); setTimeout(() => F('name').focus(), 30); }
+  function openForm(t) { lastFocus = t; if (done.hidden === false) resetForm(); openedAt = Date.now(); modal.showModal(); document.documentElement.classList.add('rv-lock', 'lock'); setTimeout(() => F('name').focus(), 30); }
   function closeModal(d) { if (!d || !d.open) return; d.classList.add('closing'); setTimeout(() => { d.classList.remove('closing'); d.close(); }, reduced() ? 0 : 220); }
   [modal, modPanel].forEach(d => {
-    on(d, 'close', () => { document.documentElement.classList.remove('rv-lock'); if (lastFocus && lastFocus.isConnected) lastFocus.focus(); });
+    on(d, 'close', () => { document.documentElement.classList.remove('rv-lock', 'lock'); if (lastFocus && lastFocus.isConnected) lastFocus.focus(); });
     on(d, 'cancel', ev => { ev.preventDefault(); closeModal(d); });                  // ESC
     on(d, 'click', ev => { if (ev.target === d) closeModal(d); });                     // backdrop
   });
@@ -476,7 +476,7 @@ function mount(root, C) {
     catch (err) { t.disabled = false; st.textContent = err && err.code === 'capability_disabled' ? 'Publishing is off while the page has a public link. Approved reviews still show to signed-in visitors.' : 'Publishing did not go through. Please try again.'; }
   }
 
-  inst = { destroy() { offs.forEach(f => f()); stopAuto(); offChange(); if (unSubs) unSubs(); [modal, modPanel].forEach(d => { if (d.open) d.close(); }); document.documentElement.classList.remove('rv-lock'); inst = null; } };
+  inst = { destroy() { offs.forEach(f => f()); stopAuto(); offChange(); if (unSubs) unSubs(); [modal, modPanel].forEach(d => { if (d.open) d.close(); }); document.documentElement.classList.remove('rv-lock', 'lock'); inst = null; } };
 }
 
 EXT.reviews = { render, mount };

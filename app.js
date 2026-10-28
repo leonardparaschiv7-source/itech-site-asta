@@ -1279,6 +1279,7 @@ let liveNear = false, liveNearIO = null;
 let liveGate = false;
 const liveGo = () => { if (liveGate) return; liveGate = true; liveSync(); };
 if (document.readyState === 'complete') setTimeout(liveGo, 2500); else addEventListener('load', () => setTimeout(liveGo, 2500), { once: true });
+new MutationObserver(() => liveSync()).observe(root, { attributes: true, attributeFilter: ['class'] });   // menu / windows (class "lock") rest the live cards
 ['wheel', 'touchmove', 'keydown'].forEach(t => addEventListener(t, liveGo, { once: true, passive: true }));
 function liveSync() {
   const nc = navigator.connection || {};
@@ -1290,7 +1291,7 @@ function liveSync() {
     const card = b.box.closest('.w3-card'), active = !!(card && card.classList.contains('is-active'));
     if ((phoneLite || b.box.classList.contains('has-poster')) && !active) { liveUnload(b); return; }   // cards with a still run no page until they are the active one
     if (liveNear && liveGate) liveLoad(b, active ? 0 : 900 + n * 700);
-    liveSetActive(b, active && liveNear && liveGate && !document.querySelector('.w3m'));   // the cards behind an open project window rest
+    liveSetActive(b, active && liveNear && liveGate && !document.querySelector('.w3m') && !root.classList.contains('lock'));   // the cards behind an open project window rest
   });
   if (w3Index()) wiWatchReady();
 }

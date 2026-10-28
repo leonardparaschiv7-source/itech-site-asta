@@ -86,7 +86,7 @@
 .rv-ver{display:inline-flex;align-items:center;gap:6px;color:var(--a3)}
 .rv-ver svg{width:12px;height:12px}
 .rv-tags time{color:var(--muted)}
-.rv-rate{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.rv-ratebox{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .rv-site{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:0 13px;border-radius:99px;background:linear-gradient(135deg,#FF6FB1,#E88BE0);color:#1A0B14;font-size:12.5px;font-weight:600;letter-spacing:.01em;box-shadow:0 8px 22px -10px rgba(255,111,177,.75);transition:transform .25s var(--ease),box-shadow .25s}
 .rv-site:hover,.rv-site:focus-visible{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(255,111,177,.95)}
 
@@ -112,7 +112,7 @@
 /* modal */
 html.rv-lock{overflow:hidden}
 .rv-modal{padding:0;border:0;background:transparent;color:var(--text);max-width:none;max-height:none;width:100%;height:100%;margin:0;overflow:hidden}
-.rv-modal::backdrop{background:rgba(8,4,6,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.rv-modal::backdrop{background:rgba(8,4,6,.9)}   /* no live blur: it re-blurs the playing films behind on every frame */
 .rv-modal[open]{display:grid;place-items:center;padding:24px}
 .rv-sheet{position:relative;width:min(720px,100%);max-height:calc(100dvh - 48px);overflow:auto;overscroll-behavior:contain;border-radius:22px;
   background:radial-gradient(70% 40% at 80% 0%,rgba(255,111,177,.09),transparent 70%),linear-gradient(170deg,#1C1217,#100A0D);border:1px solid rgba(255,190,220,.14);
