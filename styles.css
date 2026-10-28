@@ -1401,3 +1401,6 @@ select.input option{background:#161319}
   .lang-b{min-width:40px;min-height:40px}
   .logo,.wi-open,.foot-start,.fcta a,footer a{display:inline-flex;align-items:center;min-height:40px}
 }
+
+/* a still card with a poster shows the poster only, not the project name on top of it */
+.w3-live.has-poster.is-still::after{display:none}

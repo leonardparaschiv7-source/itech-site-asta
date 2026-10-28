@@ -1266,7 +1266,7 @@ function liveUnload(b) {
 let liveNear = false, liveNearIO = null;
 function liveSync() {
   const nc = navigator.connection || {};
-  const stillOnly = reduced || nc.saveData;
+  const stillOnly = reduced || nc.saveData || (innerWidth <= 760 && C.motionConfig.liveCardsOnPhones === false);   // phones: the card shows its still (instant, no 1440px page decoding a film); the full live page opens in the project window
   const phoneLite = innerWidth <= 760 || (nc.effectiveType && /(^|-)(2|3)g$/.test(nc.effectiveType));   // phones / slow links: only the active card is loaded
   liveBoxes.filter(b => b.box.isConnected && !b.modal).forEach((b, n) => {
     if (stillOnly) { b.box.classList.add('is-still'); return; }

@@ -82,7 +82,7 @@ function wireVideos(root, offs) {
     const v = en.target;
     if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { const go = () => { v.play().catch(() => { }); }; addEventListener('touchstart', go, { once: true, passive: true }); }); }   // low-power mode blocks autoplay: the first touch starts it
     else v.pause();
-  }), { rootMargin: '250px 0px', threshold: 0.01 });
+  }), { rootMargin: phone() ? '1600px 0px' : '250px 0px', threshold: 0.01 });
   vids.forEach(v => io.observe(v));
   offs.push(() => io.disconnect());
 }
