@@ -44,3 +44,11 @@
 .syx-ico:focus-visible{outline:2px solid #fff;outline-offset:4px}
 .syx-ico:active{transform:translateY(-1px) scale(.97)}
 @media (prefers-reduced-motion:reduce){.syx-us{animation:none}.syx-ico{transition:none}}
+
+/* footer film: the llama melts into the black page below (like the hero), the link footer after it is black too, and phones show the llama alone (no text column) */
+.syx-fvid::after{content:"";position:absolute;inset:auto 0 -1px 0;height:36%;z-index:1;pointer-events:none;background:linear-gradient(0deg,#000 0%,rgba(0,0,0,.72) 38%,rgba(0,0,0,0) 100%)}
+.syx-foot+.foot,footer.foot{background:#000;border-top-color:transparent}
+@media (max-width:767px){.syx-fcol{display:none}.syx-foot{min-height:0}.syx-fvid{height:min(78vw,380px)}}
+.syx-foot+.sec,.syx-foot+.sec.sec-alt{background:#000}   /* the section right after the footer film is black too, so the llama melts into it */
+/* no text next to the llama on any screen; the llama keeps its original size and place (left half on desktop) */
+.syx-fcol{display:none}

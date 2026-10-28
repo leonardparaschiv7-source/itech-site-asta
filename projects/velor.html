@@ -10,12 +10,41 @@
 html,body{height:100%;background:#08090B}
 .hero{position:relative;height:100vh;height:100svh;width:100%;overflow:hidden}
 .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+
+/* portrait screens (phones and the phone frame in the project window): a real mobile layout on a portrait crop of the hero, not the landscape film */
+.m{display:none}
+@media (max-width:760px) and (orientation:portrait){
+ .hero{display:none}
+ .m{position:relative;display:flex;flex-direction:column;justify-content:flex-start;height:100vh;height:100svh;overflow:hidden;color:#fff;font-family:"Inter Tight","Inter",system-ui,sans-serif;padding:calc(18px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));background:#111}
+ .m-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transform-origin:50% 55%;animation:mz 16s ease-in-out infinite alternate}
+ .m::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.72))}
+ .m>*:not(.m-bg){position:relative;z-index:2}
+ .m-top{display:flex;align-items:center;justify-content:space-between}
+ .m-brand{font-size:20px;letter-spacing:.24em;font-weight:500}
+ .m-menu{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor;opacity:.8}
+ .m-menu i{display:block;width:16px;height:1.5px;background:currentColor;box-shadow:0 5px 0 currentColor;margin-top:-5px}
+ .m-copy{margin-top:clamp(18px,6svh,48px)}
+ .m h1{font-weight:300;font-size:clamp(38px,12.5vw,52px);line-height:1;letter-spacing:-.03em}
+ .m-p{margin-top:14px;font-size:15px;line-height:1.5;opacity:.82;max-width:22rem}
+ .m-foot{display:grid;gap:14px;margin-top:auto}
+ .m-chips{display:flex;flex-wrap:wrap;gap:8px}
+ .m-chips span{font-size:12px;padding:7px 13px;border-radius:99px;border:1px solid currentColor;opacity:.78}
+ .m-cta{display:flex;align-items:center;justify-content:center;height:52px;border-radius:99px;background:#fff;color:#0b0b0d;font-size:15px;font-weight:500;letter-spacing:.02em}
+}
+@keyframes mz{from{transform:scale(1)}to{transform:scale(1.07)}}
+@media (prefers-reduced-motion:reduce){.m-bg{animation:none}}
 </style>
 </head>
 <body>
 <section class="hero" aria-label="VÉLOR, digital wealth card">
   <video class="bg" autoplay loop muted playsinline preload="auto" aria-hidden="true" poster="../media/velor/velor-poster.webp" src="../media/velor/velor.mp4?v=1"></video>
 </section>
+<main class="m" aria-label="VÉLOR">
+  <img class="m-bg" src="../media/velor/m-bg.webp?v=2" alt="" decoding="async" fetchpriority="high">
+  <div class="m-top"><span class="m-brand">VÉLOR</span><span class="m-menu" aria-hidden="true"><i></i></span></div>
+  <div class="m-copy"><h1>Digital wealth.<br>Redefined.</h1><p class="m-p">Banking beyond boundaries.</p></div>
+  <div class="m-foot"><div class="m-chips"><span>Private control</span><span>Instant movement</span><span>Intelligent insight</span></div><span class="m-cta">Explore VÉLOR</span></div>
+</main>
 <script src="film-guard.js?v=2"></script>
 </body>
 </html>

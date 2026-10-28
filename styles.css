@@ -1409,3 +1409,15 @@ select.input option{background:#161319}
 .sy-pp:focus-visible{opacity:1;outline:2px solid #fff;outline-offset:3px}
 .sy-pp .i-play,.sy-pp.is-paused .i-pause{display:none}
 .sy-pp.is-paused .i-play{display:block}
+
+/* project window on phones: only the preview and a close button that is always on screen (pink, like the package buttons); the long text is dropped */
+@media (max-width:760px){
+  .w3m{padding:0 16px 20px;gap:16px;max-height:calc(100dvh - 24px);overscroll-behavior:contain}
+  .w3m-head{position:sticky;top:0;z-index:6;flex-direction:row;align-items:center;margin:0 -16px;padding:12px 16px;background:linear-gradient(180deg,var(--bg2) 78%,rgba(17,16,21,0))}
+  .w3m-head h3{font-size:1.5rem;margin:2px 0 0}
+  .w3m-head .w3-type{display:none}
+  .w3m-head .btn{flex:none;min-height:44px;padding:0 20px;background:linear-gradient(135deg,#FF6FB1,#E88BE0);color:#1A0B14;border:0;font-weight:600;box-shadow:0 10px 26px -10px rgba(255,111,177,.7)}
+  .w3m .modal-body .cs:first-child,.w3m .modal-body .cs:last-child>:not(.btn){display:none}
+  .w3m .modal-body{padding:0}
+  .w3m .modal-body .btn-primary{width:100%}
+}
