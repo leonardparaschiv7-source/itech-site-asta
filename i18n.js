@@ -477,6 +477,8 @@ const ROWS = [
   ['Submitting…', 'Se trimite…', 'Wird gesendet…'],
   ['Every review is read by iTECH before it appears. Your email stays private.', 'Fiecare recenzie e citită de iTECH înainte să apară. Emailul tău rămâne privat.', 'Jede Bewertung wird von iTECH gelesen, bevor sie erscheint. Deine E-Mail bleibt privat.'],
   ['Close', 'Închide', 'Schließen'],
+  ['Pause background animation', 'Oprește animația de fundal', 'Hintergrundanimation pausieren'],
+  ['Play background animation', 'Pornește animația de fundal', 'Hintergrundanimation abspielen'],
   ['Please enter your name (at least 2 characters).', 'Te rugăm să scrii numele (cel puțin 2 caractere).', 'Bitte gib deinen Namen ein (mindestens 2 Zeichen).'],
   ['Please enter a valid email address.', 'Te rugăm să scrii o adresă de email validă.', 'Bitte gib eine gültige E-Mail-Adresse ein.'],
   ['Please choose the project type.', 'Te rugăm să alegi tipul proiectului.', 'Bitte wähle die Projektart.'],

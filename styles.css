@@ -1365,11 +1365,8 @@ select.input option{background:#161319}
 /* ── Hero "stage" (hero.sy.layout "split"): the film is no longer a full-screen background. It is a stage on the right whose edges melt
       into the black page; the copy sits on clean black. The film comes in with a slow cinematic zoom and fade; the stage, wordmark and
       copy move at different depths (app.js setupHeroSynapse). "full" keeps the old full-screen look. ── */
-.sy-video::before{content:"";position:absolute;inset:0;z-index:2;background:#000;pointer-events:none;animation:syFade 1.8s var(--ease) .1s both}
-@keyframes syFade{from{opacity:.92}to{opacity:0}}
 .sy-video video{animation:syZoom 3s var(--ease) both}
 @keyframes syZoom{from{transform:scale(1.13)}to{transform:scale(1)}}
-.sy-glow{position:absolute;left:0;top:0;width:560px;height:560px;z-index:-1;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,rgba(255,111,177,.15),rgba(197,139,255,.05) 55%,transparent);will-change:transform;display:none}
 @media (min-width:1101px){
   .hero-synapse.sy-split{align-items:center;padding-bottom:0}
   .sy-split .sy-video{left:auto;width:64%}
@@ -1381,8 +1378,7 @@ select.input option{background:#161319}
   .sy-split .hero-title{font-size:clamp(44px,5.6vw,96px)}
   .sy-split .sy-mark{opacity:.07}
 }
-@media (pointer:fine) and (min-width:1101px){.sy-glow{display:block}}
-@media (prefers-reduced-motion:reduce){.sy-video::before{animation:none;opacity:0}.sy-video video{animation:none}}
+@media (prefers-reduced-motion:reduce){.sy-video video{animation:none}}
 /* the giant ghost wordmark in the footer: its "i" is an echo, as soft as the letters next to it */
 .foot-mark .logo-i{font-size:var(--logo-i-s);opacity:.34;margin-left:.05em}
 
@@ -1407,7 +1403,9 @@ select.input option{background:#161319}
 /* a still card with a poster shows the poster only, not the project name on top of it */
 .w3-live.has-poster.is-still::after{display:none}
 
-/* autoplay blocked (iOS Low Power Mode): the poster drifts slowly until a tap starts the film */
-.sy-video.is-blocked video{animation:syDrift 16s ease-in-out infinite alternate}
-@keyframes syDrift{from{transform:scale(1.02) translate3d(0,0,0)}to{transform:scale(1.1) translate3d(-1.5%,-1%,0)}}
-@media (prefers-reduced-motion:reduce){.sy-video.is-blocked video{animation:none}}
+/* play / pause for the hero film (decorative motion must be stoppable); the poster stays when it is paused or blocked */
+.sy-pp{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.22);cursor:pointer;opacity:.7;transition:opacity .25s,background .25s}
+.sy-pp:hover{opacity:1;background:rgba(0,0,0,.65)}
+.sy-pp:focus-visible{opacity:1;outline:2px solid #fff;outline-offset:3px}
+.sy-pp .i-play,.sy-pp.is-paused .i-pause{display:none}
+.sy-pp.is-paused .i-play{display:block}

@@ -64,7 +64,7 @@ window.ITECH_CONFIG = {
     threeDIntensity: 1,         // 0–1.5
     threeDOnMobile: true,       // lighter 3D scene on phones; false = flat hero on phones
     liveCardsOnPhones: true,    // false = on phones the project cards show their still image instead of running the page inside the card
-    heroFilmFollowsMouse: false, // hero film scrubs with the mouse; off = it only plays its own slow drift (lighter, no seeking lag)
+    heroFilmFollowsMouse: false, // unused: the hero film now just plays (no mouse scrubbing)
     cursorEffectsEnabled: true, // desktop only, disabled automatically on touch
     scrollAnimationsEnabled: true,
     grainEnabled: true
@@ -151,7 +151,7 @@ window.ITECH_CONFIG = {
     look: "synapse",                  // "synapse" = full-screen film you scrub with the mouse + scrambling headline + watermark (current); "strata" / "aura" / "" = the other layouts
     // films re-encoded with a keyframe on every frame (mouse scrubbing seeks without decoding the whole clip); srcMobile is used on screens <= 760px.
     // original: https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d.mp4
-    sy: { src: "img/hero-synapse.mp4", srcMobile: "img/hero-synapse-m-loop.mp4", poster: "img/hero-synapse-poster.webp", posterMobile: "img/hero-synapse-poster-m.webp", watermark: "iTECH", layout: "split" },   // layout: "split" = the film is a stage on the right, copy on clean black (current); "full" = the film fills the whole screen behind the copy   // poster = the film's first frame: shown at once, so nothing blinks while the film loads
+    sy: { src: "img/hero-llama.mp4?v=1", srcMobile: "img/hero-llama-m.mp4?v=1", poster: "img/hero-llama-poster.webp?v=1", posterMobile: "img/hero-llama-poster-m.webp?v=1", watermark: "iTECH", layout: "split" },   // layout: "split" = the film is a stage on the right, copy on clean black (current); "full" = the film fills the whole screen behind the copy   // poster = the film's first frame: shown at once, so nothing blinks while the film loads
     //   previous look was: "strata"
     bg: "img/hero-bg-4k.webp?v=3",
     bgMobile: "img/hero-bg-mobile.webp?v=3",   // portrait picture used on phones (<= 760px)           // still background image of the first screen (hero.bg); remove it for the plain dark grid

@@ -153,7 +153,7 @@ R.hero = () => {
   return `<section class="hero${V ? ' has-video' : ''}${(V && V.hideScene) || S || SY ? ' no-scene' : ''}${SY ? ' hero-synapse' + (h.sy.layout === 'full' ? '' : ' sy-split') : ''}${h.look === 'aura' && !S ? ' hero-aura' : ''}${S ? ' hero-strata' : ''}" id="home" aria-labelledby="hero-title">
   ${h.look === 'aura' && !S ? '<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="c3-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/><feComposite in2="SourceGraphic" operator="in" result="noise"/><feBlend in="SourceGraphic" in2="noise" mode="multiply"/></filter></svg>' : ''}
   ${V ? `<div class="hero-video" aria-hidden="true"><video muted loop playsinline preload="metadata"${V.poster ? ` poster="${esc(V.poster)}"` : ''}><source src="${esc(V.src)}" type="video/mp4"></video><span class="hero-video-shade"></span></div>` : ''}
-  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted playsinline preload="none" data-src="${esc(small() && h.sy.srcMobile || h.sy.src)}"${(small() && h.sy.posterMobile || h.sy.poster) ? ` poster="${esc(small() && h.sy.posterMobile || h.sy.poster)}"` : ''}></video></div><div class="sy-glow" aria-hidden="true"></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div><p class="sy-logo syx-logo" aria-hidden="true">${C.brandConfig.logoPrefix ? '<span class="syx-us"></span>' : ''}${logoName(C.brandConfig.name)}</p>` : ''}
+  ${SY ? `<div class="sy-video" aria-hidden="true"><video muted loop playsinline preload="none" disablepictureinpicture data-src="${esc(small() && h.sy.srcMobile || h.sy.src)}"${(small() && h.sy.posterMobile || h.sy.poster) ? ` poster="${esc(small() && h.sy.posterMobile || h.sy.poster)}"` : ''}></video></div><div class="sy-dots" aria-hidden="true"></div><div class="sy-mark" aria-hidden="true">${esc(h.sy.watermark || '')}</div><p class="sy-logo syx-logo" aria-hidden="true">${C.brandConfig.logoPrefix ? '<span class="syx-us"></span>' : ''}${logoName(C.brandConfig.name)}</p><button class="sy-pp" type="button" aria-label="${esc(T('Pause background animation'))}"><svg class="i-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg></button>` : ''}
   ${h.bg && !SY ? `<div class="hero-photo" aria-hidden="true"><picture>${h.bgMobile ? `<source media="(max-width:760px)" srcset="${esc(h.bgMobile)}">` : ''}<img src="${esc(h.bg)}" alt="" decoding="async" fetchpriority="high"></picture></div>` : ''}
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-grid">
@@ -1329,8 +1329,8 @@ function setupLive(root = document) {
   } else liveNear = true;
   liveSync();
 }
-/* hero "synapse": the film is not played, it is scrubbed by horizontal mouse movement (delta based, 0.8 of the film per screen width);
-   without a mouse (touch) or after 3 s of stillness it drifts back and forth by itself. The headline lines scramble in once. */
+/* hero "synapse": the film plays natively (muted, looped, from the network, one file per device class). It plays only while the hero is on screen,
+   the tab is visible and nothing covers the page, and never against the visitor's manual pause. The headline lines scramble in once. */
 let syCleanup = null;
 const SY_CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~|}{[]:;?><';
 function scrambleIn(el, delay) {
@@ -1350,94 +1350,47 @@ function scrambleIn(el, delay) {
   }, delay));
   return () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); nodes.forEach(o => { o.n.nodeValue = o.t; }); unfix(); };
 }
-let syFilm = null;   // {src, url: Promise<blob URL>} shared by every setup of the hero
+let syVid = null, syUserPaused = false, syUserPlay = false;   // survive re-renders (language change): same <video>, same buffer, same playhead; a manual choice is remembered
 function setupHeroSynapse() {
   if (syCleanup) { syCleanup(); syCleanup = null; }
-  const hero = $('.hero-synapse'), box = $('.sy-video'), v = box && $('video', box); if (!v) return;
-  const mark = $('.sy-mark', hero), glow = $('.sy-glow', hero), grid = $('.hero-grid', hero);
-  const cleans = [];
+  const hero = $('.hero-synapse'), box = $('.sy-video'), slot = box && $('video', box); if (!slot) return;
+  const btn = $('.sy-pp', hero), cleans = [];
   if (!reduced) $$('.hero-synapse .hero-title .ln>span').forEach((el, i) => cleans.push(scrambleIn(el, 200 + i * 300)));
-  const nc = navigator.connection || {};
-  if (nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // 5 MB film: skipped on data saver / 2G (the headline still animates)
-  const filmSrc = v.dataset.src;
-  /* phones: the light forward-and-back clip plays natively from the network (it starts with the first bytes, no seeking, no blob wait).
-     It plays only while the hero is on screen and the tab is visible. iOS Low Power Mode rejects autoplay: the poster then drifts
-     slowly with CSS (is-blocked) and the first tap starts the film. Reduced motion keeps the poster. */
-  if (small()) {
-    if (reduced) { syCleanup = () => cleans.forEach(f => f()); return; }
-    let vis = true, blocked = false;
-    const wake = () => { if (vis && !document.hidden) v.play().catch(() => { }); };
-    const play = () => {
-      if (!vis || document.hidden) return;
-      const p = v.play();
-      if (p && p.catch) p.catch(() => { if (blocked) return; blocked = true; box.classList.add('is-blocked'); ['touchend', 'click'].forEach(t => addEventListener(t, wake, { once: true, passive: true })); });
-    };
-    const onPlaying = () => box.classList.remove('is-blocked'), onVis = () => { if (document.hidden) v.pause(); else play(); };
-    const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; if (vis) play(); else v.pause(); }, { threshold: .15 }) : null;
-    if (io) io.observe(hero);
-    v.addEventListener('playing', onPlaying); v.addEventListener('loadeddata', play); document.addEventListener('visibilitychange', onVis);
-    v.loop = true; v.muted = true; v.preload = 'auto';   // markup says preload="none" (desktop waits for the blob); phones load at once
-    v.src = filmSrc; play();
-    syCleanup = () => {
-      cleans.forEach(f => f()); if (io) io.disconnect(); v.pause();
-      v.removeEventListener('playing', onPlaying); v.removeEventListener('loadeddata', play); document.removeEventListener('visibilitychange', onVis);
-      ['touchend', 'click'].forEach(t => removeEventListener(t, wake));
-    };
-    return;
-  }
-  /* desktop scrubs the film by seeking, so it is kept in memory: seeking from the network is what makes scrubbing lag. One download only,
-     however often the hero is set up again (language change, resize...); until then the poster (its first frame) is on screen */
-  if (!syFilm || syFilm.src !== filmSrc) syFilm = { src: filmSrc, url: fetch(filmSrc).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => URL.createObjectURL(b)) };
-  syFilm.url.then(u => { if (v.isConnected) v.src = u; }).catch(() => { if (v.isConnected) v.src = filmSrc; });
-  v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
-
-  /* Motion model — everything that moves is a spring or an eased curve; only transform and opacity are written, three elements per frame:
-       playhead   critically damped spring toward the mouse (inertia, no stepping feel); with no pointer it follows a sine, so it
-                  eases to a stop at both ends and then turns, starting exactly where the mouse left it (no jump)
-       stage      spring-smoothed pointer parallax: film, giant wordmark and headline sit at different depths
-       exit       on scroll the stage drifts down slower than the page and the copy lifts away                                     */
-  const followFilm = (C.motionConfig || {}).heroFilmFollowsMouse !== false;
-  const fine = matchMedia('(pointer: fine)').matches, FPS = 24, TAU = Math.PI * 2, DRIFT_S = 14;
-  let pos = 0, vel = 0, target = 0, phase = 0, drifting = false, lastX = null, lastMove = -1e9, vis = true, last = 0, raf = 0, hh = hero.offsetHeight || 1;
-  let nx = 0, ny = 0, px = 0, py = 0, pvx = 0, pvy = 0, gx = 0, gy = 0, gvx = 0, gvy = 0, mx = innerWidth / 2, my = innerHeight / 2, lastP = -1;
-  const apply = () => { if (!v.duration || v.seeking) return; const want = Math.min(v.duration - .001, Math.round(pos * FPS) / FPS); if (Math.abs(v.currentTime - want) > .5 / FPS) v.currentTime = want; };   // the playhead moves in whole frames, so a seek only happens when the frame really changes
-  v.addEventListener('seeked', apply);
-  const onMove = e => {
-    mx = e.clientX; my = e.clientY;
-    if (!vis || reduced || !v.duration || !followFilm) return;
-    const dx = lastX == null ? 0 : e.clientX - lastX; lastX = e.clientX; lastMove = performance.now();
-    target = Math.min(v.duration, Math.max(0, target + dx / innerWidth * v.duration * .8));
+  const src = slot.dataset.src;
+  let v = slot;
+  if (syVid && syVid.dataset.src === src) { slot.replaceWith(syVid); v = syVid; } else syVid = slot;   // same film as before: keep the element, never download it twice
+  v.muted = true;
+  const rm = matchMedia('(prefers-reduced-motion: reduce)'), nc = navigator.connection || {};
+  const autoOk = () => !rm.matches && !nc.saveData && !/(^|-)2g$/.test(nc.effectiveType || '');   // otherwise the poster stays until the visitor presses play
+  const wants = () => !syUserPaused && (syUserPlay || autoOk());
+  let vis = true, blocked = false;
+  const ui = () => {
+    const on = wants() && !blocked;
+    if (btn) { btn.setAttribute('aria-label', T(on ? 'Pause background animation' : 'Play background animation')); btn.classList.toggle('is-paused', !on); }
   };
-  const onResize = () => { hh = hero.offsetHeight || 1; };
-  addEventListener('mousemove', onMove, { passive: true }); addEventListener('resize', onResize, { passive: true });
-  const tick = now => {
-    raf = requestAnimationFrame(tick);
-    if (!vis || document.hidden) { last = now; return; }
-    const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
-    const dur = v.duration;
-    if (dur) {
-      const idle = !reduced && (!fine || !followFilm || now - lastMove > 3000);
-      if (idle) { if (!drifting) { drifting = true; phase = Math.acos(1 - 2 * Math.min(1, Math.max(0, pos / dur))); } phase += dt * TAU / DRIFT_S; target = dur * (.5 - .5 * Math.cos(phase)); }
-      else drifting = false;
-      vel += (170 * (target - pos) - 2 * Math.sqrt(170) * .92 * vel) * dt; pos += vel * dt;   // critically damped spring
-      if (pos < 0) { pos = 0; vel = 0; } else if (pos > dur) { pos = dur; vel = 0; }
-      apply();
-    }
-    if (reduced) return;
-    const sy = scrollY, p = sy <= 0 ? 0 : sy >= hh ? 1 : sy / hh;
-    if (fine) {   // pointer depth: with no pointer the stage sways gently by itself
-      const idleP = now - lastMove > 3000, tx = idleP ? Math.sin(now / 3400) * .35 : mx / innerWidth * 2 - 1, ty = idleP ? Math.cos(now / 4100) * .25 : my / innerHeight * 2 - 1;
-      pvx += (46 * (tx - px) - 2 * Math.sqrt(46) * pvx) * dt; px += pvx * dt; pvy += (46 * (ty - py) - 2 * Math.sqrt(46) * pvy) * dt; py += pvy * dt;
-      if (glow) { gvx += (60 * (mx - gx) - 2 * Math.sqrt(60) * .9 * gvx) * dt; gx += gvx * dt; gvy += (60 * (my + sy - gy) - 2 * Math.sqrt(60) * .9 * gvy) * dt; gy += gvy * dt; glow.style.transform = 'translate3d(' + (gx - 280).toFixed(1) + 'px,' + (gy - 280).toFixed(1) + 'px,0)'; }
-    }
-    box.style.transform = 'translate3d(' + (px * 16).toFixed(2) + 'px,' + (py * 10 + p * 72).toFixed(2) + 'px,0) scale(' + (1.04 + p * .07).toFixed(4) + ')';
-    if (mark) mark.style.transform = 'translate3d(' + (-px * 28).toFixed(2) + 'px,calc(-50% + ' + (50 - py * 14 + p * 36).toFixed(2) + 'px),0)';
-    if (grid && p !== lastP) { grid.style.transform = 'translate3d(0,' + (-p * 52).toFixed(2) + 'px,0)'; grid.style.opacity = Math.max(0, 1 - p * 1.3).toFixed(3); lastP = p; }
+  const sync = () => {
+    if (wants() && vis && !document.hidden && !root.classList.contains('lock')) {
+      if (!v.getAttribute('src')) v.src = src;
+      if (v.paused) { const p = v.play(); if (p && p.catch) p.catch(() => { blocked = true; ui(); }); }   // autoplay refused (e.g. Low Power Mode): poster stays, the button offers play; no retries
+    } else if (!v.paused) v.pause();
+    ui();
   };
-  raf = requestAnimationFrame(tick);
-  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; }, { threshold: 0 }) : null;
+  const onClick = () => { if (wants() && !blocked) { syUserPaused = true; syUserPlay = false; } else { syUserPaused = false; syUserPlay = true; blocked = false; } sync(); };
+  const onPlaying = () => { blocked = false; ui(); };
+  /* in view = at least 30 % visible; out of view = under 10 %: the band between keeps the last state, so no play/pause flutter at the edge */
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { const r = es[es.length - 1].intersectionRatio; if (r >= .3) vis = true; else if (r < .1) vis = false; else return; sync(); }, { threshold: [0, .1, .3] }) : null;
   if (io) io.observe(hero);
-  syCleanup = () => { removeEventListener('mousemove', onMove); removeEventListener('resize', onResize); cancelAnimationFrame(raf); if (io) io.disconnect(); cleans.forEach(f => f()); };
+  const mo = new MutationObserver(sync); mo.observe(root, { attributes: true, attributeFilter: ['class'] });   // modal / menu open (class "lock") pauses it
+  if (btn) btn.addEventListener('click', onClick);
+  v.addEventListener('playing', onPlaying); document.addEventListener('visibilitychange', sync);
+  rm.addEventListener && rm.addEventListener('change', sync);
+  sync();
+  syCleanup = () => {
+    cleans.forEach(f => f()); if (io) io.disconnect(); mo.disconnect();
+    if (btn) btn.removeEventListener('click', onClick);
+    v.removeEventListener('playing', onPlaying); document.removeEventListener('visibilitychange', sync);
+    rm.removeEventListener && rm.removeEventListener('change', sync);
+  };
 }
 function setupScene() {
   rig = $('#rig'); scene = $('#scene'); layers = $$('#rig .layer').map(el => ({ el, z: +el.dataset.z || 0 }));
