@@ -897,6 +897,7 @@ function afterRender() {
 }
 
 /* ───────────────────────── navigation / actions ───────────────────────── */
+let goT = 0, goStop = () => { };
 function goTo(id) {
   // switched-off destinations fall back: brief → contact → packages (WhatsApp buttons and phone)
   if (id === 'brief' && !document.getElementById('brief')) id = 'contact';
@@ -904,8 +905,12 @@ function goTo(id) {
   const el = document.getElementById(id); if (!el) return;
   closeMenu(); closeModal();
   el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
-  // safety net: if smooth scrolling is blocked or interrupted, jump there
-  setTimeout(() => { if (Math.abs(el.getBoundingClientRect().top) > innerHeight * .6) el.scrollIntoView({ behavior: 'instant', block: 'start' }); }, 1400);
+  // safety net: if smooth scrolling is blocked, jump there; the visitor's own scroll/touch/keys (or a newer goTo) cancel it
+  goStop();
+  const ev = ['wheel', 'touchstart', 'keydown'], stop = () => goStop();
+  ev.forEach(t => addEventListener(t, stop, { passive: true }));
+  goStop = () => { clearTimeout(goT); ev.forEach(t => removeEventListener(t, stop)); goStop = () => { }; };
+  goT = setTimeout(() => { goStop(); if (Math.abs(el.getBoundingClientRect().top) > innerHeight * .6) el.scrollIntoView({ behavior: 'instant', block: 'start' }); }, 1400);
   if (id === 'brief') setTimeout(() => { const s = $(`#briefForm .brief-step[data-step="${S.brief.step}"]`); const f = s && $('input,textarea,select', s); f && f.focus({ preventScroll: true }); }, reduced ? 50 : 900);
 }
 function openMenu() { const m = $('#mmenu'); m.hidden = false; requestAnimationFrame(() => m.classList.add('open')); root.classList.add('lock'); $('.burger').setAttribute('aria-expanded', 'true'); $('.mmenu-close').focus(); }
@@ -955,7 +960,13 @@ document.addEventListener('click', e => {
   if (root.classList.contains('editing') && e.target.closest('[data-e]') && t.contains(e.target.closest('[data-e]'))) return;
   const a = t.dataset.act;
   switch (a) {
-    case 'go': e.preventDefault(); goTo(t.dataset.target); break;
+    case 'go': {
+      e.preventDefault();
+      const L = pricingL(), pk = S.pkg && C.packagesConfig.items.find(p => p.id === S.pkg);
+      const msg = pk && ((L && L.packages && L.packages[pk.id] || {}).whatsappMessage || pk.whatsappMessage);
+      if (t.classList.contains('fc-main') && msg && C.packagesConfig.whatsappNumber) { window.open(waLink(msg), '_blank', 'noopener'); break; }   // no packages → start → packages loop
+      goTo(t.dataset.target); break;
+    }
     case 'menu-open': openMenu(); break;
     case 'lang': setLang(t.dataset.lang); break;
     case 'menu-close': closeMenu(); $('.burger').focus(); break;
@@ -1197,7 +1208,7 @@ let liveRaf = 0;
 function liveAuto(box, f) {
   if (reduced) return;
   const st = { box, f, ph: 'wait', t0: 0, from: 0, y: 0, last: 0, wait: performance.now() + 3200, vis: true };
-  new IntersectionObserver(es => { st.vis = es[es.length - 1].isIntersecting; }).observe(box);
+  st.io = new IntersectionObserver(es => { st.vis = es[es.length - 1].isIntersecting; }); st.io.observe(box);
   /* no scrollbar inside the card: the page should read as a film, not as a scrolled page */
   f.addEventListener('load', () => { try { const d = f.contentDocument, s = d.createElement('style'); s.textContent = 'html{scrollbar-width:none}::-webkit-scrollbar{display:none}'; d.head.appendChild(s); } catch (e) { } });
   liveRuns.add(st);
@@ -1208,7 +1219,7 @@ function liveTick(now) {
   liveRaf = liveRuns.size ? requestAnimationFrame(liveTick) : 0;
   if (document.hidden) return;
   liveRuns.forEach(s => {
-    if (!s.box.isConnected) { liveRuns.delete(s); return; }
+    if (!s.box.isConnected) { s.io.disconnect(); liveRuns.delete(s); return; }   // card of an earlier render
     const card = s.box.closest('.w3-card'), w = s.f.contentWindow;
     if (!w || !w.document || !w.document.body) return;
     const on = s.vis && card && card.classList.contains('is-active');
@@ -1346,29 +1357,38 @@ function setupHeroSynapse() {
   const mark = $('.sy-mark', hero), glow = $('.sy-glow', hero), grid = $('.hero-grid', hero);
   const cleans = [];
   if (!reduced) $$('.hero-synapse .hero-title .ln>span').forEach((el, i) => cleans.push(scrambleIn(el, 200 + i * 300)));
-  /* keep the clip in memory: seeking from the network is what makes scrubbing lag */
   const nc = navigator.connection || {};
   if (nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // 5 MB film: skipped on data saver / 2G (the headline still animates)
-  const filmSrc = v.dataset.src;   // one download only, however often the hero is set up again (language change, resize...): the film comes into memory as a blob; until then the poster (its first frame) is on screen
-  if (!syFilm || syFilm.src !== filmSrc) syFilm = { src: filmSrc, url: fetch(filmSrc).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => URL.createObjectURL(b)) };
-  syFilm.url.then(u => { v.src = u; }).catch(() => { v.src = filmSrc; });
-  /* phones play the light forward-and-back clip natively (no seeking: it lags and some phones never show the first seek); a blocked autoplay starts on the first touch */
+  const filmSrc = v.dataset.src;
+  /* phones: the light forward-and-back clip plays natively from the network (it starts with the first bytes, no seeking, no blob wait).
+     It plays only while the hero is on screen and the tab is visible. iOS Low Power Mode rejects autoplay: the poster then drifts
+     slowly with CSS (is-blocked) and the first tap starts the film. Reduced motion keeps the poster. */
   if (small()) {
-    v.loop = true; v.muted = true;
-    /* iOS Low Power Mode (yellow battery) blocks autoplay: until a tap lets it play, the poster drifts slowly with CSS so the page is never frozen */
-    const wake = () => { v.play().then(() => box.classList.remove('is-blocked')).catch(() => { }); };
-    const go = () => {
+    if (reduced) { syCleanup = () => cleans.forEach(f => f()); return; }
+    let vis = true, blocked = false;
+    const wake = () => { if (vis && !document.hidden) v.play().catch(() => { }); };
+    const play = () => {
+      if (!vis || document.hidden) return;
       const p = v.play();
-      if (p && p.catch) p.catch(() => { box.classList.add('is-blocked'); ['touchend', 'pointerup', 'click'].forEach(t => addEventListener(t, wake, { once: true, passive: true })); });
-      setTimeout(() => { if (v.paused) box.classList.add('is-blocked'); }, 1500);
+      if (p && p.catch) p.catch(() => { if (blocked) return; blocked = true; box.classList.add('is-blocked'); ['touchend', 'click'].forEach(t => addEventListener(t, wake, { once: true, passive: true })); });
     };
-    v.addEventListener('playing', () => box.classList.add('ready'));
-    v.addEventListener('loadeddata', () => { box.classList.add('ready'); go(); });
-    v.preload = 'auto';   // markup says preload="none", which phones with data saver honour: the film would never start
-    syFilm.url.catch(() => { }).then(() => { v.load(); go(); });
-    syCleanup = () => cleans.forEach(f => f());
+    const onPlaying = () => box.classList.remove('is-blocked'), onVis = () => { if (document.hidden) v.pause(); else play(); };
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => { vis = es[es.length - 1].isIntersecting; if (vis) play(); else v.pause(); }, { threshold: .15 }) : null;
+    if (io) io.observe(hero);
+    v.addEventListener('playing', onPlaying); v.addEventListener('loadeddata', play); document.addEventListener('visibilitychange', onVis);
+    v.loop = true; v.muted = true; v.preload = 'auto';   // markup says preload="none" (desktop waits for the blob); phones load at once
+    v.src = filmSrc; play();
+    syCleanup = () => {
+      cleans.forEach(f => f()); if (io) io.disconnect(); v.pause();
+      v.removeEventListener('playing', onPlaying); v.removeEventListener('loadeddata', play); document.removeEventListener('visibilitychange', onVis);
+      ['touchend', 'click'].forEach(t => removeEventListener(t, wake));
+    };
     return;
   }
+  /* desktop scrubs the film by seeking, so it is kept in memory: seeking from the network is what makes scrubbing lag. One download only,
+     however often the hero is set up again (language change, resize...); until then the poster (its first frame) is on screen */
+  if (!syFilm || syFilm.src !== filmSrc) syFilm = { src: filmSrc, url: fetch(filmSrc).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => URL.createObjectURL(b)) };
+  syFilm.url.then(u => { if (v.isConnected) v.src = u; }).catch(() => { if (v.isConnected) v.src = filmSrc; });
   v.addEventListener('loadeddata', () => { try { v.currentTime = .001; } catch (e) { } box.classList.add('ready'); });
 
   /* Motion model — everything that moves is a spring or an eased curve; only transform and opacity are written, three elements per frame:

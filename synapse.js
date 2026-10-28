@@ -73,18 +73,30 @@ function renderFoot(C, h) {
 </section>`;
 }
 
-/* films: load when near the screen, play while visible */
+/* films: one controller for all of them. Loading starts about two screens ahead on phones (one on desktop); playing only while
+   at least 15% of the film is on screen, the tab is visible and no window/menu is open over the page. The poster stays until the film
+   really plays. Reduced motion, data saver and 2G keep the poster. A blocked autoplay (iOS Low Power Mode) waits for one tap. */
 function wireVideos(root, offs) {
   const nc = navigator.connection || {};
   const vids = [].slice.call(root.querySelectorAll('video[data-src]'));
-  if (!('IntersectionObserver' in window) || nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;   // data saver / 2G: the poster stays
-  const io = new IntersectionObserver(es => es.forEach(en => {
-    const v = en.target;
-    if (en.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => { const go = () => { v.play().catch(() => { }); }; ['touchend', 'pointerup', 'click'].forEach(t => addEventListener(t, go, { once: true, passive: true })); }); }   // low-power mode blocks autoplay: the first tap starts it
-    else v.pause();
-  }), { rootMargin: phone() ? '1600px 0px' : '250px 0px', threshold: 0.01 });
-  vids.forEach(v => io.observe(v));
-  offs.push(() => io.disconnect());
+  if (!vids.length || !('IntersectionObserver' in window) || reducedMotion() || nc.saveData || /(^|-)2g$/.test(nc.effectiveType || '')) return;
+  const seen = new Set(), html = document.documentElement;
+  const canPlay = v => seen.has(v) && !document.hidden && !html.classList.contains('lock');
+  let waiting = false;
+  const wake = () => { waiting = false; vids.forEach(v => { if (canPlay(v)) v.play().catch(() => { }); }); };
+  const sync = v => {
+    if (!canPlay(v)) { v.pause(); return; }
+    const p = v.play();
+    if (p && p.catch) p.catch(() => { if (!waiting) { waiting = true; addEventListener('touchend', wake, { once: true, passive: true }); addEventListener('click', wake, { once: true }); } });
+  };
+  const load = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting && !en.target.getAttribute('src')) { en.target.preload = 'auto'; en.target.src = en.target.dataset.src; load.unobserve(en.target); } }),
+    { rootMargin: phone() ? '1600px 0px' : '800px 0px' });
+  const show = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) seen.add(en.target); else seen.delete(en.target); sync(en.target); }), { threshold: .15 });
+  vids.forEach(v => { load.observe(v); show.observe(v); });
+  const all = () => vids.forEach(sync);
+  const mo = new MutationObserver(all); mo.observe(html, { attributes: true, attributeFilter: ['class'] });   // modal / menu open → pause, closed → resume
+  document.addEventListener('visibilitychange', all);
+  offs.push(() => { load.disconnect(); show.disconnect(); mo.disconnect(); document.removeEventListener('visibilitychange', all); removeEventListener('touchend', wake); removeEventListener('click', wake); vids.forEach(v => v.pause()); });
 }
 
 function mount(el, C) {
