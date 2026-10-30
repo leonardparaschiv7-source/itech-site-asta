@@ -1108,7 +1108,10 @@ window.ITECH_CONFIG = {
     reviews: [
       { id: "r-titus-sfp", status: "approved", name: "Titus", company: "SC.SFPPROJECT.SRL", projectType: "Business Website", rating: 5,
         review: "Le mulțumesc celor de la ITECH pentru răbdarea cu care au primit fiecare idee „nebună” de-a noastră! Au fost mereu aproape, deschiși și gata să găsim împreună soluții. Am apreciat mult și ideile utile venite din partea lor, pe care le-am si pus în aplicare. Mulțumesc sincer întregii echipe! Si oricum pastram legatura in continuare pentru fiecare schimbare pe site-ul nostru. :)",
-        showUrl: true, projectUrl: "https://www.sfpproject.com/", createdAt: "2026-10-28" }
+        showUrl: true, projectUrl: "https://www.sfpproject.com/", createdAt: "2026-10-28" },
+      { id: "r-roxana-dharma", status: "approved", name: "Roxana Sturzu", company: "Sturzuroxana SRL", projectType: "Custom Project", rating: 5,
+        review: "Am apelat la echipa iTech pentru realizarea site-ului Dharma Beauty by RS și pot spune că a fost cea mai bună alegere! Site-ul a fost creat de la zero, de la logo și idei până la cele mai mici detalii. Am fost impresionată de absolut tot! De aspectul profesional al site-ului, de detaliile 3D, de design și de atenția acordată fiecărui element. Am avut senzația că mi-au citit gândurile când a venit vorba de fonturi, culori și texte. Totul a fost exact pe gustul meu, ba chiar peste așteptări! Comunicarea a fost extraordinară.",
+        showUrl: true, projectUrl: "https://dharmabeauty.ro/", createdAt: "2026-10-30" }
     ]
   },
 
