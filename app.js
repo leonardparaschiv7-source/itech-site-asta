@@ -521,6 +521,7 @@ R.packages = () => {
       <ul class="checks">${(P ? P.features : pk.features).map(pkgFeature).join('')}${P ? '' : (pk.excludedFeatures || []).map(f => `<li class="x">${I.minus}<span>${esc(f)}</span></li>`).join('')}</ul>
       ${P && K.showExcluded !== false ? pkgExcluded(P.excludedLabel || L.notIncluded, P.excluded) : ''}
       ${K.cardCta === 'whatsapp' && K.whatsappNumber ? `<a class="btn pkg-cta ${pk.featured ? 'btn-primary' : 'btn-ghost'}" href="${esc(waLink(msg))}" target="_blank" rel="noopener noreferrer" aria-label="${esc(cta)}: ${esc(name)} (WhatsApp)">${WA_ICON}<span>${esc(cta)}</span>${I.arrow}</a>`
+        : K.cardCta === 'cart' && P && P.launchPrice ? `<a class="btn ${pk.featured ? 'btn-primary' : 'btn-ghost'}" href="cos.html?pkg=${esc(pk.id)}">${esc(cta)} ${I.arrow}</a>`
         : `<button class="btn ${pk.featured ? 'btn-primary' : 'btn-ghost'}" data-act="package" data-id="${esc(pk.id)}" data-target="${esc(pk.ctaTarget || 'start')}">${esc(cta)} ${I.arrow}</button>`}
     </article>`; }).join('')}</div>
     ${K.whatsappNumber && K.contactStrip && K.contactStrip.enabled !== false ? `<div class="pkg-wa-strip"><div><p class="mono">${esc(K.contactStrip.title)}</p><p>${esc(K.contactStrip.text)}</p></div>

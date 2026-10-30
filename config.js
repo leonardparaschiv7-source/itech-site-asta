@@ -71,6 +71,9 @@ window.ITECH_CONFIG = {
   },
 
   /* ── SECTIONS: order + on/off ──────────────────────────────────────────── */
+  /* cart page (cos.html): payLinks = online payment link per package id, e.g. { start: "https://…" }. Empty until a provider is chosen: the order then goes to WhatsApp. */
+  cartConfig: { payLinks: { start: "", grow: "", premium: "" } },
+
   welcomeConfig: { src: "media/llama-welcome.mp4?v=2", poster: "media/llama-welcome-poster.webp?v=2" },
 
   sections: {
@@ -661,7 +664,7 @@ window.ITECH_CONFIG = {
        The texts stay in pricing.en / ro / de; set these back to true to show them again. */
     showSubtitles: false, showExcluded: false, showNote: false,
     /* what the button on each package card does: "contact" = scrolls to the closing contact section (current); "whatsapp" = opens WhatsApp with the card's message (whatsappNumber below) */
-    cardCta: "contact",
+    cardCta: "cart",   // "cart": package buttons open cos.html (cart); "builder"/"contact": scroll to the builder; "whatsapp": WhatsApp link
     currency: "€",
     note: "Prices are starting points in EUR and exclude VAT where applicable. Your final quote follows the project brief.",
     /* PRICING PER LANGUAGE — the packages section reads pricing[active language] (en / ro / de).
