@@ -71,7 +71,7 @@ window.ITECH_CONFIG = {
   },
 
   /* ── SECTIONS: order + on/off ──────────────────────────────────────────── */
-  welcomeConfig: { src: "media/llama-welcome.mp4?v=2", poster: "media/llama-welcome-poster.webp?v=1" },
+  welcomeConfig: { src: "media/llama-welcome.mp4?v=2", poster: "media/llama-welcome-poster.webp?v=2" },
 
   sections: {
     order: ["hero", "work", "synapse", "builder", "experience", "trust", "services", "why", "websiteTypes", "packages", "welcome", "addons",
