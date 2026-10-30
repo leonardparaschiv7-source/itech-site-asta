@@ -785,6 +785,18 @@ R.finalCTA = () => {
   </div></section>`;
 };
 
+/* contact icons in the top bar (finalContact): WhatsApp, phone, Instagram, Facebook */
+const NAVI = {
+  whatsapp: '<path d="M4.2 19.8l1.1-3.9A8.2 8.2 0 1 1 8.4 19z"/><path d="M9.2 8.4c.2-.5.6-.5.9-.5.2 0 .4.4.6 1 .2.5-.4.9-.4 1.1.3.8 1.4 1.9 2.4 2.3.2.1.6-.6 1-.5.5.1 1.1.5 1.2.7.1.3-.1 1.1-.9 1.5-.9.4-2 .2-3.7-1.1-1.7-1.3-2.5-2.8-2.6-3.6-.1-.5.1-1.4.5-1.8z" fill="currentColor" stroke="none"/>',
+  phone: '<path d="M6.6 4h3l1.2 3.6-1.9 1.3a11 11 0 0 0 5.2 5.2l1.3-1.9 3.6 1.2v3a2 2 0 0 1-2.2 2A14.4 14.4 0 0 1 4.6 6.2 2 2 0 0 1 6.6 4z"/>',
+  instagram: '<rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.9" cy="7.1" r=".6" fill="currentColor"/>',
+  facebook: '<path d="M14.5 8.5h2V5.2h-2.4c-2.3 0-3.6 1.4-3.6 3.7v2H8.5v3.2h2V20h3.3v-5.9h2.4l.4-3.2h-2.8V9.4c0-.6.3-.9.7-.9z"/>'
+};
+function navSocial() {
+  const K = C.finalContact || {}, wa = String(K.whatsappNumber || '').replace(/\D/g, '');
+  const L = [wa && ['whatsapp', 'WhatsApp', `https://wa.me/${wa}`], K.phone && ['phone', T('Call'), `tel:${String(K.phone).replace(/[^\d+]/g, '')}`], K.instagram && ['instagram', 'Instagram', K.instagram], K.facebook && ['facebook', 'Facebook', K.facebook]].filter(Boolean);
+  return L.length ? `<div class="nav-soc">${L.map(([k, n, h]) => `<a href="${esc(h)}"${k === 'phone' ? '' : ' target="_blank" rel="noopener"'} aria-label="${esc(n)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${NAVI[k]}</svg></a>`).join('')}</div>` : '';
+}
 function navHTML() {
   const N = C.navigationConfig;
   const items = pageOrder(N.items);
@@ -793,6 +805,7 @@ function navHTML() {
     <nav aria-label="Primary"><ul class="nav-links" id="navLinks">${items.map(it => `<li><a href="#${esc(it.target)}" data-act="go" data-target="${esc(it.target)}" data-nav="${esc(it.target)}">${esc(it.label)}</a></li>`).join('')}<li class="nav-ind" id="navInd" aria-hidden="true"></li></ul></nav>
     ${langHTML('lang-nav')}
     <button class="btn btn-primary btn-sm nav-cta" data-act="go" data-target="${esc(N.cta.target)}">${esc(N.cta.label)}</button>
+    ${navSocial()}
     <button class="burger" data-act="menu-open" aria-expanded="false" aria-controls="mmenu" aria-label="${esc(T('Open menu'))}"><span></span></button>
   </div></div></header>
   <div class="mmenu" id="mmenu" hidden role="dialog" aria-modal="true" aria-label="${esc(T('Menu'))}">

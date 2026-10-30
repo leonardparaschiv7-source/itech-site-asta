@@ -164,6 +164,7 @@ const ROWS = [
   ['Overview', 'Prezentare', 'Überblick'],
   ['Design direction', 'Direcție de design', 'Designrichtung'],
   ['This is a concept project created by iTECH to show a design direction. It is not client work.', 'Acesta este un proiect concept creat de iTECH pentru a arăta o direcție de design. Nu este un proiect realizat pentru un client.', 'Dies ist ein Konzeptprojekt von iTECH, das eine Designrichtung zeigt. Es ist keine Kundenarbeit.'],
+  ['Call', 'Sună', 'Anrufen'],
   ['Turn sound on', 'Pornește sunetul', 'Ton einschalten'],
   ['Turn sound off', 'Oprește sunetul', 'Ton ausschalten'],
   ['Start a similar project', 'Începe un proiect similar', 'Ähnliches Projekt starten'],
