@@ -71,8 +71,10 @@ window.ITECH_CONFIG = {
   },
 
   /* ── SECTIONS: order + on/off ──────────────────────────────────────────── */
+  welcomeConfig: { src: "media/llama-welcome.mp4?v=2", poster: "media/llama-welcome-poster.webp?v=1" },
+
   sections: {
-    order: ["hero", "work", "synapse", "builder", "experience", "trust", "services", "why", "websiteTypes", "packages", "addons",
+    order: ["hero", "work", "synapse", "builder", "experience", "trust", "services", "why", "websiteTypes", "packages", "welcome", "addons",
             "estimator", "process", "comparison", "about", "testimonials", "synapseFoot", "faq",
             "projectBrief", "contact", "finalCTA"],
     hero: { enabled: true },
@@ -86,6 +88,7 @@ window.ITECH_CONFIG = {
     why: { enabled: false, hideNumber: true },   // removed at the owner's request (content kept in whyConfig / whyITechFeatures); nav "Services" + footer link hide automatically
     websiteTypes: { enabled: false },   // removed; content kept in websiteTypesConfig
     packages: { enabled: true, hideNumber: true },
+    welcome: { enabled: true },   // black film band with sound right after Packages (app.js R.welcome); film in welcomeConfig
     addons: { enabled: false, altSpan: 2, hideNumber: true },   // removed at the owner's request (content kept in addonsConfig; nav "Add-ons" link hides automatically); altSpan 2 keeps the background rhythm if re-enabled
     estimator: { enabled: false },   // removed; settings kept in estimatorConfig
     process: { enabled: false, hideNumber: true },   // removed at the owner's request: the phone-only laptop scroll film "The anatomy of digital" (content kept in processConfig; nav/footer links hide automatically)

@@ -535,6 +535,10 @@ function addonPrice(a, cur) {
   if (a.priceType === 'monthly') return money(a.price, cur) + ' / month';
   return money(a.price, cur);
 }
+R.welcome = () => { const W = C.welcomeConfig;
+  return `<section class="wlc" id="welcome" aria-label="iTECH"><video class="wlc-v" muted loop playsinline preload="none" poster="${esc(W.poster)}" data-src="${esc(W.src)}" aria-hidden="true"></video>
+    <button class="wlc-snd" type="button" data-act="wlc-sound" aria-pressed="false">${esc(T('Turn sound on'))}</button></section>`;
+};
 R.addons = () => {
   const A = C.addonsConfig;
   if (window.ITECH_EXT && window.ITECH_EXT.addons && C.addonsExperienceConfig && C.addonsExperienceConfig.enabled !== false)
@@ -891,7 +895,7 @@ function setupFcta() {
   row.onpointerleave = () => { mag.style.transform = ''; };
 }
 function afterRender() {
-  observeReveals(); setupScene(); setupW3(); setupFcta(); setupOffscreenPause(); setupHeroVideo(); setupHeroSynapse(); setupLive();
+  observeReveals(); setupScene(); setupW3(); setupFcta(); setupOffscreenPause(); setupHeroVideo(); setupHeroSynapse(); setupLive(); setupWelcome();
   Object.keys(EXT).forEach(k => { const el = document.querySelector(`[data-ext="${k}"]`); if (el && EXT[k].mount) EXT[k].mount(el, C); });
   briefGo(S.brief.step, false); markEditable(); updateNavInd(); onScroll();
 }
@@ -1357,6 +1361,13 @@ function scrambleIn(el, delay) {
   return () => { timers.forEach(t => { clearTimeout(t); clearInterval(t); }); nodes.forEach(o => { o.n.nodeValue = o.t; }); unfix(); };
 }
 let syVid = null, syUserPaused = false, syUserPlay = false;   // survive re-renders (language change): same <video>, same buffer, same playhead; a manual choice is remembered
+/* Welcome film: plays muted while on screen; the button turns the sound on (browsers only allow sound after a tap) */
+function setupWelcome() {
+  const sec = $('.wlc'), v = sec && $('video', sec), b = sec && $('.wlc-snd', sec); if (!v) return;
+  v.src = v.dataset.src;
+  b.onclick = () => { v.muted = !v.muted; b.setAttribute('aria-pressed', String(!v.muted)); b.textContent = T(v.muted ? 'Turn sound on' : 'Turn sound off'); };
+  new IntersectionObserver(es => { if (es[0].isIntersecting) { if (!reduced) v.play().catch(() => { }); } else { v.pause(); v.muted = true; b.setAttribute('aria-pressed', 'false'); b.textContent = T('Turn sound on'); } }, { threshold: .35 }).observe(sec);
+}
 function setupHeroSynapse() {
   if (syCleanup) { syCleanup(); syCleanup = null; }
   const hero = $('.hero-synapse'), box = $('.sy-video'), slot = box && $('video', box); if (!slot) return;
